@@ -11,8 +11,6 @@ public class EnemyScript : MonoBehaviour
     public float attackDamage;
     public float movementSpeed;
 
-    public bool isShortsword, isLongsword, isGreatsword;
-    
     // Start is called before the first frame update
 
     // Update is called once per frame

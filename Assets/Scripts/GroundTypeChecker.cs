@@ -16,7 +16,7 @@ public class GroundTypeChecker : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
        Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.1f);
         if (hit.collider != null)

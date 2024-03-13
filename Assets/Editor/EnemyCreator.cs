@@ -11,9 +11,8 @@ using UnityEngine;
         private bool _spawnOnCamera, _spawnAtSpecificLocation, _spawnAnywhere;
         private Vector3 _spawnLocation;
         private int _amountToSpawn = 1;
-        
-        private bool _shortsword, _longsword, _greatsword;
-    
+        private int _enemyHP = 100;
+
         private enum EnemyType
         {
             Melee, Archer, Exploder
@@ -98,25 +97,16 @@ using UnityEngine;
                     if (GUILayout.Button("Shortsword"))
                     {
                         _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
-                        _shortsword = true;
-                        _longsword = false;
-                        _greatsword = false;
                     }
 
                     if (GUILayout.Button("Longsword"))
                     {
                         _selectedMeleeWeapon = MeleeWeaponType.Longsword;
-                        _shortsword = false;
-                        _longsword = true;
-                        _greatsword = false;
                     }
 
                     if (GUILayout.Button("Greatsword"))
                     {
                         _selectedMeleeWeapon = MeleeWeaponType.Greatsword;
-                        _shortsword = false;
-                        _longsword = false;
-                        _greatsword = true;
                     }
 
                     GUILayout.Label("Selected Melee weapon Type: " + _selectedMeleeWeapon, EditorStyles.boldLabel);
@@ -184,6 +174,10 @@ using UnityEngine;
             // Allows user to enter the movement speed attribute for the enemy
             GUILayout.Label("Enter Movement Speed", EditorStyles.boldLabel);
             _movementSpeed = EditorGUILayout.FloatField("Movement Speed:", _movementSpeed);
+            
+            // Allows the user to enter the HP of the enemy
+            GUILayout.Label("Enter the HP of the Unit", EditorStyles.boldLabel);
+            _enemyHP = EditorGUILayout.IntField("HP:", _enemyHP);
 
             /*if (GUILayout.Button("Create Attributes for Enemy"))
         {
@@ -231,13 +225,15 @@ using UnityEngine;
                     // Handle spawning anywhere
                     break;
             }
-        
+            
             GUILayout.Label("");
         
             // Allows the user to enter the amount of enemies to spawn
             GUILayout.Label("Enter amount to Spawn", EditorStyles.boldLabel);
             _amountToSpawn = EditorGUILayout.IntField("Amount to Spawn:", _amountToSpawn);
         
+            GUILayout.Label("");
+            
             // Will instantiate the enemy with the selected attributes
             if (GUILayout.Button("Create Enemy"))
             {
@@ -266,6 +262,9 @@ using UnityEngine;
                 {
                     GameObject newEnemy = Instantiate(objectToInstantiate,_spawnLocation, Quaternion.identity);
                     EnemyScript enemyScript = newEnemy.GetComponent<EnemyScript>();
+                    Health enemyHealth = newEnemy.GetComponent<Health>();
+                    
+                    enemyHealth.health = _enemyHP;
             
                     // Assign the attributes to the enemy
                     if (enemyScript != null)
@@ -279,7 +278,7 @@ using UnityEngine;
                         if (_selectedType == EnemyType.Melee)
                         {
                             // Find which weapon is selected, then get the corresponding child object and set it to active
-                            if (_longsword)
+                            if (_selectedMeleeWeapon == MeleeWeaponType.Longsword)
                             {
                                 Transform childTransform = newEnemy.transform.GetChild(0);
         
@@ -290,7 +289,7 @@ using UnityEngine;
                                     childTransform.gameObject.SetActive(true);
                                 }
                             }
-                            else if (_greatsword)
+                            else if (_selectedMeleeWeapon == MeleeWeaponType.Greatsword)
                             {
                                 Transform childTransform = newEnemy.transform.GetChild(1);
         
@@ -301,7 +300,7 @@ using UnityEngine;
                                     childTransform.gameObject.SetActive(true);
                                 }
                             }
-                            else if (_shortsword)
+                            else if (_selectedMeleeWeapon == MeleeWeaponType.Shortsword)
                             {
                                 Transform childTransform = newEnemy.transform.GetChild(2);
         
@@ -312,6 +311,60 @@ using UnityEngine;
                                     childTransform.gameObject.SetActive(true);
                                 }
                             } 
+                        }
+
+                        if (_selectedType == EnemyType.Archer)
+                        {
+                            // Find which weapon is selected, then get the corresponding child object and set it to active
+                            if (_selectedArcherWeapon == ArcherWeaponType.Longbow)
+                            {
+                                Transform childTransform = newEnemy.transform.GetChild(0);
+        
+                                // Checking if a child exists
+                                if (childTransform != null)
+                                {
+                                    // Setting the child GameObject active
+                                    childTransform.gameObject.SetActive(true);
+                                }
+                            }
+                            else if (_selectedArcherWeapon == ArcherWeaponType.Greatbow)
+                            {
+                                Transform childTransform = newEnemy.transform.GetChild(1);
+        
+                                // Checking if a child exists
+                                if (childTransform != null)
+                                {
+                                    // Setting the child GameObject active
+                                    childTransform.gameObject.SetActive(true);
+                                }
+                            }
+                            else if (_selectedArcherWeapon == ArcherWeaponType.Shortbow)
+                            {
+                                Transform childTransform = newEnemy.transform.GetChild(2);
+        
+                                // Checking if a child exists
+                                if (childTransform != null)
+                                {
+                                    // Setting the child GameObject active
+                                    childTransform.gameObject.SetActive(true);
+                                }
+                            }
+                        }
+
+                        if (_selectedType == EnemyType.Exploder)
+                        {
+                            if (_selectedExploderType == ExploderType.Small)
+                            {
+                                newEnemy.transform.localScale = new Vector3(1, .5f, 1);
+                            }
+                            else if (_selectedExploderType == ExploderType.Medium)
+                            {
+                                newEnemy.transform.localScale = new Vector3(1, 1, 1);
+                            }
+                            else if (_selectedExploderType == ExploderType.Nuke)
+                            {
+                                newEnemy.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+                            }
                         }
                     }
                 }
