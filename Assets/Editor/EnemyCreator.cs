@@ -6,9 +6,9 @@ using UnityEngine;
         private GameObject _meleeEnemy, _archerEnemy, _exploderEnemy;
         //private SpawnManagerScriptableObject _enemyAttributes;
 
-        private string[] _spawnOptions = { "Spawn in Front of Camera", "Spawn at Specific Location", "Spawn Anywhere" };
+        private string[] _spawnOptions = { "Spawn in Front of Camera", "Spawn at Specific Location", "Spawn Anywhere", "Spawn on Selected GameObject" };
         private int _selectedSpawnOptionIndex; 
-        private bool _spawnOnCamera, _spawnAtSpecificLocation, _spawnAnywhere;
+        private bool _spawnOnCamera, _spawnAtSpecificLocation, _spawnAnywhere, _spawnOnSelectedGameObject;
         private Vector3 _spawnLocation;
         private int _amountToSpawn = 1;
         private int _enemyHP = 100;
@@ -38,7 +38,7 @@ using UnityEngine;
         private ArcherWeaponType _selectedArcherWeapon = ArcherWeaponType.Shortbow;
         private ExploderType _selectedExploderType = ExploderType.Small;
 
-        private float _attackSpeed, _attackRange, _attackDamage, _movementSpeed;
+        private float _attackSpeed, _attackRange, _aggroRange, _attackDamage, _movementSpeed;
 
         /*private void OnEnable()
         {
@@ -163,7 +163,10 @@ using UnityEngine;
             GUILayout.Label("Enter Attack Speed", EditorStyles.boldLabel);
             _attackSpeed = EditorGUILayout.FloatField("Attack Speed:", _attackSpeed);
 
-            // Allows user to enter the attack range attribute for the enemy
+            GUILayout.Label("Enter Aggro Range", EditorStyles.boldLabel);
+            _aggroRange = EditorGUILayout.FloatField("Attack Range:", _aggroRange);
+            
+            // Allows user to enter the aggro range attribute for the enemy
             GUILayout.Label("Enter Attack Range", EditorStyles.boldLabel);
             _attackRange = EditorGUILayout.FloatField("Attack Range:", _attackRange);
 
@@ -224,6 +227,20 @@ using UnityEngine;
                     _spawnLocation = new Vector3(Random.Range(0, 100), Random.Range(0, 100), Random.Range(0, 100));
                     // Handle spawning anywhere
                     break;
+                
+                case 3:
+                    if (Selection.activeGameObject != null)
+                    {
+                        _spawnOnSelectedGameObject = true;
+                        _spawnLocation = Selection.activeGameObject.transform.position;
+                    }
+                    else
+                    {
+                        _spawnOnSelectedGameObject = false;
+                        GUILayout.Label("");
+                        GUILayout.Label("WARNING: No GameObject selected to spawn on. Please select a GameObject to spawn on.");
+                    }
+                    break;
             }
             
             GUILayout.Label("");
@@ -238,6 +255,11 @@ using UnityEngine;
             if (GUILayout.Button("Create Enemy"))
             {
                 GameObject objectToInstantiate;
+
+                if (_selectedSpawnOptionIndex == 3 && !_spawnOnSelectedGameObject)
+                {
+                    return;
+                }
                 
                 if (_selectedType == EnemyType.Melee && _meleeEnemy != null)
                 {
@@ -271,6 +293,7 @@ using UnityEngine;
                     {
                         //enemyScript.enemyAttributes = _enemyAttributes;
                         enemyScript.attackSpeed = _attackSpeed;
+                        enemyScript.aggroRange = _aggroRange;
                         enemyScript.attackRange = _attackRange;
                         enemyScript.attackDamage = _attackDamage;
                         enemyScript.movementSpeed = _movementSpeed;
