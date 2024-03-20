@@ -1,4 +1,3 @@
-/*
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -41,7 +40,7 @@ public class EnemyScript : MonoBehaviour
         {
             Vector3 playerVector = _player.transform.position;
             
-            Rigidbody.MovePosition(playerVector);
+            //Rigidbody.MovePosition(playerVector);
             
             
             
@@ -65,4 +64,3 @@ public class EnemyScript : MonoBehaviour
         
     }
 }
-*/
