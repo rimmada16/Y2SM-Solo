@@ -24,7 +24,7 @@ public class GroundTypeChecker : MonoBehaviour
             if (hit.collider.gameObject.layer == 0)
             { 
                 playerMovement.playerMovementSpeed = _defaultMovementSpeed;
-                Debug.Log("On Ground");
+                //Debug.Log("On Ground");
                 
             }
             //Ice

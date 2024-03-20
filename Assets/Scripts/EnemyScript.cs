@@ -36,7 +36,7 @@ public class EnemyScript : MonoBehaviour
             Debug.Log(movementSpeed);
         }
         
-        if (Vector3.Distance(transform.position, _player.transform.position) < aggroRange && !inAttackRange)
+        /*if (Vector3.Distance(transform.position, _player.transform.position) < aggroRange && !inAttackRange)
         {
             Vector3 playerVector = _player.transform.position;
             
@@ -47,7 +47,7 @@ public class EnemyScript : MonoBehaviour
             // Move towards player
             transform.position = Vector3.MoveTowards(transform.position, _player.transform.position, movementSpeed * Time.deltaTime);
             inAttackRange = false;
-        }
+        }*/
         
         if (Vector3.Distance(transform.position, _player.transform.position) < attackRange)
         {

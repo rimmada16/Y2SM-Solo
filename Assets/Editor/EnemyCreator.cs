@@ -46,10 +46,13 @@ using UnityEngine;
         }*/
 
         [MenuItem("Enemy Creator/Enemy Creator Window")]
-        public static void ShowExample()
+        public static void ShowWindow()
         {
             EnemyCreator wnd = GetWindow<EnemyCreator>();
             wnd.titleContent = new GUIContent("Enemy Creator Window");
+            
+            // Ensure all content is visible
+            wnd.minSize = new Vector2(400, 800);
         }
         
         private void OnGUI()
@@ -64,16 +67,19 @@ using UnityEngine;
             if (GUILayout.Button("Melee"))
             {
                 _selectedType = EnemyType.Melee;
+                _aggroRange = 10;
             }
 
             if (GUILayout.Button("Archer"))
             {
                 _selectedType = EnemyType.Archer;
+                _aggroRange = 20;
             }
 
             if (GUILayout.Button("Exploder"))
             {
                 _selectedType = EnemyType.Exploder;
+                _aggroRange = 10;
             }
 
             //
@@ -97,16 +103,31 @@ using UnityEngine;
                     if (GUILayout.Button("Shortsword"))
                     {
                         _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
+                        _attackDamage = 10;
+                        _attackSpeed = 1;
+                        _attackRange = 1;
+                        _movementSpeed = 5;
+                        _enemyHP = 30;
                     }
 
                     if (GUILayout.Button("Longsword"))
                     {
                         _selectedMeleeWeapon = MeleeWeaponType.Longsword;
+                        _attackDamage = 15;
+                        _attackSpeed = 0.75f;
+                        _attackRange = 3;
+                        _movementSpeed = 3;
+                        _enemyHP = 60;
                     }
 
                     if (GUILayout.Button("Greatsword"))
                     {
                         _selectedMeleeWeapon = MeleeWeaponType.Greatsword;
+                        _attackDamage = 50;
+                        _attackSpeed = 0.5f;
+                        _attackRange = 5;
+                        _movementSpeed = 1.5f;
+                        _enemyHP = 100;
                     }
 
                     GUILayout.Label("Selected Melee weapon Type: " + _selectedMeleeWeapon, EditorStyles.boldLabel);
@@ -119,16 +140,31 @@ using UnityEngine;
                     if (GUILayout.Button("Shortbow"))
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Shortbow;
+                        _attackDamage = 10;
+                        _attackSpeed = 1;
+                        _attackRange = 9;
+                        _movementSpeed = 5;
+                        _enemyHP = 20;
                     }
 
                     if (GUILayout.Button("Longbow"))
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Longbow;
+                        _attackDamage = 15;
+                        _attackSpeed = 0.75f;
+                        _attackRange = 9;
+                        _movementSpeed = 3;
+                        _enemyHP = 50;
                     }
 
                     if (GUILayout.Button("Greatbow"))
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Greatbow;
+                        _attackDamage = 50;
+                        _attackSpeed = 0.5f;
+                        _attackRange = 9;
+                        _movementSpeed = 1.5f;
+                        _enemyHP = 75;
                     }
 
                     GUILayout.Label("Selected Archer weapon Type: " + _selectedArcherWeapon, EditorStyles.boldLabel);
@@ -141,16 +177,31 @@ using UnityEngine;
                     if (GUILayout.Button("Small"))
                     {
                         _selectedExploderType = ExploderType.Small;
+                        _attackDamage = 25;
+                        _attackSpeed = 1;
+                        _attackRange = 1;
+                        _movementSpeed = 3;
+                        _enemyHP = 50;
                     }
 
                     if (GUILayout.Button("Medium"))
                     {
                         _selectedExploderType = ExploderType.Medium;
+                        _attackDamage = 50;
+                        _attackSpeed = 1;
+                        _attackRange = 2;
+                        _movementSpeed = 2;
+                        _enemyHP = 100;
                     }
 
                     if (GUILayout.Button("Nuke"))
                     {
                         _selectedExploderType = ExploderType.Nuke;
+                        _attackDamage = 200;
+                        _attackSpeed = 0.5f;
+                        _attackRange = 2;
+                        _movementSpeed = 1.5f;
+                        _enemyHP = 200;
                     }
 
                     GUILayout.Label("Selected Exploder Type: " + _selectedExploderType, EditorStyles.boldLabel);
@@ -164,7 +215,7 @@ using UnityEngine;
             _attackSpeed = EditorGUILayout.FloatField("Attack Speed:", _attackSpeed);
 
             GUILayout.Label("Enter Aggro Range", EditorStyles.boldLabel);
-            _aggroRange = EditorGUILayout.FloatField("Attack Range:", _aggroRange);
+            _aggroRange = EditorGUILayout.FloatField("Aggro Range:", _aggroRange);
             
             // Allows user to enter the aggro range attribute for the enemy
             GUILayout.Label("Enter Attack Range", EditorStyles.boldLabel);
@@ -238,7 +289,8 @@ using UnityEngine;
                     {
                         _spawnOnSelectedGameObject = false;
                         GUILayout.Label("");
-                        GUILayout.Label("WARNING: No GameObject selected to spawn on. Please select a GameObject to spawn on.");
+                        GUILayout.Label("WARNING: No GameObject selected to spawn on.");
+                        GUILayout.Label("Please select a GameObject to spawn on.");
                     }
                     break;
             }
@@ -247,7 +299,7 @@ using UnityEngine;
         
             // Allows the user to enter the amount of enemies to spawn
             GUILayout.Label("Enter amount to Spawn", EditorStyles.boldLabel);
-            _amountToSpawn = EditorGUILayout.IntField("Amount to Spawn:", _amountToSpawn);
+            _amountToSpawn = EditorGUILayout.IntSlider("Amount to Spawn:", _amountToSpawn, 1, 10);
         
             GUILayout.Label("");
             
