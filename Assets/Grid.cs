@@ -127,12 +127,12 @@ public class Grid : MonoBehaviour
             return null;
         }
     }
-
     
     //Function that draws the wireframe
     private void OnDrawGizmos()
     {
-
+       
+        
         Gizmos.DrawWireCube(transform.position, new Vector3(vGridWorldSize.x, 1, vGridWorldSize.y));//Draw a wire cube with the given dimensions from the Unity inspector
 
         if (NodeArray != null)//If the grid is not empty
@@ -148,20 +148,20 @@ public class Grid : MonoBehaviour
                     Gizmos.color = Color.yellow;//Set the color of the node
                 }
 
-
-                if (FinalPath != null)//If the final path is not empty
+                // Check if any enemy final paths exist and if the current node is in any of them
+                foreach (var kvp in enemyFinalPaths)
                 {
-                    if (FinalPath.Contains(n))//If the current node is in the final path
+                    if (kvp.Value.Contains(n))//If the current node is in the final path of the enemy
                     {
                         Gizmos.color = Color.red;//Set the color of that node
+                        break; // Exit the loop if the node is found in any enemy's final path
                     }
-
                 }
-
 
                 Gizmos.DrawCube(n.NodePosition, Vector3.one * (fNodeDiameter - fDistanceBetweenNodes));//Draw the node at the position of the node.
             }
         }
+
     }
 }
 
