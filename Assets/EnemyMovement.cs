@@ -13,7 +13,7 @@ public class EnemyMovement : MonoBehaviour
     private int _currentNodeIndex = 0;
     private Grid _grid;
     private Pathfinding _pathfinding;
-    private bool funnyBool;
+    private bool _journeyStarted;
 
     private void Awake()
     {
@@ -34,38 +34,30 @@ public class EnemyMovement : MonoBehaviour
     {
         FollowPath();
         
-        if (_currentNodeIndex == 0 && !funnyBool)
+        
+        // So that the enemy starts on a path when the game starts
+        if (_currentNodeIndex == 0 && !_journeyStarted)
         {
             ChooseNewTarget();
-            funnyBool = true;
+            _journeyStarted = true;
         }
     }
 
     private void FollowPath()
     {
-       // funnyBool = true;
         List<Node> finalPath = _grid.GetFinalPath(gameObject);
-        
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Debug.Log("finalpath " + finalPath.Count);
-        }
-        
+
         if (finalPath == null || finalPath.Count == 0)
         {
             return; 
         }
         
-        
-
         // Move towards the current node
         transform.position = Vector3.MoveTowards(transform.position, finalPath[_currentNodeIndex].NodePosition, movementSpeed * Time.deltaTime);
 
         // Check if the enemy's position matches the position of the current node
         if (Vector3.Distance(transform.position, finalPath[_currentNodeIndex].NodePosition) < .1f)
         {
-            //Debug.LogWarning("Reached node position: " + finalPath[_currentNodeIndex].NodePosition);
-
             // Increment currentNodeIndex
             _currentNodeIndex++;
 
@@ -78,9 +70,6 @@ public class EnemyMovement : MonoBehaviour
                 ChooseNewTarget();
             }
         }
-
-        // Ensure the y-coordinate remains at 1 unit
-        // transform.position = new Vector3(transform.position.x, 1f, transform.position.z);
     }
 
     private void ChooseNewTarget()
