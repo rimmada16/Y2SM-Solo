@@ -13,6 +13,7 @@ public class Grid : MonoBehaviour
 
     Node[,] NodeArray;
     public List<Node> FinalPath;
+    private Dictionary<GameObject, List<Node>> enemyFinalPaths = new Dictionary<GameObject, List<Node>>();
 
 
     public float fNodeDiameter;
@@ -27,6 +28,12 @@ public class Grid : MonoBehaviour
         CreateGrid();
     }
 
+    public void SetEnemyFinalPath(GameObject enemy, List<Node> finalPath)
+    {
+        enemyFinalPaths[enemy] = finalPath;
+    }
+    
+    
     void CreateGrid()
     {
         NodeArray = new Node[iGridSizeX, iGridSizeY];
@@ -108,9 +115,17 @@ public class Grid : MonoBehaviour
         return NodeArray[ix, iy];
     }
     
-    public List<Node> GetFinalPath()
+    public List<Node> GetFinalPath(GameObject enemy)
     {
-        return FinalPath;
+        if (enemyFinalPaths.ContainsKey(enemy))
+        {
+            return enemyFinalPaths[enemy];
+        }
+        else
+        {
+            Debug.LogWarning("No final path found for the specified enemy.");
+            return null;
+        }
     }
 
     

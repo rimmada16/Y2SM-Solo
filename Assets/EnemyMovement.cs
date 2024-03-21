@@ -44,7 +44,7 @@ public class EnemyMovement : MonoBehaviour
     private void FollowPath()
     {
        // funnyBool = true;
-        List<Node> finalPath = _grid.GetFinalPath();
+        List<Node> finalPath = _grid.GetFinalPath(gameObject);
         
         if (Input.GetKeyDown(KeyCode.P))
         {

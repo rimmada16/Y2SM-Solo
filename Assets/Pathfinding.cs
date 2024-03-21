@@ -96,6 +96,8 @@ public class Pathfinding : MonoBehaviour {
         List<Node> finalPath = new List<Node>();
         Node currentNode = aEndNode;
 
+        _gridReference.SetEnemyFinalPath(gameObject, finalPath);
+        
         while(currentNode != aStartingNode)//While loop to work through each node going through the parents to the beginning of the path
         {
             finalPath.Add(currentNode);
