@@ -15,7 +15,7 @@ public class Grid : MonoBehaviour
     public List<Node> FinalPath;
 
 
-    float fNodeDiameter;
+    public float fNodeDiameter;
     int iGridSizeX, iGridSizeY;
 
 

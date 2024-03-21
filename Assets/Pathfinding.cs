@@ -27,11 +27,15 @@ public class Pathfinding : MonoBehaviour {
     {
         if (_player != null)
         {
-            targetPosition = _player.transform;  
+            //targetPosition = _player.transform;  
         }
-        FindPath(startPosition.position, targetPosition.position);
     }
 
+    public void RecalculatePath()
+    {
+        FindPath(startPosition.position, targetPosition.position);
+    }
+    
     void FindPath(Vector3 aStartPos, Vector3 aTargetPos)
     {
         Node startNode = _gridReference.NodeFromWorldPoint(aStartPos);
