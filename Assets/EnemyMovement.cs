@@ -11,47 +11,56 @@ public class EnemyMovement : MonoBehaviour
 {
     public float movementSpeed = 5f; // Adjust the speed as needed
     private int _currentNodeIndex = 0;
-    private Grid _grid;
     private Pathfinding _pathfinding;
-    private bool _journeyStarted;
+    private bool _initialPathCalculated;
+    private bool _canFollowPath = true;
+
+
+
 
     private void Awake()
     {
         _pathfinding = GetComponent<Pathfinding>();
-        _grid = FindObjectOfType<Grid>(); // Find the Grid script in the scene
 
         // Set the initial y-coordinate of the position to 1
         transform.position = new Vector3(transform.position.x, 1f, transform.position.z);
         
     }
 
-    private void Start()
-    {
-        _pathfinding.RecalculatePath();
-    }
-    
     private void Update()
     {
-        FollowPath();
-        
-        
-        // So that the enemy starts on a path when the game starts
-        if (_currentNodeIndex == 0 && !_journeyStarted)
+        if (_canFollowPath)
         {
-            ChooseNewTarget();
-            _journeyStarted = true;
+            FollowPath();
+        }
+
+        // So that the enemy starts on a path when the game starts
+        if (!_initialPathCalculated)
+        {
+            _pathfinding.ChooseNewTarget();
+            _initialPathCalculated = true;
         }
     }
 
     private void FollowPath()
     {
-        List<Node> finalPath = _grid.GetFinalPath(gameObject);
+        List<Node> finalPath = _pathfinding.GetFinalPath(gameObject);
 
         if (finalPath == null || finalPath.Count == 0)
         {
-            return; 
+            // Reset _currentNodeIndex and return
+            _currentNodeIndex = 0;
+            return;
         }
-        
+
+        // Ensure _currentNodeIndex is within the valid range of indices
+        if (_currentNodeIndex < 0 || _currentNodeIndex >= finalPath.Count)
+        {
+            // Reset _currentNodeIndex and return
+            _currentNodeIndex = 0;
+            return;
+        }
+    
         // Move towards the current node
         transform.position = Vector3.MoveTowards(transform.position, finalPath[_currentNodeIndex].NodePosition, movementSpeed * Time.deltaTime);
 
@@ -62,24 +71,28 @@ public class EnemyMovement : MonoBehaviour
             _currentNodeIndex++;
 
             // Check if reached the end of the path
-            if (_currentNodeIndex >= finalPath.Count -1)
+            if (_currentNodeIndex >= finalPath.Count)
             {
-                Debug.Log("Reached the target!");
-                // Handle reaching the target here
+                Debug.Log("Reached the end of the path!");
+            
+                // Reset _currentNodeIndex
+                _currentNodeIndex = 0;
+            
+                // Find a new target and make the enemy wait before following the path
 
-                ChooseNewTarget();
+                if (!_pathfinding.isFollowingPlayer)
+                {
+                    _pathfinding.ChooseNewTarget();
+                }
+                _canFollowPath = false;
+                StartCoroutine(WaitBeforeFollowingPath());
             }
         }
     }
-
-    private void ChooseNewTarget()
+    
+    private IEnumerator WaitBeforeFollowingPath()
     {
-        var gridX = (_grid.vGridWorldSize.x / _grid.fNodeDiameter) / 2;
-        var gridY = (_grid.vGridWorldSize.y / _grid.fNodeDiameter) / 2;
-        
-        _pathfinding.targetPosition.position = new Vector3(Random.Range(-gridX,gridX), 0,
-            Random.Range(-gridY,gridY));
-        _currentNodeIndex = 0;
-        _pathfinding.RecalculatePath();
+        yield return new WaitForSeconds(1f);
+        _canFollowPath = true;
     }
 }

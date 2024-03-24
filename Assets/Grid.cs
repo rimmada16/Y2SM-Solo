@@ -13,12 +13,12 @@ public class Grid : MonoBehaviour
 
     Node[,] NodeArray;
     public List<Node> FinalPath;
-    private Dictionary<GameObject, List<Node>> enemyFinalPaths = new Dictionary<GameObject, List<Node>>();
+    
 
 
     public float fNodeDiameter;
     int iGridSizeX, iGridSizeY;
-
+    public Dictionary<GameObject, List<Node>> enemyFinalPaths = new Dictionary<GameObject, List<Node>>();
 
     private void Start()
     {
@@ -115,18 +115,7 @@ public class Grid : MonoBehaviour
         return NodeArray[ix, iy];
     }
     
-    public List<Node> GetFinalPath(GameObject enemy)
-    {
-        if (enemyFinalPaths.ContainsKey(enemy))
-        {
-            return enemyFinalPaths[enemy];
-        }
-        else
-        {
-            Debug.LogWarning("No final path found for the specified enemy.");
-            return null;
-        }
-    }
+    
     
     //Function that draws the wireframe
     private void OnDrawGizmos()
