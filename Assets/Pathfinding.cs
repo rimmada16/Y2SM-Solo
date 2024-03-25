@@ -8,23 +8,61 @@ using Random = UnityEngine.Random;
 public class Pathfinding : MonoBehaviour {
 
     private Grid _gridReference;
+    private GameObject _player;
+    public enum SelectionOption
+    {
+        RoamBounds,
+        FollowWaypoints
+    }
+    [Header("Agent Type")]
+    public SelectionOption selectionOption = SelectionOption.RoamBounds;
+    
+    [Space(10)]
+    
+    [Header("Positions")]
     public Transform startPosition;
     public Transform targetPosition;
-    private GameObject _player;
+    
+    [Space(10)]
+    
+    [Header("Agent Behaviour")]
     public bool isFollowingPlayer;
-    private bool isAttacking = false;
+    
+    [Space(10)]
+    
+    [Header("Waypoints")]
+    public bool isTargetingWaypoints;
+    public bool isTargetingPointOne = true;
+    public bool isTargetingPointTwo;
+    [SerializeField] private Transform waypointOne;
+    [SerializeField] private Transform waypointTwo;
+    
+    [Space(10)]
+    
+    [SerializeField] private Collider[] results;
+    
+    private bool _isAttacking = false;
     private float attackRange = 2f;
     private float aggroRange = 2.5f;
-    public bool cock;
 
     private void Awake()
     {
         _player = GameObject.FindWithTag("Player");
         _gridReference = FindObjectOfType<Grid>();
+        results = new Collider[1];
     }
 
     private void Start()
     {
+        if (selectionOption == SelectionOption.FollowWaypoints)
+        {
+            isTargetingWaypoints = true;
+        }
+        else
+        {
+            isTargetingWaypoints = false;
+        }
+        
         startPosition = transform;
     }
 
@@ -140,7 +178,7 @@ public class Pathfinding : MonoBehaviour {
         var gridY = (_gridReference.vGridWorldSize.y / _gridReference.fNodeDiameter) / 2;
         
         targetPosition.position = new Vector3(Random.Range(-gridX,gridX), 0,
-            Random.Range(-gridY,gridY));
+                                            Random.Range(-gridY,gridY));
         RecalculatePath();
     }
 
@@ -151,23 +189,19 @@ public class Pathfinding : MonoBehaviour {
         float maxDistance = 4f;
 
         LayerMask playerLayer = LayerMask.GetMask("Player");
-
-        // Calculate the direction from the agent to the player
-        Vector3 directionToPlayer = (_player.transform.position - transform.position).normalized;
+        
         float distanceToPlayer = Vector3.Distance(transform.position, _player.transform.position);
-        
-        Vector3 origin = transform.position;
-        Vector3 direction = transform.forward;
-        
-        RaycastHit hit;
-        
-        Collider[] colliders = Physics.OverlapSphere(transform.position, sphereCastRadius, playerLayer);
+
+        Array.Clear(results, 0, results.Length);
+        int size = Physics.OverlapSphereNonAlloc(transform.position, sphereCastRadius, results, playerLayer);
 
         // Check if any colliders were found
-        if (colliders != null && colliders.Length > 0)
+        if (results != null && results.Length > 0)
         {
-            foreach (Collider collider1 in colliders)
+            for (int i = 0; i < size; i++)
             {
+                Collider collider1 = results[i];
+                
                 //Debug.Log("Hit something: " + collider.name);
                 if (collider1.gameObject.CompareTag("Player"))
                 {
@@ -181,24 +215,23 @@ public class Pathfinding : MonoBehaviour {
                     isFollowingPlayer = false;
                 }
 
-                if (distanceToPlayer <= 2f)
+                if (distanceToPlayer <= 2f && !_isAttacking)
                 {
                     // Add is attacking to check, gotta be false at start
                     
                     StopMoving();
-                    // Start attack coroutine which starts an anim
-                    // Co makes above bool true at start and false at end
+                    StartCoroutine(Attack());
                 }
 
                 if (distanceToPlayer > 2.1f && isFollowingPlayer)
                 {
                     targetPosition.position = _player.transform.position;
-                    //StartCoroutine(WaitToCalculatePath());
+                    StartCoroutine(WaitToCalculatePath());
                     
                     
                     // EXPENSIVE VERY VERY EXPENSIVE
                     
-                    RecalculatePath();
+                    //RecalculatePath();
                 }
             }
         }
@@ -210,39 +243,49 @@ public class Pathfinding : MonoBehaviour {
         
         IEnumerator WaitToCalculatePath()
         {
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(.1f);
             RecalculatePath();
-        } 
-        
-        
-        
-        /*if (Physics.SphereCast(origin, 5f, direction, out hit, maxDistance, 9))
-        {
-            isFollowingPlayer = true;
-            Debug.Log("Supposedly hit the player!");
-            targetPosition.position = _player.transform.position;
-            RecalculatePath();
-            Debug.DrawLine(origin, hit.point, Color.red);
         }
-        else
-        {
-            isFollowingPlayer = false;
-        }
-
-        if (distanceToPlayer <= 1f)
-        {
-            StopMoving();
-        }
-
-        if (distanceToPlayer > 1f && isFollowingPlayer)
-        {
-            targetPosition.position = _player.transform.position;
-            RecalculatePath();
-        }*/
     }
 
+    private IEnumerator Attack()
+    {
+        // May make this in a diff class and use an event to trigger it
+        
+        _isAttacking = true;
+        
+        
+        // Needs to check the enemy type and weapon and play the correct animation accordingly
+        
+        // Play animation
+        // Wait for duration of animation - does not need to be exact
+        _isAttacking = false;
+        
+        yield return null;
+    }
 
+    public void WaypointFollower()
+    {
+        if (waypointOne == null || waypointTwo == null)
+        {
+            Debug.LogWarning("Waypoints not set!");
+            return;
+        }
 
+        if (isTargetingPointOne)
+        {
+            targetPosition.position = waypointOne.transform.position;
+            Debug.Log("Targeting waypoint one: " + targetPosition.position);
+            RecalculatePath();
+        }
+        else if (isTargetingPointTwo)
+        {
+            targetPosition.position = waypointTwo.transform.position;
+            Debug.Log("Targeting waypoint two: " + targetPosition.position);
+            RecalculatePath();
+        }
+    }
+    
     public void StopMoving()
     {
         // Stop any ongoing movement or pathfinding

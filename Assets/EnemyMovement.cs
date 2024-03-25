@@ -35,9 +35,15 @@ public class EnemyMovement : MonoBehaviour
         }
 
         // So that the enemy starts on a path when the game starts
-        if (!_initialPathCalculated)
+        if (!_initialPathCalculated && !_pathfinding.isTargetingWaypoints)
         {
             _pathfinding.ChooseNewTarget();
+            _initialPathCalculated = true;
+        }
+        // If waypoints are being targeted on start travel to the first waypoint
+        else if (!_initialPathCalculated && _pathfinding.isTargetingWaypoints)
+        {
+            _pathfinding.WaypointFollower();
             _initialPathCalculated = true;
         }
     }
@@ -80,10 +86,26 @@ public class EnemyMovement : MonoBehaviour
             
                 // Find a new target and make the enemy wait before following the path
 
-                if (!_pathfinding.isFollowingPlayer)
+                if (_pathfinding.isTargetingWaypoints)
+                {
+                    if (_pathfinding.isTargetingPointOne)
+                    {
+                        _pathfinding.isTargetingPointOne = false;
+                        _pathfinding.isTargetingPointTwo = true; // Switch to targeting second waypoint
+                    }
+                    else if (_pathfinding.isTargetingPointTwo)
+                    {
+                        _pathfinding.isTargetingPointOne = true; // Switch to targeting first waypoint
+                        _pathfinding.isTargetingPointTwo = false;
+                    }
+                    _pathfinding.WaypointFollower(); // Update target position based on new waypoint
+                }
+
+                else
                 {
                     _pathfinding.ChooseNewTarget();
                 }
+                
                 _canFollowPath = false;
                 StartCoroutine(WaitBeforeFollowingPath());
             }
