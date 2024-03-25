@@ -34,9 +34,10 @@ public class Pathfinding : MonoBehaviour {
     public bool isTargetingWaypoints;
     public bool isTargetingPointOne = true;
     public bool isTargetingPointTwo;
-    [SerializeField] private Transform waypointOne;
-    [SerializeField] private Transform waypointTwo;
-    
+    //[SerializeField] private Transform waypointOne;
+    //[SerializeField] private Transform waypointTwo;
+    [SerializeField] private List<Transform> waypointsList;
+
     [Space(10)]
     
     [SerializeField] private Collider[] results;
@@ -266,21 +267,24 @@ public class Pathfinding : MonoBehaviour {
 
     public void WaypointFollower()
     {
-        if (waypointOne == null || waypointTwo == null)
+        foreach (var transform1 in waypointsList)
         {
-            Debug.LogWarning("Waypoints not set!");
-            return;
+            if (transform1 == null)
+            {
+                Debug.LogWarning("Waypoints not set!");
+                return;
+            }
         }
 
         if (isTargetingPointOne)
         {
-            targetPosition.position = waypointOne.transform.position;
+            targetPosition.position = waypointsList[0].transform.position;
             Debug.Log("Targeting waypoint one: " + targetPosition.position);
             RecalculatePath();
         }
         else if (isTargetingPointTwo)
         {
-            targetPosition.position = waypointTwo.transform.position;
+            targetPosition.position = waypointsList[1].transform.position;
             Debug.Log("Targeting waypoint two: " + targetPosition.position);
             RecalculatePath();
         }

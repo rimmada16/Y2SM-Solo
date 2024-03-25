@@ -717,8 +717,7 @@ MonoBehaviour:
   isTargetingWaypoints: 0
   isTargetingPointOne: 1
   isTargetingPointTwo: 0
-  waypointOne: {fileID: 0}
-  waypointTwo: {fileID: 0}
+  waypointsList: []
   results: []
 --- !u!114 &71617047
 MonoBehaviour:
@@ -1511,8 +1510,7 @@ MonoBehaviour:
   isTargetingWaypoints: 0
   isTargetingPointOne: 1
   isTargetingPointTwo: 0
-  waypointOne: {fileID: 0}
-  waypointTwo: {fileID: 0}
+  waypointsList: []
   results: []
 --- !u!114 &214793718
 MonoBehaviour:
@@ -2175,8 +2173,7 @@ MonoBehaviour:
   isTargetingWaypoints: 0
   isTargetingPointOne: 1
   isTargetingPointTwo: 0
-  waypointOne: {fileID: 0}
-  waypointTwo: {fileID: 0}
+  waypointsList: []
   results: []
 --- !u!114 &358737440
 MonoBehaviour:
@@ -3856,8 +3853,7 @@ MonoBehaviour:
   isTargetingWaypoints: 0
   isTargetingPointOne: 1
   isTargetingPointTwo: 0
-  waypointOne: {fileID: 0}
-  waypointTwo: {fileID: 0}
+  waypointsList: []
   results: []
 --- !u!114 &682137899
 MonoBehaviour:
@@ -8040,8 +8036,7 @@ MonoBehaviour:
   isTargetingWaypoints: 0
   isTargetingPointOne: 1
   isTargetingPointTwo: 0
-  waypointOne: {fileID: 0}
-  waypointTwo: {fileID: 0}
+  waypointsList: []
   results: []
 --- !u!114 &1530657515
 MonoBehaviour:
@@ -8800,8 +8795,7 @@ MonoBehaviour:
   isTargetingWaypoints: 0
   isTargetingPointOne: 1
   isTargetingPointTwo: 0
-  waypointOne: {fileID: 0}
-  waypointTwo: {fileID: 0}
+  waypointsList: []
   results: []
 --- !u!114 &1670169131
 MonoBehaviour:
@@ -9434,8 +9428,7 @@ MonoBehaviour:
   isTargetingWaypoints: 0
   isTargetingPointOne: 1
   isTargetingPointTwo: 0
-  waypointOne: {fileID: 0}
-  waypointTwo: {fileID: 0}
+  waypointsList: []
   results: []
 --- !u!114 &1733785367
 MonoBehaviour:
@@ -9642,8 +9635,9 @@ MonoBehaviour:
   isTargetingWaypoints: 0
   isTargetingPointOne: 1
   isTargetingPointTwo: 0
-  waypointOne: {fileID: 1144700433}
-  waypointTwo: {fileID: 787638748}
+  waypointsList:
+  - {fileID: 1144700433}
+  - {fileID: 787638748}
   results: []
 --- !u!114 &1749791286
 MonoBehaviour:
