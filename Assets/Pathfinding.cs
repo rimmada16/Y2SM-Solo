@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
@@ -32,10 +33,6 @@ public class Pathfinding : MonoBehaviour {
     
     [Header("Waypoints")]
     public bool isTargetingWaypoints;
-    public bool isTargetingPointOne = true;
-    public bool isTargetingPointTwo;
-    //[SerializeField] private Transform waypointOne;
-    //[SerializeField] private Transform waypointTwo;
     [SerializeField] private List<Transform> waypointsList;
 
     [Space(10)]
@@ -43,18 +40,28 @@ public class Pathfinding : MonoBehaviour {
     [SerializeField] private Collider[] results;
     
     private bool _isAttacking = false;
+    private bool waitToCalculatePath = false;
     private float attackRange = 2f;
     private float aggroRange = 2.5f;
+    private int currentWaypointIndex = 0;
+    private bool isMovingForward;
+    bool initialPathCalculated = false;
+    Vector3 lastPlayerPosition;
+    private bool firstTime;
+    public bool canPathfind = true;
+    private int currentNodeIndex;
+    private Animation anim;
 
     private void Awake()
     {
         _player = GameObject.FindWithTag("Player");
         _gridReference = FindObjectOfType<Grid>();
-        results = new Collider[1];
+        //results = new Collider[1];
     }
 
     private void Start()
     {
+        anim = GetComponentInChildren<Animation>();
         if (selectionOption == SelectionOption.FollowWaypoints)
         {
             isTargetingWaypoints = true;
@@ -69,9 +76,90 @@ public class Pathfinding : MonoBehaviour {
 
     private void Update()
     {
-        DoSphereCast();
+        //DoSphereCast();
+
+        CheckToFollowPlayer();
+        Rotation();
     }
 
+    private void Rotation()
+    {
+        if (!isFollowingPlayer)
+        {
+            Vector3 lookAtPosition =
+                new Vector3(targetPosition.position.x, transform.position.y, targetPosition.position.z);
+            transform.LookAt(lookAtPosition);
+        }
+        else if (isFollowingPlayer)
+        {
+            // Look at the player if following
+            Vector3 lookAtPosition =
+                new Vector3(_player.transform.position.x, transform.position.y, _player.transform.position.z);
+            transform.LookAt(lookAtPosition);
+        }
+    }
+
+    private void CheckToFollowPlayer()
+    {
+        if (Vector3.Distance(transform.position, _player.transform.position) <= 5)
+        {
+            isFollowingPlayer = true;
+            if (initialPathCalculated == false)
+            {
+                isFollowingPlayer = true;
+                targetPosition.position = _player.transform.position;
+                lastPlayerPosition = _player.transform.position;
+                RecalculatePath();
+                initialPathCalculated = true;
+            }
+            else if (initialPathCalculated)
+            {
+                if (Vector3.Distance(lastPlayerPosition, _player.transform.position) >= 2)
+                {
+                    canPathfind = true;
+                    lastPlayerPosition = _player.transform.position;
+                    targetPosition.position = lastPlayerPosition;
+                    RecalculatePath();
+                }
+                else if (Vector3.Distance(lastPlayerPosition, transform.position) <= 2)
+                {
+                    Debug.Log("In attack range");
+                    canPathfind = false;
+                    if (!_isAttacking)
+                    {
+                        StartCoroutine(Attack());
+                    }
+
+                    //StopMoving();
+                    startPosition = transform;
+                }
+            }
+        }
+        else
+        {
+            if (isFollowingPlayer && !isTargetingWaypoints)
+            {
+                ChooseNewTarget();
+            }
+
+            else if (isFollowingPlayer && isTargetingWaypoints)
+            {
+                WaypointFollower();
+            }
+
+            isFollowingPlayer = false;
+        }
+    }
+
+    private IEnumerator Attack()
+    {
+        _isAttacking = true;
+        anim.Play();
+        yield return new WaitForSeconds(1f);
+        _isAttacking = false;
+        yield return null;
+    }
+    
     private void RecalculatePath()
     {
         FindPath(startPosition.position, targetPosition.position);
@@ -182,9 +270,69 @@ public class Pathfinding : MonoBehaviour {
                                             Random.Range(-gridY,gridY));
         RecalculatePath();
     }
+    
+    public void WaypointFollower()
+    {
+        if (waypointsList.Count == 0)
+        {
+            Debug.LogWarning("Waypoints not set!");
+            return;
+        }
+
+        // Set the target position based on the current waypoint index
+        targetPosition.position = waypointsList[currentWaypointIndex].transform.position;
+        RecalculatePath();
+
+        // Move to the next waypoint or the previous one if reached the end
+        if (isMovingForward)
+        {
+            // Increment the current waypoint index
+            currentWaypointIndex++;
+
+            // If reached the last waypoint, start moving backward
+            if (currentWaypointIndex >= waypointsList.Count)
+            {
+                currentWaypointIndex = waypointsList.Count - 2; // Set index to second-to-last waypoint
+                isMovingForward = false;
+            }
+        }
+        else
+        {
+            // Decrement the current waypoint index
+            currentWaypointIndex--;
+
+            // If reached the first waypoint, start moving forward
+            if (currentWaypointIndex < 0)
+            {
+                currentWaypointIndex = 1; // Set index to second waypoint
+                isMovingForward = true;
+            }
+        }
+    }
 
     
-    private void DoSphereCast()
+    private void OnDrawGizmos()
+    {
+        // Draw a wire sphere representing the sphere cast
+        Gizmos.color = Color.blue;
+        Gizmos.DrawWireSphere(transform.position, 5f);
+    }
+}
+
+    /*public void StopMoving()
+    {
+        canPathfind = false;
+        // Stop any ongoing movement or pathfinding
+        //targetPosition.position = transform.position;
+
+        if (firstTime == false)
+        {
+            RecalculatePath(); // Ensure that the current path is cleared
+            firstTime = true;   
+        }
+    }*/
+
+    /*private void DoSphereCast()
     {
         float sphereCastRadius = 5f;
         float maxDistance = 4f;
@@ -219,15 +367,27 @@ public class Pathfinding : MonoBehaviour {
                 if (distanceToPlayer <= 2f && !_isAttacking)
                 {
                     // Add is attacking to check, gotta be false at start
-                    
-                    StopMoving();
-                    StartCoroutine(Attack());
+
+                    if (anim != null)
+                    {
+                        _isAttacking = true;
+                        anim.Play();
+                    }
+                    else
+                    {
+                        Debug.LogError("No animation component found!");
+                    }
                 }
 
                 if (distanceToPlayer > 2.1f && isFollowingPlayer)
                 {
                     targetPosition.position = _player.transform.position;
-                    StartCoroutine(WaitToCalculatePath());
+                    if (waitToCalculatePath == false)
+                    {
+                        waitToCalculatePath = true;
+                        StartCoroutine(WaitToCalculatePath());
+                    }
+                    
                     
                     
                     // EXPENSIVE VERY VERY EXPENSIVE
@@ -244,68 +404,10 @@ public class Pathfinding : MonoBehaviour {
         
         IEnumerator WaitToCalculatePath()
         {
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(1f);
             RecalculatePath();
+            waitToCalculatePath = false;
         }
-    }
-
-    private IEnumerator Attack()
-    {
-        // May make this in a diff class and use an event to trigger it
-        
-        _isAttacking = true;
-        
-        
-        // Needs to check the enemy type and weapon and play the correct animation accordingly
-        
-        // Play animation
-        // Wait for duration of animation - does not need to be exact
-        _isAttacking = false;
-        
-        yield return null;
-    }
-
-    public void WaypointFollower()
-    {
-        foreach (var transform1 in waypointsList)
-        {
-            if (transform1 == null)
-            {
-                Debug.LogWarning("Waypoints not set!");
-                return;
-            }
-        }
-
-        if (isTargetingPointOne)
-        {
-            targetPosition.position = waypointsList[0].transform.position;
-            Debug.Log("Targeting waypoint one: " + targetPosition.position);
-            RecalculatePath();
-        }
-        else if (isTargetingPointTwo)
-        {
-            targetPosition.position = waypointsList[1].transform.position;
-            Debug.Log("Targeting waypoint two: " + targetPosition.position);
-            RecalculatePath();
-        }
-    }
-    
-    public void StopMoving()
-    {
-        // Stop any ongoing movement or pathfinding
-        targetPosition.position = transform.position;
-        RecalculatePath(); // Ensure that the current path is cleared
-    }
-    
-    private void OnDrawGizmos()
-    {
-        // Draw a wire sphere representing the sphere cast
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, 5f);
-    }
-
-
-    
-}
+    }*/
 
 

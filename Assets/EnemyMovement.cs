@@ -9,6 +9,7 @@ using Random = UnityEngine.Random;
 
 public class EnemyMovement : MonoBehaviour
 {
+
     public float movementSpeed = 5f; // Adjust the speed as needed
     private int _currentNodeIndex = 0;
     private Pathfinding _pathfinding;
@@ -29,7 +30,7 @@ public class EnemyMovement : MonoBehaviour
 
     private void Update()
     {
-        if (_canFollowPath)
+        if (_canFollowPath && _pathfinding.canPathfind)
         {
             FollowPath();
         }
@@ -86,22 +87,12 @@ public class EnemyMovement : MonoBehaviour
             
                 // Find a new target and make the enemy wait before following the path
 
-                if (_pathfinding.isTargetingWaypoints)
+                if (_pathfinding.isTargetingWaypoints && !_pathfinding.isFollowingPlayer)
                 {
-                    if (_pathfinding.isTargetingPointOne)
-                    {
-                        _pathfinding.isTargetingPointOne = false;
-                        _pathfinding.isTargetingPointTwo = true; // Switch to targeting second waypoint
-                    }
-                    else if (_pathfinding.isTargetingPointTwo)
-                    {
-                        _pathfinding.isTargetingPointOne = true; // Switch to targeting first waypoint
-                        _pathfinding.isTargetingPointTwo = false;
-                    }
-                    _pathfinding.WaypointFollower(); // Update target position based on new waypoint
+                    _pathfinding.WaypointFollower();
                 }
 
-                else
+                else if (!_pathfinding.isFollowingPlayer)
                 {
                     _pathfinding.ChooseNewTarget();
                 }
