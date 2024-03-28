@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Xml.Resolvers;
+using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -9,7 +12,9 @@ public class EnemyCreator : EditorWindow
         //private SpawnManagerScriptableObject _enemyAttributes;
 
         private string[] _spawnOptions = { "Spawn in Front of Camera", "Spawn at Specific Location", "Spawn Anywhere", "Spawn on Selected GameObject" };
-        private int _selectedSpawnOptionIndex; 
+        private string[] _agentTypes = { "Roam Bounds", "Follow Waypoints" };
+        private int _selectedSpawnOptionIndex;
+        private int _selectedAgentTypeIndex;
         private bool _spawnOnCamera, _spawnAtSpecificLocation, _spawnAnywhere, _spawnOnSelectedGameObject;
         private Vector3 _spawnLocation;
         private int _amountToSpawn = 1;
@@ -36,12 +41,24 @@ public class EnemyCreator : EditorWindow
             Small, Medium, Nuke
         }
 
+        private enum SelectionOption
+        {
+            RoamBounds, FollowWaypoints
+        }
+
+        private SelectionOption _selectedOption = SelectionOption.RoamBounds;
+        
         private EnemyType _selectedType = EnemyType.Melee;
         private MeleeWeaponType _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
         private ArcherWeaponType _selectedArcherWeapon = ArcherWeaponType.Shortbow;
         private ExploderType _selectedExploderType = ExploderType.Small;
 
         private float _attackFrequency, _attackRange, _aggroRange, _attackDamage, _movementSpeed;
+        
+        List<Transform> gameObjects = new List<Transform>();
+        Transform newGameObject;
+        Vector2 scrollPosition = Vector2.zero;
+        
 
         /*private void OnEnable()
         {
@@ -60,6 +77,8 @@ public class EnemyCreator : EditorWindow
         
         private void OnGUI()
         {
+            scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+            
             //
             // Selects the wanted enemy type
             //
@@ -187,7 +206,7 @@ public class EnemyCreator : EditorWindow
                         _selectedExploderType = ExploderType.Small;
                         _attackDamage = 25;
                         _attackFrequency = 1;
-                        _attackRange = 1;
+                        _attackRange = 1.5f;
                         _movementSpeed = 3;
                         _enemyHealth = 50;
                     }
@@ -241,7 +260,56 @@ public class EnemyCreator : EditorWindow
             GUILayout.Label("Enter the HP of the Unit", EditorStyles.boldLabel);
             _enemyHealth = EditorGUILayout.IntField("HP:", _enemyHealth);
 
-        
+
+            
+            GUILayout.Label("Select Agent Type", EditorStyles.boldLabel);
+            _selectedAgentTypeIndex = EditorGUILayout.Popup("Agent Type:", _selectedAgentTypeIndex, _agentTypes);
+
+            switch (_selectedAgentTypeIndex)
+            {
+                case 0:
+                    _selectedOption = SelectionOption.RoamBounds;
+                    break;
+                case 1:
+                    _selectedOption = SelectionOption.FollowWaypoints;
+                    break;
+            }
+
+            
+            
+            if (_selectedOption == SelectionOption.FollowWaypoints)
+            {
+                GUILayout.BeginHorizontal();
+                newGameObject = (Transform)EditorGUILayout.ObjectField(newGameObject, typeof(Transform), true);
+                if (GUILayout.Button("Add", GUILayout.Width(50)))
+                {
+                    if (newGameObject != null && !gameObjects.Contains(newGameObject))
+                    {
+                        gameObjects.Add(newGameObject);
+                        newGameObject = null;
+                    }
+                    
+                }
+                GUILayout.EndHorizontal();
+                
+                GUILayout.Label("Current Waypoints", EditorStyles.boldLabel);
+                for (int i = 0; i < gameObjects.Count; i++)
+                {
+                    GUILayout.BeginHorizontal();
+                    EditorGUILayout.ObjectField(gameObjects[i], typeof(Transform), true);
+                    if (GUILayout.Button("Remove", GUILayout.Width(60)))
+                    {
+                        gameObjects.RemoveAt(i);
+                        break; // Exit the loop to avoid modifying the list while iterating
+                    }
+                    GUILayout.EndHorizontal();
+                }
+
+                
+                
+            }
+
+
             //GUILayout.Space(10);
             GUILayout.Label("");
         
@@ -346,10 +414,17 @@ public class EnemyCreator : EditorWindow
                         pathfinding.attackFrequency = _attackFrequency;
                         pathfinding.aggroRange = _aggroRange;
                         pathfinding.attackRange = _attackRange;
+                        pathfinding.selectionOption = (Pathfinding.SelectionOption)_selectedOption;
                         enemyMovement.movementSpeed = _movementSpeed;
+
+                        if (_selectedOption == SelectionOption.FollowWaypoints)
+                        {
+                            pathfinding.waypointsList = gameObjects;
+                        }
 
                         if (_selectedType == EnemyType.Melee)
                         {
+                            pathfinding.enemyType = Pathfinding.EnemyType.Melee;
                             // Find which weapon is selected, then get the corresponding child object and set it to active
                             if (_selectedMeleeWeapon == MeleeWeaponType.Longsword)
                             {
@@ -406,44 +481,64 @@ public class EnemyCreator : EditorWindow
 
                         if (_selectedType == EnemyType.Archer)
                         {
+                            pathfinding.enemyType = Pathfinding.EnemyType.Archer;
                             // Find which weapon is selected, then get the corresponding child object and set it to active
                             if (_selectedArcherWeapon == ArcherWeaponType.Longbow)
                             {
-                                Transform childTransform = newEnemy.transform.GetChild(0);
-        
-                                // Checking if a child exists
-                                if (childTransform != null)
+                                Transform meshTransform = newEnemy.transform.Find("Mesh");
+                                if (meshTransform != null)
                                 {
-                                    // Setting the child GameObject active
-                                    childTransform.gameObject.SetActive(true);
+                                    Debug.Log("Mesh found");
+                                    Transform weaponTransform = meshTransform.Find("Longbow");
+                                    if (weaponTransform != null)
+                                    {
+                                        Debug.Log("Longbow found");
+                                        // Setting the child GameObject active
+                                        weaponTransform.gameObject.SetActive(true);
+                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
+                                        dealDamage.damage = (int)_attackDamage;
+                                    }
                                 }
                             }
                             else if (_selectedArcherWeapon == ArcherWeaponType.Greatbow)
                             {
-                                Transform childTransform = newEnemy.transform.GetChild(1);
-        
-                                // Checking if a child exists
-                                if (childTransform != null)
+                                Transform meshTransform = newEnemy.transform.Find("Mesh");
+                                if (meshTransform != null)
                                 {
-                                    // Setting the child GameObject active
-                                    childTransform.gameObject.SetActive(true);
+                                    Debug.Log("Mesh found");
+                                    Transform weaponTransform = meshTransform.Find("Greatbow");
+                                    if (weaponTransform != null)
+                                    {
+                                        Debug.Log("Greatbow found");
+                                        // Setting the child GameObject active
+                                        weaponTransform.gameObject.SetActive(true);
+                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
+                                        dealDamage.damage = (int)_attackDamage;
+                                    }
                                 }
                             }
                             else if (_selectedArcherWeapon == ArcherWeaponType.Shortbow)
                             {
-                                Transform childTransform = newEnemy.transform.GetChild(2);
-        
-                                // Checking if a child exists
-                                if (childTransform != null)
+                                Transform meshTransform = newEnemy.transform.Find("Mesh");
+                                if (meshTransform != null)
                                 {
-                                    // Setting the child GameObject active
-                                    childTransform.gameObject.SetActive(true);
+                                    Debug.Log("Mesh found");
+                                    Transform weaponTransform = meshTransform.Find("Shortbow");
+                                    if (weaponTransform != null)
+                                    {
+                                        Debug.Log("Shortbow found");
+                                        // Setting the child GameObject active
+                                        weaponTransform.gameObject.SetActive(true);
+                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
+                                        dealDamage.damage = (int)_attackDamage;
+                                    }
                                 }
                             }
                         }
 
                         if (_selectedType == EnemyType.Exploder)
                         {
+                            pathfinding.enemyType = Pathfinding.EnemyType.Exploder;
                             if (_selectedExploderType == ExploderType.Small)
                             {
                                 newEnemy.transform.localScale = new Vector3(1, .5f, 1);
@@ -460,6 +555,7 @@ public class EnemyCreator : EditorWindow
                     }
                 }
             }
+            GUILayout.EndScrollView();
         }
     }
 

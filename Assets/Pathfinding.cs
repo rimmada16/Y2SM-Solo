@@ -8,6 +8,17 @@ using Random = UnityEngine.Random;
 
 public class Pathfinding : MonoBehaviour {
 
+    // Add another enum for the enemy type
+    // Depending on type logic for attack
+    // Such as sword will run animation
+    // Bow will instantiate arrow
+    // Exploder will start explosion coroutine
+    // Like a MC Creeper - Get slightly bigger over small period
+    // Everything within explosion radius takes damage
+    // If time make it so further from explosion radius
+    // The less damage taken
+    
+    
     private Grid _gridReference;
     private GameObject _player;
     public enum SelectionOption
@@ -15,6 +26,18 @@ public class Pathfinding : MonoBehaviour {
         RoamBounds,
         FollowWaypoints
     }
+    
+    public enum EnemyType
+    {
+        Melee,
+        Archer,
+        Exploder
+    }
+   
+    [Header("Enemy Type")]
+    public EnemyType enemyType = EnemyType.Melee;
+    
+    
     [Header("Agent Type")]
     public SelectionOption selectionOption = SelectionOption.RoamBounds;
     
@@ -33,7 +56,7 @@ public class Pathfinding : MonoBehaviour {
     
     [Header("Waypoints")]
     public bool isTargetingWaypoints;
-    [SerializeField] private List<Transform> waypointsList;
+    public List<Transform> waypointsList;
 
     [Space(10)]
     
@@ -60,6 +83,9 @@ public class Pathfinding : MonoBehaviour {
 
     public bool reachedPointAfterInitialCalc;
     private bool setPos = true;
+    
+    
+    private Vector3 lastPosition;
     
     // XML WHERE!?!?!?!?
     
@@ -104,6 +130,27 @@ public class Pathfinding : MonoBehaviour {
         //         new Vector3(_targetPosition.position.x, transform.position.y, _targetPosition.position.z);
         //     transform.LookAt(lookAtPosition);
         // }
+
+        if (!isFollowingPlayer)
+        {
+            // Calculate the direction vector of movement
+            Vector3 direction = (transform.position - lastPosition).normalized;
+
+            var rotationSpeed = 5f;
+            
+            // Check if the enemy is moving (magnitude of direction is not close to zero)
+            if (direction.magnitude > 0.01f)
+            {
+                // Rotate the enemy to face the direction of movement
+                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
+            }
+
+            // Update lastPosition to the current position for the next frame
+            lastPosition = transform.position;
+        }
+        
+        
         if (isFollowingPlayer && _player != null)
         {
             // Look at the player if following
@@ -120,7 +167,7 @@ public class Pathfinding : MonoBehaviour {
         // WHAT WAS WRITTEN TODAY
         // !?!?!?!?!?!?!??!?!?!?!?!?!??!?!?!?!?!?!??!
         
-        if (Vector3.Distance(transform.position, _player.transform.position) <= 5)
+        if (Vector3.Distance(transform.position, _player.transform.position) <= aggroRange)
         {
             isFollowingPlayer = true;
             if (_initialPathCalculated == false)
@@ -133,20 +180,32 @@ public class Pathfinding : MonoBehaviour {
             }
             else if (_initialPathCalculated)
             {
-                if (Vector3.Distance(_lastPlayerPosition, _player.transform.position) >= 2)
+                if (Vector3.Distance(_lastPlayerPosition, _player.transform.position) >= attackRange)
                 {
                     canPathfind = true;
                     _lastPlayerPosition = _player.transform.position;
                     _targetPosition.position = _lastPlayerPosition;
                     RecalculatePath();
                 }
-                else if (Vector3.Distance(_lastPlayerPosition, transform.position) <= 2)
+                else if (Vector3.Distance(_lastPlayerPosition, transform.position) <= attackRange)
                 {
+                    // SHOULD CALL A METHOD IN A DIFF CLASS - LOGIC SHOULD NOT BE HERE
+                    // COROUTINE SHOULD BE MOVED AS WELL
+                    
                     Debug.Log("In attack range");
                     canPathfind = false;
-                    if (!_isAttacking)
+                    if (!_isAttacking && enemyType == EnemyType.Melee)
                     {
+                        // Coroutine for the melee attack
                         StartCoroutine(Attack());
+                    }
+                    else if (!_isAttacking && enemyType == EnemyType.Archer)
+                    {
+                        // Logic for the archer attack
+                    }
+                    else if (!_isAttacking && enemyType == EnemyType.Exploder)
+                    {
+                        // Logic for the exploder attack
                     }
 
                     //StopMoving();
@@ -172,7 +231,7 @@ public class Pathfinding : MonoBehaviour {
 
     
     
-    private void CheckToFaollowPlayer()
+    /*private void CheckToFaollowPlayer()
     {
         var distanceToPlayer = Vector3.Distance(transform.position, _player.transform.position);
     
@@ -222,7 +281,7 @@ public class Pathfinding : MonoBehaviour {
                     
                     //lastPathfindingTime = Time.time;
                     //RecalculatePath();
-                }*/
+                }#1#
                 if (distanceToPlayer <= attackRange)
                 {
                     //Debug.Log("In attack range");
@@ -256,7 +315,7 @@ public class Pathfinding : MonoBehaviour {
             
             isFollowingPlayer = false;
         }
-    }
+    }*/
 
     private IEnumerator Attack()
     {
