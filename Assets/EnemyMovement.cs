@@ -97,6 +97,11 @@ public class EnemyMovement : MonoBehaviour
                     _pathfinding.ChooseNewTarget();
                 }
                 
+                else
+                {
+                    _pathfinding.reachedPointAfterInitialCalc = true;
+                }
+                
                 _canFollowPath = false;
                 StartCoroutine(WaitBeforeFollowingPath());
             }

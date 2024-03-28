@@ -18,11 +18,11 @@ public class Pathfinding : MonoBehaviour {
     [Header("Agent Type")]
     public SelectionOption selectionOption = SelectionOption.RoamBounds;
     
-    [Space(10)]
+    //[Space(10)]
     
-    [Header("Positions")]
-    public Transform startPosition;
-    public Transform targetPosition;
+    //[Header("Positions")]
+    private Transform _startPosition;
+    private Transform _targetPosition;
     
     [Space(10)]
     
@@ -38,30 +38,43 @@ public class Pathfinding : MonoBehaviour {
     [Space(10)]
     
     [SerializeField] private Collider[] results;
-    
-    private bool _isAttacking = false;
-    private bool waitToCalculatePath = false;
-    private float attackRange = 2f;
-    private float aggroRange = 2.5f;
-    private int currentWaypointIndex = 0;
-    private bool isMovingForward;
-    bool initialPathCalculated = false;
-    Vector3 lastPlayerPosition;
-    private bool firstTime;
-    public bool canPathfind = true;
-    private int currentNodeIndex;
-    private Animation anim;
 
+    
+    // Need organising
+    private bool _isAttacking;
+    private bool _waitToCalculatePath;
+    public float attackRange = 1.5f;
+    public float aggroRange = 5f;
+    private int _currentWaypointIndex = 0;
+    private bool _isMovingForward;
+    private bool _initialPathCalculated = false;
+    private Vector3 _lastPlayerPosition;
+    private bool _firstTime;
+    public bool canPathfind = true;
+    private int _currentNodeIndex;
+    private Animation _anim;
+    private bool _justAttacked;
+    public float attackFrequency = 2f;
+    private float timeBetweenPathfinding = 0.5f; // Adjust as needed
+    private float lastPathfindingTime;
+
+    public bool reachedPointAfterInitialCalc;
+    private bool setPos = true;
+    
+    // XML WHERE!?!?!?!?
+    
+    
     private void Awake()
     {
         _player = GameObject.FindWithTag("Player");
         _gridReference = FindObjectOfType<Grid>();
+        _targetPosition = GameObject.FindWithTag("DefaultTargeting").transform;
         //results = new Collider[1];
     }
 
     private void Start()
     {
-        anim = GetComponentInChildren<Animation>();
+        _anim = GetComponentInChildren<Animation>();
         if (selectionOption == SelectionOption.FollowWaypoints)
         {
             isTargetingWaypoints = true;
@@ -71,26 +84,27 @@ public class Pathfinding : MonoBehaviour {
             isTargetingWaypoints = false;
         }
         
-        startPosition = transform;
+        _startPosition = transform;
+        
+        // Some other optimisation thing
+        //InvokeRepeating(nameof(CheckToFollowPlayer), 0f, 0.5f);
     }
 
     private void Update()
-    {
-        //DoSphereCast();
-
+    { 
         CheckToFollowPlayer();
         Rotation();
     }
 
     private void Rotation()
     {
-        if (!isFollowingPlayer)
-        {
-            Vector3 lookAtPosition =
-                new Vector3(targetPosition.position.x, transform.position.y, targetPosition.position.z);
-            transform.LookAt(lookAtPosition);
-        }
-        else if (isFollowingPlayer)
+        // if (!isFollowingPlayer)
+        // {
+        //     Vector3 lookAtPosition =
+        //         new Vector3(_targetPosition.position.x, transform.position.y, _targetPosition.position.z);
+        //     transform.LookAt(lookAtPosition);
+        // }
+        if (isFollowingPlayer && _player != null)
         {
             // Look at the player if following
             Vector3 lookAtPosition =
@@ -101,27 +115,32 @@ public class Pathfinding : MonoBehaviour {
 
     private void CheckToFollowPlayer()
     {
+        // PULLED YESTERDAYS CODE OF GIT
+        // WORKS AND IS INSANELY OPTIMISED COMPARED TO
+        // WHAT WAS WRITTEN TODAY
+        // !?!?!?!?!?!?!??!?!?!?!?!?!??!?!?!?!?!?!??!
+        
         if (Vector3.Distance(transform.position, _player.transform.position) <= 5)
         {
             isFollowingPlayer = true;
-            if (initialPathCalculated == false)
+            if (_initialPathCalculated == false)
             {
                 isFollowingPlayer = true;
-                targetPosition.position = _player.transform.position;
-                lastPlayerPosition = _player.transform.position;
+                _targetPosition.position = _player.transform.position;
+                _lastPlayerPosition = _player.transform.position;
                 RecalculatePath();
-                initialPathCalculated = true;
+                _initialPathCalculated = true;
             }
-            else if (initialPathCalculated)
+            else if (_initialPathCalculated)
             {
-                if (Vector3.Distance(lastPlayerPosition, _player.transform.position) >= 2)
+                if (Vector3.Distance(_lastPlayerPosition, _player.transform.position) >= 2)
                 {
                     canPathfind = true;
-                    lastPlayerPosition = _player.transform.position;
-                    targetPosition.position = lastPlayerPosition;
+                    _lastPlayerPosition = _player.transform.position;
+                    _targetPosition.position = _lastPlayerPosition;
                     RecalculatePath();
                 }
-                else if (Vector3.Distance(lastPlayerPosition, transform.position) <= 2)
+                else if (Vector3.Distance(_lastPlayerPosition, transform.position) <= 2)
                 {
                     Debug.Log("In attack range");
                     canPathfind = false;
@@ -131,7 +150,7 @@ public class Pathfinding : MonoBehaviour {
                     }
 
                     //StopMoving();
-                    startPosition = transform;
+                    _startPosition = transform;
                 }
             }
         }
@@ -151,18 +170,110 @@ public class Pathfinding : MonoBehaviour {
         }
     }
 
+    
+    
+    private void CheckToFaollowPlayer()
+    {
+        var distanceToPlayer = Vector3.Distance(transform.position, _player.transform.position);
+    
+        if (distanceToPlayer > aggroRange)
+        {
+            _initialPathCalculated = false;
+        }
+        
+        
+        if (distanceToPlayer <= aggroRange)
+        {
+            isFollowingPlayer = true;
+            if (_initialPathCalculated == false)
+            {
+                _targetPosition.position = _player.transform.position;
+                RecalculatePath();
+                _initialPathCalculated = true;
+            }
+            else if (_initialPathCalculated && reachedPointAfterInitialCalc)
+            {
+                if (distanceToPlayer >= 3f)
+                {
+                    if (setPos)
+                    {
+                        _targetPosition.position = _player.transform.position;
+                        RecalculatePath();
+                        setPos = false;
+                    }
+                }
+                
+                
+                
+                
+                
+                // If the player has moved further than x units, recalculate the path
+                // Settled on 3 during optimisation tests as it seemed to be the best balance
+                /*if (distanceToPlayer >= 3f)
+                {
+                    canPathfind = true;
+                    _lastPlayerPosition = _player.transform.position;
+                    _targetPosition.position = _lastPlayerPosition;
+                    _initialPathCalculated = false;
+                    // if (Time.time - lastPathfindingTime < timeBetweenPathfinding)
+                    // {
+                    //     return;
+                    // }
+                    
+                    //lastPathfindingTime = Time.time;
+                    //RecalculatePath();
+                }*/
+                if (distanceToPlayer <= attackRange)
+                {
+                    //Debug.Log("In attack range");
+                    setPos = true;
+                    canPathfind = false;
+                    if (!_isAttacking)
+                    {
+                        StartCoroutine(Attack());
+                    }
+                }
+                // else if (_justAttacked && distanceToPlayer <= 3f)
+                // {
+                //     canPathfind = true;
+                //     _lastPlayerPosition = _player.transform.position;
+                //     _targetPosition.position = _lastPlayerPosition;
+                //     RecalculatePath();
+                //     _justAttacked = false;
+                // }
+            }
+        }
+        else
+        {
+            if (isFollowingPlayer && !isTargetingWaypoints)
+            {
+                ChooseNewTarget();
+            }
+            else if (isFollowingPlayer && isTargetingWaypoints)
+            {
+                WaypointFollower();
+            }
+            
+            isFollowingPlayer = false;
+        }
+    }
+
     private IEnumerator Attack()
     {
         _isAttacking = true;
-        anim.Play();
-        yield return new WaitForSeconds(1f);
+        _anim.Play();
+        // Wait amount should be dependant on the weapon type used.
+        // Currently is not
+        yield return new WaitForSeconds(attackFrequency);
+        _justAttacked = true;
         _isAttacking = false;
+        
         yield return null;
     }
     
     private void RecalculatePath()
     {
-        FindPath(startPosition.position, targetPosition.position);
+        FindPath(_startPosition.position, _targetPosition.position);
     }
     
     private void FindPath(Vector3 aStartPos, Vector3 aTargetPos)
@@ -266,7 +377,7 @@ public class Pathfinding : MonoBehaviour {
         var gridX = (_gridReference.vGridWorldSize.x / _gridReference.fNodeDiameter) / 2;
         var gridY = (_gridReference.vGridWorldSize.y / _gridReference.fNodeDiameter) / 2;
         
-        targetPosition.position = new Vector3(Random.Range(-gridX,gridX), 0,
+        _targetPosition.position = new Vector3(Random.Range(-gridX,gridX), 0,
                                             Random.Range(-gridY,gridY));
         RecalculatePath();
     }
@@ -280,32 +391,32 @@ public class Pathfinding : MonoBehaviour {
         }
 
         // Set the target position based on the current waypoint index
-        targetPosition.position = waypointsList[currentWaypointIndex].transform.position;
+        _targetPosition.position = waypointsList[_currentWaypointIndex].transform.position;
         RecalculatePath();
 
         // Move to the next waypoint or the previous one if reached the end
-        if (isMovingForward)
+        if (_isMovingForward)
         {
             // Increment the current waypoint index
-            currentWaypointIndex++;
+            _currentWaypointIndex++;
 
             // If reached the last waypoint, start moving backward
-            if (currentWaypointIndex >= waypointsList.Count)
+            if (_currentWaypointIndex >= waypointsList.Count)
             {
-                currentWaypointIndex = waypointsList.Count - 2; // Set index to second-to-last waypoint
-                isMovingForward = false;
+                _currentWaypointIndex = waypointsList.Count - 2; // Set index to second-to-last waypoint
+                _isMovingForward = false;
             }
         }
         else
         {
             // Decrement the current waypoint index
-            currentWaypointIndex--;
+            _currentWaypointIndex--;
 
             // If reached the first waypoint, start moving forward
-            if (currentWaypointIndex < 0)
+            if (_currentWaypointIndex < 0)
             {
-                currentWaypointIndex = 1; // Set index to second waypoint
-                isMovingForward = true;
+                _currentWaypointIndex = 1; // Set index to second waypoint
+                _isMovingForward = true;
             }
         }
     }
@@ -315,7 +426,7 @@ public class Pathfinding : MonoBehaviour {
     {
         // Draw a wire sphere representing the sphere cast
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(transform.position, 5f);
+        Gizmos.DrawWireSphere(transform.position, aggroRange);
     }
 }
 

@@ -5,13 +5,22 @@ using UnityEngine;
 
 public class DealDamage : MonoBehaviour
 {
-    [SerializeField] private int damage = 50;
+    public int damage = 50;
+    private bool _isAttacking;
     
-    // Can deal damage by just walking into the sword need to make it so that isnt possible;
+    public void StartAttack()
+    {
+        _isAttacking = true;
+    }
     
+    public void EndAttack()
+    {
+        _isAttacking = false;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == 3 && gameObject.transform.parent.gameObject.layer == 9 || other.gameObject.layer == 9 && gameObject.layer == 3)
+        if (_isAttacking && (other.gameObject.layer == 3 && gameObject.transform.parent.gameObject.layer == 9 || other.gameObject.layer == 9 && gameObject.layer == 3))
         {
             Health health = other.GetComponentInParent<Health>();
             if (health != null)

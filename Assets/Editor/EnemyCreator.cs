@@ -1,7 +1,9 @@
+using System;
 using UnityEditor;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
-    public class EnemyCreator : EditorWindow
+public class EnemyCreator : EditorWindow
     {
         private GameObject _meleeEnemy, _archerEnemy, _exploderEnemy;
         //private SpawnManagerScriptableObject _enemyAttributes;
@@ -11,7 +13,8 @@ using UnityEngine;
         private bool _spawnOnCamera, _spawnAtSpecificLocation, _spawnAnywhere, _spawnOnSelectedGameObject;
         private Vector3 _spawnLocation;
         private int _amountToSpawn = 1;
-        private int _enemyHP = 100;
+        private int _enemyHealth = 100;
+        private Grid _gridReference;
 
         private enum EnemyType
         {
@@ -38,7 +41,7 @@ using UnityEngine;
         private ArcherWeaponType _selectedArcherWeapon = ArcherWeaponType.Shortbow;
         private ExploderType _selectedExploderType = ExploderType.Small;
 
-        private float _attackSpeed, _attackRange, _aggroRange, _attackDamage, _movementSpeed;
+        private float _attackFrequency, _attackRange, _aggroRange, _attackDamage, _movementSpeed;
 
         /*private void OnEnable()
         {
@@ -67,7 +70,7 @@ using UnityEngine;
             if (GUILayout.Button("Melee"))
             {
                 _selectedType = EnemyType.Melee;
-                _aggroRange = 10;
+                _aggroRange = 5;
             }
 
             if (GUILayout.Button("Archer"))
@@ -104,30 +107,35 @@ using UnityEngine;
                     {
                         _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
                         _attackDamage = 10;
-                        _attackSpeed = 1;
-                        _attackRange = 1;
+                        _attackFrequency = 2f;
+                        _attackRange = 1.5f;
+                        _aggroRange = 5;
                         _movementSpeed = 5;
-                        _enemyHP = 30;
+                        _enemyHealth = 30;
                     }
 
                     if (GUILayout.Button("Longsword"))
                     {
+                        // All need redoing
                         _selectedMeleeWeapon = MeleeWeaponType.Longsword;
                         _attackDamage = 15;
-                        _attackSpeed = 0.75f;
+                        _attackFrequency = 3.5f;
                         _attackRange = 3;
+                        _aggroRange = 5;
                         _movementSpeed = 3;
-                        _enemyHP = 60;
+                        _enemyHealth = 60;
                     }
 
                     if (GUILayout.Button("Greatsword"))
                     {
+                        // All need redoing
                         _selectedMeleeWeapon = MeleeWeaponType.Greatsword;
                         _attackDamage = 50;
-                        _attackSpeed = 0.5f;
-                        _attackRange = 5;
+                        _attackFrequency = 5f;
+                        _attackRange = 3;
+                        _aggroRange = 5;
                         _movementSpeed = 1.5f;
-                        _enemyHP = 100;
+                        _enemyHealth = 100;
                     }
 
                     GUILayout.Label("Selected Melee weapon Type: " + _selectedMeleeWeapon, EditorStyles.boldLabel);
@@ -141,30 +149,30 @@ using UnityEngine;
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Shortbow;
                         _attackDamage = 10;
-                        _attackSpeed = 1;
+                        _attackFrequency = 1;
                         _attackRange = 9;
                         _movementSpeed = 5;
-                        _enemyHP = 20;
+                        _enemyHealth = 20;
                     }
 
                     if (GUILayout.Button("Longbow"))
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Longbow;
                         _attackDamage = 15;
-                        _attackSpeed = 0.75f;
+                        _attackFrequency = 0.75f;
                         _attackRange = 9;
                         _movementSpeed = 3;
-                        _enemyHP = 50;
+                        _enemyHealth = 50;
                     }
 
                     if (GUILayout.Button("Greatbow"))
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Greatbow;
                         _attackDamage = 50;
-                        _attackSpeed = 0.5f;
+                        _attackFrequency = 0.5f;
                         _attackRange = 9;
                         _movementSpeed = 1.5f;
-                        _enemyHP = 75;
+                        _enemyHealth = 75;
                     }
 
                     GUILayout.Label("Selected Archer weapon Type: " + _selectedArcherWeapon, EditorStyles.boldLabel);
@@ -178,30 +186,30 @@ using UnityEngine;
                     {
                         _selectedExploderType = ExploderType.Small;
                         _attackDamage = 25;
-                        _attackSpeed = 1;
+                        _attackFrequency = 1;
                         _attackRange = 1;
                         _movementSpeed = 3;
-                        _enemyHP = 50;
+                        _enemyHealth = 50;
                     }
 
                     if (GUILayout.Button("Medium"))
                     {
                         _selectedExploderType = ExploderType.Medium;
                         _attackDamage = 50;
-                        _attackSpeed = 1;
+                        _attackFrequency = 1;
                         _attackRange = 2;
                         _movementSpeed = 2;
-                        _enemyHP = 100;
+                        _enemyHealth = 100;
                     }
 
                     if (GUILayout.Button("Nuke"))
                     {
                         _selectedExploderType = ExploderType.Nuke;
                         _attackDamage = 200;
-                        _attackSpeed = 0.5f;
+                        _attackFrequency = 0.5f;
                         _attackRange = 2;
                         _movementSpeed = 1.5f;
-                        _enemyHP = 200;
+                        _enemyHealth = 200;
                     }
 
                     GUILayout.Label("Selected Exploder Type: " + _selectedExploderType, EditorStyles.boldLabel);
@@ -211,8 +219,8 @@ using UnityEngine;
             GUILayout.Label("");
         
             // Allows user to enter the attack speed attribute for the enemy
-            GUILayout.Label("Enter Attack Speed", EditorStyles.boldLabel);
-            _attackSpeed = EditorGUILayout.FloatField("Attack Speed:", _attackSpeed);
+            GUILayout.Label("Enter Attack Frequency", EditorStyles.boldLabel);
+            _attackFrequency = EditorGUILayout.FloatField("Attack Frequency:", _attackFrequency);
 
             GUILayout.Label("Enter Aggro Range", EditorStyles.boldLabel);
             _aggroRange = EditorGUILayout.FloatField("Aggro Range:", _aggroRange);
@@ -231,26 +239,8 @@ using UnityEngine;
             
             // Allows the user to enter the HP of the enemy
             GUILayout.Label("Enter the HP of the Unit", EditorStyles.boldLabel);
-            _enemyHP = EditorGUILayout.IntField("HP:", _enemyHP);
+            _enemyHealth = EditorGUILayout.IntField("HP:", _enemyHealth);
 
-            /*if (GUILayout.Button("Create Attributes for Enemy"))
-        {
-            SpawnManagerScriptableObject newEnemyAttributes = CreateInstance<SpawnManagerScriptableObject>();
-            newEnemyAttributes.attackSpeed = _attackSpeed;
-            newEnemyAttributes.attackRange = _attackRange;
-            newEnemyAttributes.attackDamage = _attackDamage;
-            newEnemyAttributes.movementSpeed = _movementSpeed;
-
-            string path = EditorUtility.SaveFilePanelInProject("Save Enemy Attribute", "NewEnemyAttribute", "asset", "Save enemy attribute");
-            if (!string.IsNullOrEmpty(path))
-            {
-                AssetDatabase.CreateAsset(newEnemyAttributes, path);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-                EditorUtility.FocusProjectWindow();
-                Selection.activeObject = newEnemyAttributes;
-            }
-        }*/
         
             //GUILayout.Space(10);
             GUILayout.Label("");
@@ -270,12 +260,14 @@ using UnityEngine;
                 case 1:
                     GUILayout.Label("");
                     GUILayout.Label("Enter Spawn Location", EditorStyles.boldLabel);
+                    _spawnLocation = new Vector3(21, 0, 21);
                     _spawnLocation = EditorGUILayout.Vector3Field("Spawn Location:", _spawnLocation);
                     // Handle spawning at specific position
                     break;
 
                 case 2:
-                    _spawnLocation = new Vector3(Random.Range(0, 100), Random.Range(0, 100), Random.Range(0, 100));
+                    _spawnLocation = new Vector3(Random.Range(0, 25), 0, Random.Range(0, 25));
+                    
                     // Handle spawning anywhere
                     break;
                 
@@ -335,55 +327,79 @@ using UnityEngine;
                 for (int i = 0; i < _amountToSpawn; i++)
                 {
                     GameObject newEnemy = Instantiate(objectToInstantiate,_spawnLocation, Quaternion.identity);
-                    EnemyScript enemyScript = newEnemy.GetComponent<EnemyScript>();
+                    
+                    // Get the relevant scripts off the enemy
+                    Pathfinding pathfinding = newEnemy.GetComponent<Pathfinding>();
+                    EnemyMovement enemyMovement = newEnemy.GetComponent<EnemyMovement>();
                     Health enemyHealth = newEnemy.GetComponent<Health>();
                     
-                    enemyHealth.health = _enemyHP;
+                    
+                    
+                    enemyHealth.health = _enemyHealth;
             
                     // Assign the attributes to the enemy
-                    if (enemyScript != null)
+                    if (pathfinding != null && enemyMovement != null)
                     {
                         //enemyScript.enemyAttributes = _enemyAttributes;
-                        enemyScript.attackSpeed = _attackSpeed;
-                        enemyScript.aggroRange = _aggroRange;
-                        enemyScript.attackRange = _attackRange;
-                        enemyScript.attackDamage = _attackDamage;
-                        enemyScript.movementSpeed = _movementSpeed;
+                        
+                        // Probably shouldn't be in pathfinding? but then again state change based on pathfinding
+                        pathfinding.attackFrequency = _attackFrequency;
+                        pathfinding.aggroRange = _aggroRange;
+                        pathfinding.attackRange = _attackRange;
+                        enemyMovement.movementSpeed = _movementSpeed;
 
                         if (_selectedType == EnemyType.Melee)
                         {
                             // Find which weapon is selected, then get the corresponding child object and set it to active
                             if (_selectedMeleeWeapon == MeleeWeaponType.Longsword)
                             {
-                                Transform childTransform = newEnemy.transform.GetChild(0);
-        
-                                // Checking if a child exists
-                                if (childTransform != null)
+                                Transform meshTransform = newEnemy.transform.Find("Mesh");
+                                if (meshTransform != null)
                                 {
-                                    // Setting the child GameObject active
-                                    childTransform.gameObject.SetActive(true);
+                                    Debug.Log("Mesh found");
+                                    Transform weaponTransform = meshTransform.Find("Longsword");
+                                    if (weaponTransform != null)
+                                    {
+                                        Debug.Log("Longsword found");
+                                        // Setting the child GameObject active
+                                        weaponTransform.gameObject.SetActive(true);
+                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
+                                        dealDamage.damage = (int)_attackDamage;
+                                    }
                                 }
                             }
                             else if (_selectedMeleeWeapon == MeleeWeaponType.Greatsword)
                             {
-                                Transform childTransform = newEnemy.transform.GetChild(1);
-        
-                                // Checking if a child exists
-                                if (childTransform != null)
+                                Transform meshTransform = newEnemy.transform.Find("Mesh");
+                                if (meshTransform != null)
                                 {
-                                    // Setting the child GameObject active
-                                    childTransform.gameObject.SetActive(true);
+                                    Debug.Log("Mesh found");
+                                    Transform weaponTransform = meshTransform.Find("Greatsword");
+                                    if (weaponTransform != null)
+                                    {
+                                        Debug.Log("Greatsword found");
+                                        // Setting the child GameObject active
+                                        weaponTransform.gameObject.SetActive(true);
+                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
+                                        dealDamage.damage = (int)_attackDamage;
+                                    }
                                 }
                             }
                             else if (_selectedMeleeWeapon == MeleeWeaponType.Shortsword)
                             {
-                                Transform childTransform = newEnemy.transform.GetChild(2);
-        
-                                // Checking if a child exists
-                                if (childTransform != null)
+                                Transform meshTransform = newEnemy.transform.Find("Mesh");
+                                if (meshTransform != null)
                                 {
-                                    // Setting the child GameObject active
-                                    childTransform.gameObject.SetActive(true);
+                                    Debug.Log("Mesh found");
+                                    Transform weaponTransform = meshTransform.Find("Shortsword");
+                                    if (weaponTransform != null)
+                                    {
+                                        Debug.Log("Shortsword found");
+                                        // Setting the child GameObject active
+                                        weaponTransform.gameObject.SetActive(true);
+                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
+                                        dealDamage.damage = (int)_attackDamage;
+                                    }
                                 }
                             } 
                         }
@@ -447,5 +463,23 @@ using UnityEngine;
         }
     }
 
+            /*if (GUILayout.Button("Create Attributes for Enemy"))
+        {
+            SpawnManagerScriptableObject newEnemyAttributes = CreateInstance<SpawnManagerScriptableObject>();
+            newEnemyAttributes.attackSpeed = _attackSpeed;
+            newEnemyAttributes.attackRange = _attackRange;
+            newEnemyAttributes.attackDamage = _attackDamage;
+            newEnemyAttributes.movementSpeed = _movementSpeed;
+
+            string path = EditorUtility.SaveFilePanelInProject("Save Enemy Attribute", "NewEnemyAttribute", "asset", "Save enemy attribute");
+            if (!string.IsNullOrEmpty(path))
+            {
+                AssetDatabase.CreateAsset(newEnemyAttributes, path);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+                EditorUtility.FocusProjectWindow();
+                Selection.activeObject = newEnemyAttributes;
+            }
+        }*/
     
     
