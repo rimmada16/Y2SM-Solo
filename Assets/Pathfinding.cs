@@ -65,27 +65,33 @@ public class Pathfinding : MonoBehaviour {
     
     // Need organising
     private bool _isAttacking;
-    private bool _waitToCalculatePath;
     public float attackRange = 1.5f;
     public float aggroRange = 5f;
+    
+    //Patrol point stuff
     private int _currentWaypointIndex = 0;
     private bool _isMovingForward;
+    
+    // Getting the enemy to move initially
     private bool _initialPathCalculated = false;
+    
+    // Pathfinding optimisation
     private Vector3 _lastPlayerPosition;
-    private bool _firstTime;
+    
+    // Cannot pathfind if in attack range
     public bool canPathfind = true;
-    private int _currentNodeIndex;
+    
+    // For the sword
     private Animation _anim;
-    private bool _justAttacked;
+    
+    // How long enemy has to wait before attacking again - if melee
     public float attackFrequency = 2f;
-    private float timeBetweenPathfinding = 0.5f; // Adjust as needed
-    private float lastPathfindingTime;
 
-    public bool reachedPointAfterInitialCalc;
-    private bool setPos = true;
-    
-    
-    private Vector3 lastPosition;
+    // Arrow type to feed into Projectile Manager
+    public int arrowToShoot;
+
+
+    private Vector3 _lastPosition;
     
     // XML WHERE!?!?!?!?
     
@@ -134,7 +140,7 @@ public class Pathfinding : MonoBehaviour {
         if (!isFollowingPlayer)
         {
             // Calculate the direction vector of movement
-            Vector3 direction = (transform.position - lastPosition).normalized;
+            Vector3 direction = (transform.position - _lastPosition).normalized;
 
             var rotationSpeed = 5f;
             
@@ -147,7 +153,7 @@ public class Pathfinding : MonoBehaviour {
             }
 
             // Update lastPosition to the current position for the next frame
-            lastPosition = transform.position;
+            _lastPosition = transform.position;
         }
         
         
@@ -166,6 +172,11 @@ public class Pathfinding : MonoBehaviour {
         // WORKS AND IS INSANELY OPTIMISED COMPARED TO
         // WHAT WAS WRITTEN TODAY
         // !?!?!?!?!?!?!??!?!?!?!?!?!??!?!?!?!?!?!??!
+
+        if (_player == null)
+        {
+            return;
+        }
         
         if (Vector3.Distance(transform.position, _player.transform.position) <= aggroRange)
         {
@@ -197,11 +208,11 @@ public class Pathfinding : MonoBehaviour {
                     if (!_isAttacking && enemyType == EnemyType.Melee)
                     {
                         // Coroutine for the melee attack
-                        StartCoroutine(Attack());
+                        StartCoroutine(MeleeAttack());
                     }
                     else if (!_isAttacking && enemyType == EnemyType.Archer)
                     {
-                        // Logic for the archer attack
+                        StartCoroutine(BowAttack());
                     }
                     else if (!_isAttacking && enemyType == EnemyType.Exploder)
                     {
@@ -317,14 +328,23 @@ public class Pathfinding : MonoBehaviour {
         }
     }*/
 
-    private IEnumerator Attack()
+    private IEnumerator MeleeAttack()
     {
         _isAttacking = true;
         _anim.Play();
         // Wait amount should be dependant on the weapon type used.
         // Currently is not
         yield return new WaitForSeconds(attackFrequency);
-        _justAttacked = true;
+        _isAttacking = false;
+        
+        yield return null;
+    }
+
+    private IEnumerator BowAttack()
+    {
+        _isAttacking = true;
+        ProjectileManager.Instance.FireProjectile(arrowToShoot, transform.position, transform.forward, gameObject);
+        yield return new WaitForSeconds(attackFrequency);
         _isAttacking = false;
         
         yield return null;

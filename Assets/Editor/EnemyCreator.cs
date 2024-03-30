@@ -13,8 +13,11 @@ public class EnemyCreator : EditorWindow
 
         private string[] _spawnOptions = { "Spawn in Front of Camera", "Spawn at Specific Location", "Spawn Anywhere", "Spawn on Selected GameObject" };
         private string[] _agentTypes = { "Roam Bounds", "Follow Waypoints" };
+        private string[] _arrowTypes = { "Standard Arrow", "Broadhead Arrow", "Greatbolts" };
+        
         private int _selectedSpawnOptionIndex;
         private int _selectedAgentTypeIndex;
+        private int _selectedArrowTypeIndex;
         private bool _spawnOnCamera, _spawnAtSpecificLocation, _spawnAnywhere, _spawnOnSelectedGameObject;
         private Vector3 _spawnLocation;
         private int _amountToSpawn = 1;
@@ -45,6 +48,13 @@ public class EnemyCreator : EditorWindow
         {
             RoamBounds, FollowWaypoints
         }
+        
+        private enum ArrowOption
+        {
+            StandardArrow, BroadheadArrow, Greatbolt
+        }
+        
+        private ArrowOption _selectedArrowOption = ArrowOption.StandardArrow;
 
         private SelectionOption _selectedOption = SelectionOption.RoamBounds;
         
@@ -168,7 +178,7 @@ public class EnemyCreator : EditorWindow
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Shortbow;
                         _attackDamage = 10;
-                        _attackFrequency = 1;
+                        _attackFrequency = 2;
                         _attackRange = 9;
                         _movementSpeed = 5;
                         _enemyHealth = 20;
@@ -178,7 +188,7 @@ public class EnemyCreator : EditorWindow
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Longbow;
                         _attackDamage = 15;
-                        _attackFrequency = 0.75f;
+                        _attackFrequency = 3.5f;
                         _attackRange = 9;
                         _movementSpeed = 3;
                         _enemyHealth = 50;
@@ -188,7 +198,7 @@ public class EnemyCreator : EditorWindow
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Greatbow;
                         _attackDamage = 50;
-                        _attackFrequency = 0.5f;
+                        _attackFrequency = 5f;
                         _attackRange = 9;
                         _movementSpeed = 1.5f;
                         _enemyHealth = 75;
@@ -248,9 +258,34 @@ public class EnemyCreator : EditorWindow
             GUILayout.Label("Enter Attack Range", EditorStyles.boldLabel);
             _attackRange = EditorGUILayout.FloatField("Attack Range:", _attackRange);
 
-            // Allows user to enter the attack damage attribute for the enemy
-            GUILayout.Label("Enter Attack Damage", EditorStyles.boldLabel);
-            _attackDamage = EditorGUILayout.FloatField("Attack Damage:", _attackDamage);
+
+            if (_selectedType != EnemyType.Archer)
+            {
+                // Allows user to enter the attack damage attribute for the enemy
+                GUILayout.Label("Enter Attack Damage", EditorStyles.boldLabel);
+                _attackDamage = EditorGUILayout.FloatField("Attack Damage:", _attackDamage);
+            }
+
+            if (_selectedType == EnemyType.Archer)
+            {
+                GUILayout.Label("Select Arrow Type", EditorStyles.boldLabel);
+                _selectedArrowTypeIndex = EditorGUILayout.Popup("Agent Type:", _selectedArrowTypeIndex, _arrowTypes);
+                
+                
+                switch (_selectedArrowTypeIndex)
+                {
+                    case 0:
+                        _selectedArrowOption = ArrowOption.StandardArrow;
+                        break;
+                    case 1:
+                        _selectedArrowOption = ArrowOption.BroadheadArrow;
+                        break;
+                    case 2:
+                        _selectedArrowOption = ArrowOption.Greatbolt;
+                        break;
+                }
+            }
+            
 
             // Allows user to enter the movement speed attribute for the enemy
             GUILayout.Label("Enter Movement Speed", EditorStyles.boldLabel);
@@ -481,6 +516,7 @@ public class EnemyCreator : EditorWindow
 
                         if (_selectedType == EnemyType.Archer)
                         {
+                            pathfinding.arrowToShoot = _selectedArrowTypeIndex;
                             pathfinding.enemyType = Pathfinding.EnemyType.Archer;
                             // Find which weapon is selected, then get the corresponding child object and set it to active
                             if (_selectedArcherWeapon == ArcherWeaponType.Longbow)
@@ -495,8 +531,8 @@ public class EnemyCreator : EditorWindow
                                         Debug.Log("Longbow found");
                                         // Setting the child GameObject active
                                         weaponTransform.gameObject.SetActive(true);
-                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
-                                        dealDamage.damage = (int)_attackDamage;
+                                        
+                                        
                                     }
                                 }
                             }
@@ -512,8 +548,8 @@ public class EnemyCreator : EditorWindow
                                         Debug.Log("Greatbow found");
                                         // Setting the child GameObject active
                                         weaponTransform.gameObject.SetActive(true);
-                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
-                                        dealDamage.damage = (int)_attackDamage;
+                                        
+                                        
                                     }
                                 }
                             }
@@ -529,8 +565,8 @@ public class EnemyCreator : EditorWindow
                                         Debug.Log("Shortbow found");
                                         // Setting the child GameObject active
                                         weaponTransform.gameObject.SetActive(true);
-                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
-                                        dealDamage.damage = (int)_attackDamage;
+                                        
+                                        
                                     }
                                 }
                             }
