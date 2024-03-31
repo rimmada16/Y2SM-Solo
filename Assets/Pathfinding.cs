@@ -27,7 +27,7 @@ public class Pathfinding : MonoBehaviour {
     public enum SelectionOption
     {
         RoamBounds,
-        FollowWaypoints
+        FollowPatrolPoints
     }
     
     public enum EnemyType
@@ -57,9 +57,9 @@ public class Pathfinding : MonoBehaviour {
     
     [Space(10)]
     
-    [Header("Waypoints")]
-    public bool isTargetingWaypoints;
-    public List<Transform> waypointsList;
+    [Header("Patrol Points")]
+    public bool isTargetingPatrolPoints;
+    public List<Transform> patrolPointsList;
 
     [Space(10)]
     
@@ -88,7 +88,7 @@ public class Pathfinding : MonoBehaviour {
     private Animation _anim;
     
     // How long enemy has to wait before attacking again - if melee
-    public float attackFrequency = 2f;
+    public float timeBetweenAttacks = 2f;
 
     // Arrow type to feed into Projectile Manager
     public int arrowToShoot;
@@ -110,13 +110,13 @@ public class Pathfinding : MonoBehaviour {
     private void Start()
     {
         _anim = GetComponentInChildren<Animation>();
-        if (selectionOption == SelectionOption.FollowWaypoints)
+        if (selectionOption == SelectionOption.FollowPatrolPoints)
         {
-            isTargetingWaypoints = true;
+            isTargetingPatrolPoints = true;
         }
         else
         {
-            isTargetingWaypoints = false;
+            isTargetingPatrolPoints = false;
         }
         
         _startPosition = transform;
@@ -229,12 +229,12 @@ public class Pathfinding : MonoBehaviour {
         }
         else
         {
-            if (isFollowingPlayer && !isTargetingWaypoints)
+            if (isFollowingPlayer && !isTargetingPatrolPoints)
             {
                 ChooseNewTarget();
             }
 
-            else if (isFollowingPlayer && isTargetingWaypoints)
+            else if (isFollowingPlayer && isTargetingPatrolPoints)
             {
                 WaypointFollower();
             }
@@ -337,7 +337,7 @@ public class Pathfinding : MonoBehaviour {
         _anim.Play();
         // Wait amount should be dependant on the weapon type used.
         // Currently is not
-        yield return new WaitForSeconds(attackFrequency);
+        yield return new WaitForSeconds(timeBetweenAttacks);
         _isAttacking = false;
         
         yield return null;
@@ -347,7 +347,7 @@ public class Pathfinding : MonoBehaviour {
     {
         _isAttacking = true;
         ProjectileManager.Instance.FireProjectile(arrowToShoot, transform.position, transform.forward, gameObject);
-        yield return new WaitForSeconds(attackFrequency);
+        yield return new WaitForSeconds(timeBetweenAttacks);
         _isAttacking = false;
         
         yield return null;
@@ -363,7 +363,7 @@ public class Pathfinding : MonoBehaviour {
         // Send in the gameobject
         // if gameobject = that gameobject, explode
         
-        yield return new WaitForSeconds(attackFrequency);
+        yield return new WaitForSeconds(timeBetweenAttacks);
         _isAttacking = false;
         
         yield return null;
@@ -482,38 +482,38 @@ public class Pathfinding : MonoBehaviour {
     
     public void WaypointFollower()
     {
-        if (waypointsList.Count == 0)
+        if (patrolPointsList.Count == 0)
         {
             Debug.LogWarning("Waypoints not set!");
             return;
         }
 
-        // Set the target position based on the current waypoint index
-        _targetPosition.position = waypointsList[_currentWaypointIndex].transform.position;
+        // Set the target position based on the current patrol index
+        _targetPosition.position = patrolPointsList[_currentWaypointIndex].transform.position;
         RecalculatePath();
 
-        // Move to the next waypoint or the previous one if reached the end
+        // Move to the next patrol or the previous one if reached the end
         if (_isMovingForward)
         {
-            // Increment the current waypoint index
+            // Increment the current patrol index
             _currentWaypointIndex++;
 
-            // If reached the last waypoint, start moving backward
-            if (_currentWaypointIndex >= waypointsList.Count)
+            // If reached the last patrol, start moving backward
+            if (_currentWaypointIndex >= patrolPointsList.Count)
             {
-                _currentWaypointIndex = waypointsList.Count - 2; // Set index to second-to-last waypoint
+                _currentWaypointIndex = patrolPointsList.Count - 2; // Set index to second-to-last patrol
                 _isMovingForward = false;
             }
         }
         else
         {
-            // Decrement the current waypoint index
+            // Decrement the current patrol index
             _currentWaypointIndex--;
 
-            // If reached the first waypoint, start moving forward
+            // If reached the first patrol, start moving forward
             if (_currentWaypointIndex < 0)
             {
-                _currentWaypointIndex = 1; // Set index to second waypoint
+                _currentWaypointIndex = 1; // Set index to second patrol
                 _isMovingForward = true;
             }
         }

@@ -12,7 +12,7 @@ public class EnemyCreator : EditorWindow
         //private SpawnManagerScriptableObject _enemyAttributes;
 
         private string[] _spawnOptions = { "Spawn in Front of Camera", "Spawn at Specific Location", "Spawn Anywhere", "Spawn on Selected GameObject" };
-        private string[] _agentTypes = { "Roam Bounds", "Follow Waypoints" };
+        private string[] _agentTypes = { "Roam Bounds", "Follow Patrol Points" };
         private string[] _arrowTypes = { "Standard Arrow", "Broadhead Arrow", "Greatbolts" };
         
         private int _selectedSpawnOptionIndex;
@@ -46,7 +46,7 @@ public class EnemyCreator : EditorWindow
 
         private enum SelectionOption
         {
-            RoamBounds, FollowWaypoints
+            RoamBounds, FollowPatrolPoints
         }
         
         private enum ArrowOption
@@ -63,11 +63,11 @@ public class EnemyCreator : EditorWindow
         private ArcherWeaponType _selectedArcherWeapon = ArcherWeaponType.Shortbow;
         private ExploderType _selectedExploderType = ExploderType.Small;
 
-        private float _attackFrequency, _attackRange, _aggroRange, _attackDamage, _movementSpeed;
+        private float _timeBetweenAttacks, _attackRange, _explosionRadius, _aggroRange, _attackDamage, _movementSpeed;
         
-        List<Transform> gameObjects = new List<Transform>();
-        Transform newGameObject;
-        Vector2 scrollPosition = Vector2.zero;
+        private List<Transform> _gameObjects = new List<Transform>();
+        private Transform _newGameObject;
+        private Vector2 _scrollPosition = Vector2.zero;
         
 
         /*private void OnEnable()
@@ -87,7 +87,7 @@ public class EnemyCreator : EditorWindow
         
         private void OnGUI()
         {
-            scrollPosition = GUILayout.BeginScrollView(scrollPosition);
+            _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
             
             //
             // Selects the wanted enemy type
@@ -136,7 +136,7 @@ public class EnemyCreator : EditorWindow
                     {
                         _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
                         _attackDamage = 10;
-                        _attackFrequency = 2f;
+                        _timeBetweenAttacks = 2f;
                         _attackRange = 1.5f;
                         _aggroRange = 5;
                         _movementSpeed = 5;
@@ -148,7 +148,7 @@ public class EnemyCreator : EditorWindow
                         // All need redoing
                         _selectedMeleeWeapon = MeleeWeaponType.Longsword;
                         _attackDamage = 15;
-                        _attackFrequency = 3.5f;
+                        _timeBetweenAttacks = 3.5f;
                         _attackRange = 3;
                         _aggroRange = 5;
                         _movementSpeed = 3;
@@ -160,7 +160,7 @@ public class EnemyCreator : EditorWindow
                         // All need redoing
                         _selectedMeleeWeapon = MeleeWeaponType.Greatsword;
                         _attackDamage = 50;
-                        _attackFrequency = 5f;
+                        _timeBetweenAttacks = 5f;
                         _attackRange = 3;
                         _aggroRange = 5;
                         _movementSpeed = 1.5f;
@@ -178,7 +178,7 @@ public class EnemyCreator : EditorWindow
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Shortbow;
                         _attackDamage = 10;
-                        _attackFrequency = 2;
+                        _timeBetweenAttacks = 2;
                         _attackRange = 9;
                         _movementSpeed = 5;
                         _enemyHealth = 20;
@@ -188,7 +188,7 @@ public class EnemyCreator : EditorWindow
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Longbow;
                         _attackDamage = 15;
-                        _attackFrequency = 3.5f;
+                        _timeBetweenAttacks = 3.5f;
                         _attackRange = 9;
                         _movementSpeed = 3;
                         _enemyHealth = 50;
@@ -198,7 +198,7 @@ public class EnemyCreator : EditorWindow
                     {
                         _selectedArcherWeapon = ArcherWeaponType.Greatbow;
                         _attackDamage = 50;
-                        _attackFrequency = 5f;
+                        _timeBetweenAttacks = 5f;
                         _attackRange = 9;
                         _movementSpeed = 1.5f;
                         _enemyHealth = 75;
@@ -215,8 +215,9 @@ public class EnemyCreator : EditorWindow
                     {
                         _selectedExploderType = ExploderType.Small;
                         _attackDamage = 25;
-                        _attackFrequency = 1;
+                        _timeBetweenAttacks = 1;
                         _attackRange = 1.5f;
+                        _explosionRadius = 3f;
                         _movementSpeed = 3;
                         _enemyHealth = 50;
                     }
@@ -225,8 +226,9 @@ public class EnemyCreator : EditorWindow
                     {
                         _selectedExploderType = ExploderType.Medium;
                         _attackDamage = 50;
-                        _attackFrequency = 1;
+                        _timeBetweenAttacks = 1;
                         _attackRange = 2;
+                        _explosionRadius = 4.5f;
                         _movementSpeed = 2;
                         _enemyHealth = 100;
                     }
@@ -235,8 +237,9 @@ public class EnemyCreator : EditorWindow
                     {
                         _selectedExploderType = ExploderType.Nuke;
                         _attackDamage = 200;
-                        _attackFrequency = 0.5f;
-                        _attackRange = 2;
+                        _timeBetweenAttacks = 1f;
+                        _attackRange = 3.5f;
+                        _explosionRadius = 6.5f;
                         _movementSpeed = 1.5f;
                         _enemyHealth = 200;
                     }
@@ -248,8 +251,8 @@ public class EnemyCreator : EditorWindow
             GUILayout.Label("");
         
             // Allows user to enter the attack speed attribute for the enemy
-            GUILayout.Label("Enter Attack Frequency", EditorStyles.boldLabel);
-            _attackFrequency = EditorGUILayout.FloatField("Attack Frequency:", _attackFrequency);
+            GUILayout.Label("Enter the Time between Attacks", EditorStyles.boldLabel);
+            _timeBetweenAttacks = EditorGUILayout.FloatField("Time between Attacks:", _timeBetweenAttacks);
 
             GUILayout.Label("Enter Aggro Range", EditorStyles.boldLabel);
             _aggroRange = EditorGUILayout.FloatField("Aggro Range:", _aggroRange);
@@ -285,8 +288,14 @@ public class EnemyCreator : EditorWindow
                         break;
                 }
             }
-            
 
+            // Allows the user to enter the explosion radius attribute for the enemy
+            if (_selectedType == EnemyType.Exploder)
+            {
+                GUILayout.Label("Enter Explosion Radius", EditorStyles.boldLabel);
+                _explosionRadius = EditorGUILayout.FloatField("Explosion Radius:", _explosionRadius);
+            }
+            
             // Allows user to enter the movement speed attribute for the enemy
             GUILayout.Label("Enter Movement Speed", EditorStyles.boldLabel);
             _movementSpeed = EditorGUILayout.FloatField("Movement Speed:", _movementSpeed);
@@ -306,35 +315,35 @@ public class EnemyCreator : EditorWindow
                     _selectedOption = SelectionOption.RoamBounds;
                     break;
                 case 1:
-                    _selectedOption = SelectionOption.FollowWaypoints;
+                    _selectedOption = SelectionOption.FollowPatrolPoints;
                     break;
             }
 
             
             
-            if (_selectedOption == SelectionOption.FollowWaypoints)
+            if (_selectedOption == SelectionOption.FollowPatrolPoints)
             {
                 GUILayout.BeginHorizontal();
-                newGameObject = (Transform)EditorGUILayout.ObjectField(newGameObject, typeof(Transform), true);
+                _newGameObject = (Transform)EditorGUILayout.ObjectField(_newGameObject, typeof(Transform), true);
                 if (GUILayout.Button("Add", GUILayout.Width(50)))
                 {
-                    if (newGameObject != null && !gameObjects.Contains(newGameObject))
+                    if (_newGameObject != null && !_gameObjects.Contains(_newGameObject))
                     {
-                        gameObjects.Add(newGameObject);
-                        newGameObject = null;
+                        _gameObjects.Add(_newGameObject);
+                        _newGameObject = null;
                     }
                     
                 }
                 GUILayout.EndHorizontal();
                 
-                GUILayout.Label("Current Waypoints", EditorStyles.boldLabel);
-                for (int i = 0; i < gameObjects.Count; i++)
+                GUILayout.Label("Current Patrol Points", EditorStyles.boldLabel);
+                for (int i = 0; i < _gameObjects.Count; i++)
                 {
                     GUILayout.BeginHorizontal();
-                    EditorGUILayout.ObjectField(gameObjects[i], typeof(Transform), true);
+                    EditorGUILayout.ObjectField(_gameObjects[i], typeof(Transform), true);
                     if (GUILayout.Button("Remove", GUILayout.Width(60)))
                     {
-                        gameObjects.RemoveAt(i);
+                        _gameObjects.RemoveAt(i);
                         break; // Exit the loop to avoid modifying the list while iterating
                     }
                     GUILayout.EndHorizontal();
@@ -435,9 +444,18 @@ public class EnemyCreator : EditorWindow
                     Pathfinding pathfinding = newEnemy.GetComponent<Pathfinding>();
                     EnemyMovement enemyMovement = newEnemy.GetComponent<EnemyMovement>();
                     Health enemyHealth = newEnemy.GetComponent<Health>();
-                    
-                    
-                    
+
+                    if (_selectedType == EnemyType.Exploder)
+                    {
+                        Exploder exploder = newEnemy.GetComponent<Exploder>();
+                        if (exploder != null)
+                        {
+                            exploder.explosionRadius = _explosionRadius;
+                            exploder.baseDamage = Mathf.RoundToInt(_attackDamage);
+                        }
+                    }
+                        
+                        
                     enemyHealth.health = _enemyHealth;
             
                     // Assign the attributes to the enemy
@@ -446,15 +464,15 @@ public class EnemyCreator : EditorWindow
                         //enemyScript.enemyAttributes = _enemyAttributes;
                         
                         // Probably shouldn't be in pathfinding? but then again state change based on pathfinding
-                        pathfinding.attackFrequency = _attackFrequency;
+                        pathfinding.timeBetweenAttacks = _timeBetweenAttacks;
                         pathfinding.aggroRange = _aggroRange;
                         pathfinding.attackRange = _attackRange;
                         pathfinding.selectionOption = (Pathfinding.SelectionOption)_selectedOption;
                         enemyMovement.movementSpeed = _movementSpeed;
 
-                        if (_selectedOption == SelectionOption.FollowWaypoints)
+                        if (_selectedOption == SelectionOption.FollowPatrolPoints)
                         {
-                            pathfinding.waypointsList = gameObjects;
+                            pathfinding.patrolPointsList = _gameObjects;
                         }
 
                         if (_selectedType == EnemyType.Melee)

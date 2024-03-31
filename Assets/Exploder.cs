@@ -6,7 +6,7 @@ using UnityEngine;
 public class Exploder : MonoBehaviour
 {
     public int baseDamage; // Base damage of the explosion
-    public int explosionRadius;
+    public float explosionRadius;
 
     private void Start()
     {
@@ -24,6 +24,9 @@ public class Exploder : MonoBehaviour
         {
             Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
             
+            
+            // Can kill other enemies as well with tactical explosion trigger
+            // Like Minecraft creepers
             foreach (Collider col in colliders)
             {
                 Health health = col.GetComponent<Health>();
@@ -35,8 +38,9 @@ public class Exploder : MonoBehaviour
     private IEnumerator AnimateExplosion(GameObject unit, Health health)
     {
         float duration = 1f;
-        Vector3 startScale = gameObject.transform.localScale; // Use unit's scale
-        Vector3 endScale = gameObject.transform.localScale * 1.5f; // Scale the unit by 1.5
+        var localScale = gameObject.transform.localScale;
+        Vector3 startScale = localScale; // Use unit's scale
+        Vector3 endScale = localScale * 1.5f; // Scale the unit by 1.5
         float currentTime = 0;
         while (currentTime < duration)
         {
@@ -48,7 +52,6 @@ public class Exploder : MonoBehaviour
         // Apply damage after the explosion animation
         float falloffFactor = 1 - Mathf.Clamp01(Vector3.Distance(transform.position, unit.transform.position) / explosionRadius);
         int damage = Mathf.RoundToInt(baseDamage * falloffFactor);
-        
         if (health != null)
         {
             health.TakeDamage(damage);
