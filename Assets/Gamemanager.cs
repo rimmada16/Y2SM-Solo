@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+public delegate void ExploderEvent(GameObject source);
+
 
 public class Gamemanager : MonoBehaviour
 {

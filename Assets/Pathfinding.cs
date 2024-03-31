@@ -8,6 +8,9 @@ using Random = UnityEngine.Random;
 
 public class Pathfinding : MonoBehaviour {
 
+    public static event ExploderEvent Explode;
+    
+    
     // Add another enum for the enemy type
     // Depending on type logic for attack
     // Such as sword will run animation
@@ -216,7 +219,7 @@ public class Pathfinding : MonoBehaviour {
                     }
                     else if (!_isAttacking && enemyType == EnemyType.Exploder)
                     {
-                        // Logic for the exploder attack
+                        Explode?.Invoke(gameObject);
                     }
 
                     //StopMoving();
@@ -344,6 +347,22 @@ public class Pathfinding : MonoBehaviour {
     {
         _isAttacking = true;
         ProjectileManager.Instance.FireProjectile(arrowToShoot, transform.position, transform.forward, gameObject);
+        yield return new WaitForSeconds(attackFrequency);
+        _isAttacking = false;
+        
+        yield return null;
+    }
+    
+    private IEnumerator ExploderAttack()
+    {
+        _isAttacking = true;
+        // Logic for the exploder attack
+        
+        // Start a coroutine that calls an event
+        // Exploder class subbed to this event
+        // Send in the gameobject
+        // if gameobject = that gameobject, explode
+        
         yield return new WaitForSeconds(attackFrequency);
         _isAttacking = false;
         
