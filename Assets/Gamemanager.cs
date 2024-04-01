@@ -5,8 +5,12 @@ using UnityEngine.SceneManagement;
 
 public delegate void ExploderEvent(GameObject source);
 
+public delegate void MeleeAttackEvent(GameObject source);
 
-public class Gamemanager : MonoBehaviour
+public delegate void RangedAttackEvent(GameObject source);
+
+
+public class GameManager : MonoBehaviour
 {
     // Start is called before the first frame update
     void Start()

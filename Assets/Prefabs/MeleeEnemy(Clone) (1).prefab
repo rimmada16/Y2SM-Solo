@@ -207,6 +207,7 @@ GameObject:
   - component: {fileID: 8979339941246789716}
   - component: {fileID: 8979339941246789717}
   - component: {fileID: 8979339941246789718}
+  - component: {fileID: 3835174713367845126}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)
   m_TagString: Enemy
@@ -276,18 +277,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d562fe57b816eb447b2468cb0d3fbd2d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyType: 0
   selectionOption: 1
   isFollowingPlayer: 0
-  isTargetingWaypoints: 0
-  waypointsList:
-  - {fileID: 0}
-  - {fileID: 0}
+  isTargetingPatrolPoints: 0
+  patrolPointsList: []
   results: []
+  isAttacking: 0
   attackRange: 1.5
   aggroRange: 5
   canPathfind: 1
-  attackFrequency: 2
-  reachedPointAfterInitialCalc: 0
+  timeBetweenAttacks: 2
+  arrowToShoot: 0
+--- !u!114 &3835174713367845126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8979339941246789719}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b1b2d8d39ab3e349beb9fd9cc742487, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  timeBetweenAttacks: 2
 --- !u!1 &8979339941560692161
 GameObject:
   m_ObjectHideFlags: 0

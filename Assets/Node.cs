@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AStarPathfinding
+{
 [Serializable]
 public class Node {
 
@@ -27,3 +29,6 @@ public class Node {
         GridY = gridY;
     }
 }
+    
+}
+

@@ -1,28 +1,57 @@
-using System;
+// Purpose: To create a custom editor window that allows the user to create enemies with different attributes and weapons.
 using System.Collections.Generic;
-using System.Xml.Resolvers;
-using NUnit.Framework;
 using UnityEditor;
 using UnityEngine;
+using AStarPathfinding;
 using Random = UnityEngine.Random;
 
+/// <summary>
+/// An editor window that allows the user to create enemies within the scene from 3 selected types being a Melee Unit,
+/// a Archer Unit and an Exploder Unit. Depending on the Unit type selected the user can change the subtype of the Unit
+/// and edit different attributes for the unit. i.e. if the Archer Unit is selected then the user can change the type
+/// of arrow they shoot. The user can also select whether the enemy will roam freely within the bounds of the map grid
+/// or follow set patrol points defined by the user. The user can also select where they would like to spawn the enemy
+/// with multiple different spawning options. Finally the user can select how many units they would like to spawn
+/// within the appropriate predefined range.
+/// </summary>
 public class EnemyCreator : EditorWindow
     {
+        // For the input of the prefab for the enemy
         private GameObject _meleeEnemy, _archerEnemy, _exploderEnemy;
-        //private SpawnManagerScriptableObject _enemyAttributes;
 
-        private string[] _spawnOptions = { "Spawn in Front of Camera", "Spawn at Specific Location", "Spawn Anywhere", "Spawn on Selected GameObject" };
-        private string[] _agentTypes = { "Roam Bounds", "Follow Patrol Points" };
-        private string[] _arrowTypes = { "Standard Arrow", "Broadhead Arrow", "Greatbolts" };
+        // For the selection of camera spawn options from drop down
+        private readonly string[] _spawnOptions = { "Spawn in Front of Camera", "Spawn at Specific Location", "Spawn Anywhere", "Spawn on Selected GameObject" };
         
-        private int _selectedSpawnOptionIndex;
-        private int _selectedAgentTypeIndex;
-        private int _selectedArrowTypeIndex;
-        private bool _spawnOnCamera, _spawnAtSpecificLocation, _spawnAnywhere, _spawnOnSelectedGameObject;
+        // For the selection of an agent type from drop down
+        private readonly string[] _agentTypes = { "Roam Bounds", "Follow Patrol Points" };
+        
+        // For the selection of an arrow type from drop down
+        private readonly string[] _arrowTypes = { "Standard Arrow", "Broadhead Arrow", "Greatbolts" };
+        
+        // For selection of enemy type
+        private readonly string[] _enemyTypes = { "Melee", "Archer", "Exploder" };
+        
+        // For selection of enemy sub type from drop down
+        private readonly string[] _meleeEnemyTypes = { "Shortsword", "Longsword", "Greatsword" };
+        private readonly string[] _archerEnemyTypes = { "Shortbow", "Longbow", "Greatbow" };
+        private readonly string[] _exploderEnemyTypes = { "Small", "Medium", "Nuke" };
+        
+        // Camera index - Roam or Patrol index - Arrow type index
+        private int _selectedSpawnOptionIndex, _selectedAgentTypeIndex, _selectedArrowTypeIndex;
+
+        // For setting the _selectedType
+        private int _selectedEnemyTypeIndex;
+        
+        // For applying default values
+        private int _selectedMeleeEnemyIndex, _selectedArcherEnemyIndex, _selectedExploderEnemyIndex;
+        
+        private bool _spawnOnSelectedGameObject;
+        
+        // For the enemy spawn location
         private Vector3 _spawnLocation;
+        
         private int _amountToSpawn = 1;
         private int _enemyHealth = 100;
-        private Grid _gridReference;
 
         private enum EnemyType
         {
@@ -48,33 +77,28 @@ public class EnemyCreator : EditorWindow
         {
             RoamBounds, FollowPatrolPoints
         }
-        
-        private enum ArrowOption
-        {
-            StandardArrow, BroadheadArrow, Greatbolt
-        }
-        
-        private ArrowOption _selectedArrowOption = ArrowOption.StandardArrow;
 
+        // Enum stuff
         private SelectionOption _selectedOption = SelectionOption.RoamBounds;
-        
         private EnemyType _selectedType = EnemyType.Melee;
         private MeleeWeaponType _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
         private ArcherWeaponType _selectedArcherWeapon = ArcherWeaponType.Shortbow;
         private ExploderType _selectedExploderType = ExploderType.Small;
 
+        // Enemy attributes
         private float _timeBetweenAttacks, _attackRange, _explosionRadius, _aggroRange, _attackDamage, _movementSpeed;
         
-        private List<Transform> _gameObjects = new List<Transform>();
-        private Transform _newGameObject;
+        // Patrol points
+        private List<Transform> _patrolPoints = new List<Transform>();
+        private Transform _newPatrolPoint;
+        
+        // Scroll view
         private Vector2 _scrollPosition = Vector2.zero;
         
-
-        /*private void OnEnable()
-        {
-            _enemyAttributes = CreateInstance<SpawnManagerScriptableObject>();
-        }*/
-
+        /// <summary>
+        /// MenuItem: Editor window can be opened via the Unity menu
+        /// ShowWindow: Creates the window in the editor so it is visible for the user
+        /// </summary>
         [MenuItem("Enemy Creator/Enemy Creator Window")]
         public static void ShowWindow()
         {
@@ -82,232 +106,204 @@ public class EnemyCreator : EditorWindow
             wnd.titleContent = new GUIContent("Enemy Creator Window");
             
             // Ensure all content is visible
-            wnd.minSize = new Vector2(400, 800);
+            wnd.minSize = new Vector2(400, 400);
         }
-        
+
+        /// <summary>
+        /// Rendering and Handling of GUI Events
+        /// </summary>
         private void OnGUI()
         {
+            // Scroll bar
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
             
-            //
-            // Selects the wanted enemy type
-            //
-        
-            GUILayout.Label("Select Enemy Type", EditorStyles.boldLabel);
-            GUILayout.Label("");
+            //Set Initial Values
+            _selectedType = EnemyType.Melee;
+            _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
+            
+            EditorGUILayout.Space();
+            // Gives the user the option to select the enemy type they wish to spawn
+            EditorGUILayout.LabelField(new GUIContent("Spawn Option:", "Select what type of enemy you wish to spawn"), EditorStyles.boldLabel);
+            _selectedEnemyTypeIndex = EditorGUILayout.Popup(_selectedEnemyTypeIndex, _enemyTypes);
 
-            if (GUILayout.Button("Melee"))
+            switch (_selectedEnemyTypeIndex)
             {
-                _selectedType = EnemyType.Melee;
-                _aggroRange = 5;
+                case 0:
+                    _selectedType = EnemyType.Melee;
+                    _aggroRange = 5;
+                    break;
+                case 1:
+                    _selectedType = EnemyType.Archer;
+                    _aggroRange = 20;
+                    break;
+                case 2:
+                    _selectedType = EnemyType.Exploder;
+                    _aggroRange = 10;
+                    break;
             }
-
-            if (GUILayout.Button("Archer"))
-            {
-                _selectedType = EnemyType.Archer;
-                _aggroRange = 20;
-            }
-
-            if (GUILayout.Button("Exploder"))
-            {
-                _selectedType = EnemyType.Exploder;
-                _aggroRange = 10;
-            }
-
-            //
-            // Displays the wanted enemy type that has been selected
-            //
-        
-            GUILayout.Label("Selected Enemy Type: " + _selectedType, EditorStyles.boldLabel);
-            GUILayout.Label("");
-
-            //
+            
+            EditorGUILayout.Space();
+            
             // Do different things based on the selected enemy type
             // Allow selection of different weapons or types for the selected enemy type
-            //
-        
             switch (_selectedType)
             {
                 // Melee allows selection of different melee weapons
                 case EnemyType.Melee:
-                    _meleeEnemy = (GameObject)EditorGUILayout.ObjectField("Melee Enemy Prefab:", _meleeEnemy, typeof(GameObject), true);
+                    _meleeEnemy = (GameObject)EditorGUILayout.ObjectField(new GUIContent("Melee Enemy Prefab:", "Please enter the corresponding prefab to the selected enemy type"), _meleeEnemy, typeof(GameObject), true);
 
-                    if (GUILayout.Button("Shortsword"))
+                    _selectedMeleeEnemyIndex = EditorGUILayout.Popup(new GUIContent("Melee Enemy Type:", "Select a type of Melee Unit"), _selectedMeleeEnemyIndex, _meleeEnemyTypes);
+
+                    switch (_selectedMeleeEnemyIndex)
                     {
-                        _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
-                        _attackDamage = 10;
-                        _timeBetweenAttacks = 2f;
-                        _attackRange = 1.5f;
-                        _aggroRange = 5;
-                        _movementSpeed = 5;
-                        _enemyHealth = 30;
+                        case 0:
+                            _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
+                            _attackDamage = 10;
+                            _timeBetweenAttacks = 2f;
+                            _attackRange = 1.5f;
+                            _aggroRange = 5;
+                            _movementSpeed = 5;
+                            _enemyHealth = 30;
+                            break;
+                        case 1:
+                            _selectedMeleeWeapon = MeleeWeaponType.Longsword;
+                            _attackDamage = 15;
+                            _timeBetweenAttacks = 3.5f;
+                            _attackRange = 3;
+                            _aggroRange = 5;
+                            _movementSpeed = 3;
+                            _enemyHealth = 60;
+                            break;
+                        case 2:
+                            _selectedMeleeWeapon = MeleeWeaponType.Greatsword;
+                            _attackDamage = 50;
+                            _timeBetweenAttacks = 5f;
+                            _attackRange = 3;
+                            _aggroRange = 5;
+                            _movementSpeed = 1.5f;
+                            _enemyHealth = 100;
+                            break;
                     }
-
-                    if (GUILayout.Button("Longsword"))
-                    {
-                        // All need redoing
-                        _selectedMeleeWeapon = MeleeWeaponType.Longsword;
-                        _attackDamage = 15;
-                        _timeBetweenAttacks = 3.5f;
-                        _attackRange = 3;
-                        _aggroRange = 5;
-                        _movementSpeed = 3;
-                        _enemyHealth = 60;
-                    }
-
-                    if (GUILayout.Button("Greatsword"))
-                    {
-                        // All need redoing
-                        _selectedMeleeWeapon = MeleeWeaponType.Greatsword;
-                        _attackDamage = 50;
-                        _timeBetweenAttacks = 5f;
-                        _attackRange = 3;
-                        _aggroRange = 5;
-                        _movementSpeed = 1.5f;
-                        _enemyHealth = 100;
-                    }
-
-                    GUILayout.Label("Selected Melee weapon Type: " + _selectedMeleeWeapon, EditorStyles.boldLabel);
                     break;
 
                 // Archer allows selection of different bows
                 case EnemyType.Archer:
-                    _archerEnemy = (GameObject)EditorGUILayout.ObjectField("Archer Enemy Prefab:", _archerEnemy, typeof(GameObject), true);
+                    _archerEnemy = (GameObject)EditorGUILayout.ObjectField(new GUIContent("Archer Enemy Prefab:", "Please enter the corresponding prefab to the selected enemy type"), _archerEnemy, typeof(GameObject), true);
 
-                    if (GUILayout.Button("Shortbow"))
+                    _selectedArcherEnemyIndex = EditorGUILayout.Popup(new GUIContent("Archer Enemy Type:", "Select a type of Archer Unit"), _selectedArcherEnemyIndex, _archerEnemyTypes);
+
+                    switch (_selectedArcherEnemyIndex)
                     {
-                        _selectedArcherWeapon = ArcherWeaponType.Shortbow;
-                        _attackDamage = 10;
-                        _timeBetweenAttacks = 2;
-                        _attackRange = 9;
-                        _movementSpeed = 5;
-                        _enemyHealth = 20;
+                        case 0:
+                            _selectedArcherWeapon = ArcherWeaponType.Shortbow;
+                            _attackDamage = 10;
+                            _timeBetweenAttacks = 2;
+                            _attackRange = 9;
+                            _movementSpeed = 5;
+                            _enemyHealth = 20;
+                            break;
+                        case 1:
+                            _selectedArcherWeapon = ArcherWeaponType.Longbow;
+                            _attackDamage = 15;
+                            _timeBetweenAttacks = 3.5f;
+                            _attackRange = 9;
+                            _movementSpeed = 3;
+                            _enemyHealth = 50;
+                            break;
+                        case 2:
+                            _selectedArcherWeapon = ArcherWeaponType.Greatbow;
+                            _attackDamage = 50;
+                            _timeBetweenAttacks = 5f;
+                            _attackRange = 9;
+                            _movementSpeed = 1.5f;
+                            _enemyHealth = 75;
+                            break;
                     }
-
-                    if (GUILayout.Button("Longbow"))
-                    {
-                        _selectedArcherWeapon = ArcherWeaponType.Longbow;
-                        _attackDamage = 15;
-                        _timeBetweenAttacks = 3.5f;
-                        _attackRange = 9;
-                        _movementSpeed = 3;
-                        _enemyHealth = 50;
-                    }
-
-                    if (GUILayout.Button("Greatbow"))
-                    {
-                        _selectedArcherWeapon = ArcherWeaponType.Greatbow;
-                        _attackDamage = 50;
-                        _timeBetweenAttacks = 5f;
-                        _attackRange = 9;
-                        _movementSpeed = 1.5f;
-                        _enemyHealth = 75;
-                    }
-
-                    GUILayout.Label("Selected Archer weapon Type: " + _selectedArcherWeapon, EditorStyles.boldLabel);
                     break;
 
                 // Exploder allows selection of different exploder types
                 case EnemyType.Exploder:
-                    _exploderEnemy = (GameObject)EditorGUILayout.ObjectField("Exploder Enemy Prefab:", _exploderEnemy, typeof(GameObject), true);
+                    _exploderEnemy = (GameObject)EditorGUILayout.ObjectField(new GUIContent("Exploder Enemy Prefab:", "Please enter the corresponding prefab to the selected enemy type"), _exploderEnemy, typeof(GameObject), true);
 
-                    if (GUILayout.Button("Small"))
+                    _selectedExploderEnemyIndex = EditorGUILayout.Popup(new GUIContent("Exploder Enemy Type:", "Select a type of Exploder Unit"), _selectedExploderEnemyIndex, _exploderEnemyTypes);
+
+                    switch (_selectedExploderEnemyIndex)
                     {
-                        _selectedExploderType = ExploderType.Small;
-                        _attackDamage = 25;
-                        _timeBetweenAttacks = 1;
-                        _attackRange = 1.5f;
-                        _explosionRadius = 3f;
-                        _movementSpeed = 3;
-                        _enemyHealth = 50;
+                        case 0:
+                            _selectedExploderType = ExploderType.Small;
+                            _attackDamage = 25;
+                            _timeBetweenAttacks = 1;
+                            _attackRange = 1.5f;
+                            _explosionRadius = 3f;
+                            _movementSpeed = 3;
+                            _enemyHealth = 50;
+                            break;
+                        case 1:
+                            _selectedExploderType = ExploderType.Medium;
+                            _attackDamage = 50;
+                            _timeBetweenAttacks = 1;
+                            _attackRange = 2;
+                            _explosionRadius = 4.5f;
+                            _movementSpeed = 2;
+                            _enemyHealth = 100;
+                            break;
+                        case 2:
+                            _selectedExploderType = ExploderType.Nuke;
+                            _attackDamage = 200;
+                            _timeBetweenAttacks = 1f;
+                            _attackRange = 3.5f;
+                            _explosionRadius = 6.5f;
+                            _movementSpeed = 1.5f;
+                            _enemyHealth = 200;
+                            break;
                     }
-
-                    if (GUILayout.Button("Medium"))
-                    {
-                        _selectedExploderType = ExploderType.Medium;
-                        _attackDamage = 50;
-                        _timeBetweenAttacks = 1;
-                        _attackRange = 2;
-                        _explosionRadius = 4.5f;
-                        _movementSpeed = 2;
-                        _enemyHealth = 100;
-                    }
-
-                    if (GUILayout.Button("Nuke"))
-                    {
-                        _selectedExploderType = ExploderType.Nuke;
-                        _attackDamage = 200;
-                        _timeBetweenAttacks = 1f;
-                        _attackRange = 3.5f;
-                        _explosionRadius = 6.5f;
-                        _movementSpeed = 1.5f;
-                        _enemyHealth = 200;
-                    }
-
-                    GUILayout.Label("Selected Exploder Type: " + _selectedExploderType, EditorStyles.boldLabel);
                     break;
             }
         
-            GUILayout.Label("");
-        
+            EditorGUILayout.Space();
+            GUILayout.Label(new GUIContent("Enemy Attributes Section", "Set the attributes for the enemy"), EditorStyles.boldLabel);
+            EditorGUILayout.Space();
+            
             // Allows user to enter the attack speed attribute for the enemy
-            GUILayout.Label("Enter the Time between Attacks", EditorStyles.boldLabel);
-            _timeBetweenAttacks = EditorGUILayout.FloatField("Time between Attacks:", _timeBetweenAttacks);
-
-            GUILayout.Label("Enter Aggro Range", EditorStyles.boldLabel);
-            _aggroRange = EditorGUILayout.FloatField("Aggro Range:", _aggroRange);
+            _timeBetweenAttacks = EditorGUILayout.FloatField(new GUIContent("Time between Attacks:", "Enter the time between each attack for the enemy, their attack cooldown"), _timeBetweenAttacks);
+            
+            // Allows the user to enter the aggression range attribute for the enemy
+            _aggroRange = EditorGUILayout.FloatField(new GUIContent("Aggro Range:", "Enter the range in which the enemy will start tracking the player"), _aggroRange);
             
             // Allows user to enter the aggro range attribute for the enemy
-            GUILayout.Label("Enter Attack Range", EditorStyles.boldLabel);
-            _attackRange = EditorGUILayout.FloatField("Attack Range:", _attackRange);
+            _attackRange = EditorGUILayout.FloatField(new GUIContent("Attack Range:", "Enter the range in which the enemy must be from the player before it will start attacking"), _attackRange);
 
 
             if (_selectedType != EnemyType.Archer)
             {
                 // Allows user to enter the attack damage attribute for the enemy
-                GUILayout.Label("Enter Attack Damage", EditorStyles.boldLabel);
-                _attackDamage = EditorGUILayout.FloatField("Attack Damage:", _attackDamage);
+                _attackDamage = EditorGUILayout.FloatField(new GUIContent("Attack Damage:", "Enter the attack damage of the enemy"), _attackDamage);
             }
 
+            
             if (_selectedType == EnemyType.Archer)
             {
-                GUILayout.Label("Select Arrow Type", EditorStyles.boldLabel);
-                _selectedArrowTypeIndex = EditorGUILayout.Popup("Agent Type:", _selectedArrowTypeIndex, _arrowTypes);
-                
-                
-                switch (_selectedArrowTypeIndex)
-                {
-                    case 0:
-                        _selectedArrowOption = ArrowOption.StandardArrow;
-                        break;
-                    case 1:
-                        _selectedArrowOption = ArrowOption.BroadheadArrow;
-                        break;
-                    case 2:
-                        _selectedArrowOption = ArrowOption.Greatbolt;
-                        break;
-                }
+                // Allows the user to select the arrow type for the archer
+                _selectedArrowTypeIndex = EditorGUILayout.Popup(new GUIContent("Arrow Type:", "Select the arrow type that the archer will shoot"), _selectedArrowTypeIndex, _arrowTypes);
             }
 
-            // Allows the user to enter the explosion radius attribute for the enemy
             if (_selectedType == EnemyType.Exploder)
             {
-                GUILayout.Label("Enter Explosion Radius", EditorStyles.boldLabel);
-                _explosionRadius = EditorGUILayout.FloatField("Explosion Radius:", _explosionRadius);
+                // Allows the user to enter the explosion radius attribute for the enemy
+                _explosionRadius = EditorGUILayout.FloatField(new GUIContent("Explosion Radius:", "Enter the explosion radius of the Exploder Unit"), _explosionRadius);
             }
             
             // Allows user to enter the movement speed attribute for the enemy
-            GUILayout.Label("Enter Movement Speed", EditorStyles.boldLabel);
-            _movementSpeed = EditorGUILayout.FloatField("Movement Speed:", _movementSpeed);
+            _movementSpeed = EditorGUILayout.FloatField(new GUIContent("Movement Speed:", "Enter the speed at which the enemy can move"), _movementSpeed);
             
             // Allows the user to enter the HP of the enemy
-            GUILayout.Label("Enter the HP of the Unit", EditorStyles.boldLabel);
-            _enemyHealth = EditorGUILayout.IntField("HP:", _enemyHealth);
+            _enemyHealth = EditorGUILayout.IntField(new GUIContent("HP:", "Enter the health points for the Enemy"), _enemyHealth);
 
-
+            EditorGUILayout.Space();
             
             GUILayout.Label("Select Agent Type", EditorStyles.boldLabel);
-            _selectedAgentTypeIndex = EditorGUILayout.Popup("Agent Type:", _selectedAgentTypeIndex, _agentTypes);
+            // Allows the user to select the agent type which will make it so the agent is either roaming the bounds of the grid or following set patrol points
+            _selectedAgentTypeIndex = EditorGUILayout.Popup(new GUIContent("Agent Type:", "Select whether the enemy will roam the bounds of the grid or follow patrol points"), _selectedAgentTypeIndex, _agentTypes);
 
             switch (_selectedAgentTypeIndex)
             {
@@ -318,72 +314,76 @@ public class EnemyCreator : EditorWindow
                     _selectedOption = SelectionOption.FollowPatrolPoints;
                     break;
             }
-
-            
             
             if (_selectedOption == SelectionOption.FollowPatrolPoints)
             {
                 GUILayout.BeginHorizontal();
-                _newGameObject = (Transform)EditorGUILayout.ObjectField(_newGameObject, typeof(Transform), true);
+                // Option to add Patrol Points to the list
+                _newPatrolPoint = (Transform)EditorGUILayout.ObjectField(_newPatrolPoint, typeof(Transform), true);
                 if (GUILayout.Button("Add", GUILayout.Width(50)))
                 {
-                    if (_newGameObject != null && !_gameObjects.Contains(_newGameObject))
+                    if (_newPatrolPoint != null && !_patrolPoints.Contains(_newPatrolPoint))
                     {
-                        _gameObjects.Add(_newGameObject);
-                        _newGameObject = null;
+                        _patrolPoints.Add(_newPatrolPoint);
+                        _newPatrolPoint = null;
                     }
                     
                 }
                 GUILayout.EndHorizontal();
-                
-                GUILayout.Label("Current Patrol Points", EditorStyles.boldLabel);
-                for (int i = 0; i < _gameObjects.Count; i++)
+                // Lists the Patrol Points on the editor window with an option to remove the Patrol Points in the list
+                GUILayout.Label(new GUIContent("Current Patrol Points", "The current list of patrol points that the enemy will follow"), EditorStyles.boldLabel);
+                for (int i = 0; i < _patrolPoints.Count; i++)
                 {
                     GUILayout.BeginHorizontal();
-                    EditorGUILayout.ObjectField(_gameObjects[i], typeof(Transform), true);
+                    EditorGUILayout.ObjectField(_patrolPoints[i], typeof(Transform), true);
                     if (GUILayout.Button("Remove", GUILayout.Width(60)))
                     {
-                        _gameObjects.RemoveAt(i);
-                        break; // Exit the loop to avoid modifying the list while iterating
+                        _patrolPoints.RemoveAt(i);
+                        break;
                     }
                     GUILayout.EndHorizontal();
                 }
-
                 
-                
+                // Display error message and prevent enemy spawning if patrol points are being used and there is
+                // less than 2 in the list
+                if (_selectedOption == SelectionOption.FollowPatrolPoints && _patrolPoints.Count < 2)
+                {
+                    EditorGUILayout.HelpBox("At least 2 patrol points are required for enemies to follow patrol points.", MessageType.Error);
+                    GUILayout.EndScrollView();
+                    return;
+                }
             }
-
-
-            //GUILayout.Space(10);
-            GUILayout.Label("");
+            
+            EditorGUILayout.Space();
         
             // Allows the user to select from multiple different spawn locations
-            GUILayout.Label("Select Spawn Option", EditorStyles.boldLabel);
+            GUILayout.Label(new GUIContent("Select Spawn Option", "Select the type of spawn option to be used for the enemy"), EditorStyles.boldLabel);
             _selectedSpawnOptionIndex = EditorGUILayout.Popup("Spawn Option:", _selectedSpawnOptionIndex, _spawnOptions);
         
             switch (_selectedSpawnOptionIndex)
             {
                 case 0:
+                    // Handle spawning in front of camera
                     var cameraTransform = SceneView.lastActiveSceneView.camera.transform;
                     _spawnLocation = cameraTransform.position + cameraTransform.forward * 2f;
-                    // Handle spawning in front of camera
                     break;
 
                 case 1:
-                    GUILayout.Label("");
-                    GUILayout.Label("Enter Spawn Location", EditorStyles.boldLabel);
+                    // Handle spawning at specific position
+                    EditorGUILayout.Space();
+                    GUILayout.Label(new GUIContent("Enter Spawn Location", "Enter the X, Y, and Z Coordinates to spawn the enemy at"), EditorStyles.boldLabel);
                     _spawnLocation = new Vector3(21, 0, 21);
                     _spawnLocation = EditorGUILayout.Vector3Field("Spawn Location:", _spawnLocation);
-                    // Handle spawning at specific position
+                    
                     break;
 
                 case 2:
-                    _spawnLocation = new Vector3(Random.Range(0, 25), 0, Random.Range(0, 25));
-                    
                     // Handle spawning anywhere
+                    _spawnLocation = new Vector3(Random.Range(0, 25), 0, Random.Range(0, 25));
                     break;
                 
                 case 3:
+                    // Handle spawning on the selected GameObject in the scene view
                     if (Selection.activeGameObject != null)
                     {
                         _spawnOnSelectedGameObject = true;
@@ -392,20 +392,22 @@ public class EnemyCreator : EditorWindow
                     else
                     {
                         _spawnOnSelectedGameObject = false;
-                        GUILayout.Label("");
-                        GUILayout.Label("WARNING: No GameObject selected to spawn on.");
-                        GUILayout.Label("Please select a GameObject to spawn on.");
+                        EditorGUILayout.Space();
+                        // Display error message if there is not a GameObject selected
+                        EditorGUILayout.HelpBox("A GameObject must be selected for this feature.", MessageType.Error);
+                        GUILayout.EndScrollView();
+                        return;
                     }
                     break;
             }
             
-            GUILayout.Label("");
+            EditorGUILayout.Space();
         
             // Allows the user to enter the amount of enemies to spawn
             GUILayout.Label("Enter amount to Spawn", EditorStyles.boldLabel);
             _amountToSpawn = EditorGUILayout.IntSlider("Amount to Spawn:", _amountToSpawn, 1, 10);
         
-            GUILayout.Label("");
+            EditorGUILayout.Space();
             
             // Will instantiate the enemy with the selected attributes
             if (GUILayout.Button("Create Enemy"))
@@ -417,6 +419,9 @@ public class EnemyCreator : EditorWindow
                     return;
                 }
                 
+                
+                
+                // Sets the var to the prefab
                 if (_selectedType == EnemyType.Melee && _meleeEnemy != null)
                 {
                     objectToInstantiate = _meleeEnemy;
@@ -454,25 +459,22 @@ public class EnemyCreator : EditorWindow
                             exploder.baseDamage = Mathf.RoundToInt(_attackDamage);
                         }
                     }
-                        
-                        
+                    
+                    // Set the enemies health
                     enemyHealth.health = _enemyHealth;
             
                     // Assign the attributes to the enemy
                     if (pathfinding != null && enemyMovement != null)
                     {
-                        //enemyScript.enemyAttributes = _enemyAttributes;
-                        
-                        // Probably shouldn't be in pathfinding? but then again state change based on pathfinding
-                        pathfinding.timeBetweenAttacks = _timeBetweenAttacks;
                         pathfinding.aggroRange = _aggroRange;
                         pathfinding.attackRange = _attackRange;
                         pathfinding.selectionOption = (Pathfinding.SelectionOption)_selectedOption;
                         enemyMovement.movementSpeed = _movementSpeed;
 
+                        // Set the Patrol Points in the enemy
                         if (_selectedOption == SelectionOption.FollowPatrolPoints)
                         {
-                            pathfinding.patrolPointsList = _gameObjects;
+                            pathfinding.patrolPointsList = _patrolPoints;
                         }
 
                         if (_selectedType == EnemyType.Melee)
@@ -481,118 +483,40 @@ public class EnemyCreator : EditorWindow
                             // Find which weapon is selected, then get the corresponding child object and set it to active
                             if (_selectedMeleeWeapon == MeleeWeaponType.Longsword)
                             {
-                                Transform meshTransform = newEnemy.transform.Find("Mesh");
-                                if (meshTransform != null)
-                                {
-                                    Debug.Log("Mesh found");
-                                    Transform weaponTransform = meshTransform.Find("Longsword");
-                                    if (weaponTransform != null)
-                                    {
-                                        Debug.Log("Longsword found");
-                                        // Setting the child GameObject active
-                                        weaponTransform.gameObject.SetActive(true);
-                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
-                                        dealDamage.damage = (int)_attackDamage;
-                                    }
-                                }
+                                EnableCorrespondingWeapon(_selectedMeleeWeapon.ToString(), newEnemy, EnemyType.Melee);
                             }
                             else if (_selectedMeleeWeapon == MeleeWeaponType.Greatsword)
                             {
-                                Transform meshTransform = newEnemy.transform.Find("Mesh");
-                                if (meshTransform != null)
-                                {
-                                    Debug.Log("Mesh found");
-                                    Transform weaponTransform = meshTransform.Find("Greatsword");
-                                    if (weaponTransform != null)
-                                    {
-                                        Debug.Log("Greatsword found");
-                                        // Setting the child GameObject active
-                                        weaponTransform.gameObject.SetActive(true);
-                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
-                                        dealDamage.damage = (int)_attackDamage;
-                                    }
-                                }
+                                EnableCorrespondingWeapon(_selectedMeleeWeapon.ToString(), newEnemy, EnemyType.Melee);
                             }
                             else if (_selectedMeleeWeapon == MeleeWeaponType.Shortsword)
                             {
-                                Transform meshTransform = newEnemy.transform.Find("Mesh");
-                                if (meshTransform != null)
-                                {
-                                    Debug.Log("Mesh found");
-                                    Transform weaponTransform = meshTransform.Find("Shortsword");
-                                    if (weaponTransform != null)
-                                    {
-                                        Debug.Log("Shortsword found");
-                                        // Setting the child GameObject active
-                                        weaponTransform.gameObject.SetActive(true);
-                                        DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
-                                        dealDamage.damage = (int)_attackDamage;
-                                    }
-                                }
+                                EnableCorrespondingWeapon(_selectedMeleeWeapon.ToString(), newEnemy, EnemyType.Melee);
                             } 
                         }
 
                         if (_selectedType == EnemyType.Archer)
                         {
-                            pathfinding.arrowToShoot = _selectedArrowTypeIndex;
                             pathfinding.enemyType = Pathfinding.EnemyType.Archer;
                             // Find which weapon is selected, then get the corresponding child object and set it to active
                             if (_selectedArcherWeapon == ArcherWeaponType.Longbow)
                             {
-                                Transform meshTransform = newEnemy.transform.Find("Mesh");
-                                if (meshTransform != null)
-                                {
-                                    Debug.Log("Mesh found");
-                                    Transform weaponTransform = meshTransform.Find("Longbow");
-                                    if (weaponTransform != null)
-                                    {
-                                        Debug.Log("Longbow found");
-                                        // Setting the child GameObject active
-                                        weaponTransform.gameObject.SetActive(true);
-                                        
-                                        
-                                    }
-                                }
+                                EnableCorrespondingWeapon(_selectedArcherWeapon.ToString(), newEnemy, EnemyType.Archer);
                             }
                             else if (_selectedArcherWeapon == ArcherWeaponType.Greatbow)
                             {
-                                Transform meshTransform = newEnemy.transform.Find("Mesh");
-                                if (meshTransform != null)
-                                {
-                                    Debug.Log("Mesh found");
-                                    Transform weaponTransform = meshTransform.Find("Greatbow");
-                                    if (weaponTransform != null)
-                                    {
-                                        Debug.Log("Greatbow found");
-                                        // Setting the child GameObject active
-                                        weaponTransform.gameObject.SetActive(true);
-                                        
-                                        
-                                    }
-                                }
+                                EnableCorrespondingWeapon(_selectedArcherWeapon.ToString(), newEnemy, EnemyType.Archer);
                             }
                             else if (_selectedArcherWeapon == ArcherWeaponType.Shortbow)
                             {
-                                Transform meshTransform = newEnemy.transform.Find("Mesh");
-                                if (meshTransform != null)
-                                {
-                                    Debug.Log("Mesh found");
-                                    Transform weaponTransform = meshTransform.Find("Shortbow");
-                                    if (weaponTransform != null)
-                                    {
-                                        Debug.Log("Shortbow found");
-                                        // Setting the child GameObject active
-                                        weaponTransform.gameObject.SetActive(true);
-                                        
-                                        
-                                    }
-                                }
+                                EnableCorrespondingWeapon(_selectedArcherWeapon.ToString(), newEnemy, EnemyType.Archer);
                             }
                         }
 
                         if (_selectedType == EnemyType.Exploder)
                         {
                             pathfinding.enemyType = Pathfinding.EnemyType.Exploder;
+                            // Apply appropriate scale depending on the exploder type
                             if (_selectedExploderType == ExploderType.Small)
                             {
                                 newEnemy.transform.localScale = new Vector3(1, .5f, 1);
@@ -611,25 +535,61 @@ public class EnemyCreator : EditorWindow
             }
             GUILayout.EndScrollView();
         }
+        
+        /// <summary>
+        /// This method finds a transform called "Mesh" on the param newEnemy, it will then find Mesh transform that is
+        /// the same as the string param weaponName on the Mesh transform, once that is found it will set it to active.
+        /// If the enemy type is Melee type then it will find the DealDamage script on the weaponName mesh and apply
+        /// the _attackDamage var to the DealDamage scripts damage var.
+        /// </summary>
+        /// <param name="weaponName"></param>
+        /// <param name="newEnemy"></param>
+        /// <param name="enemyType"></param>
+        private void EnableCorrespondingWeapon(string weaponName, GameObject newEnemy, EnemyType enemyType)
+        {
+            // Get the mesh
+            Transform meshTransform = newEnemy.transform.Find("Mesh");
+            if (meshTransform != null)
+            {
+                Debug.Log("Mesh found");
+                // Get the appropriate weapon off the mesh
+                Transform weaponTransform = meshTransform.Find(weaponName);
+                if (weaponTransform != null)
+                {
+                    Debug.Log(weaponName + " found");
+                    // Enable the appropriate weapon
+                    weaponTransform.gameObject.SetActive(true);
+
+                    switch (enemyType)
+                    {
+                        case EnemyType.Melee:
+                        {
+                            DealDamage dealDamage = weaponTransform.GetComponent<DealDamage>();
+                            if (dealDamage != null)
+                            {
+                                dealDamage.damage = Mathf.RoundToInt(_attackDamage);
+                            }
+                            MeleeUnit meleeUnit = newEnemy.GetComponent<MeleeUnit>();
+                            if (meleeUnit != null)
+                            {
+                                meleeUnit.timeBetweenAttacks = _timeBetweenAttacks;
+                            }
+                            break;
+                        }
+                        case EnemyType.Archer:
+                            ArcherUnit archerUnit = newEnemy.GetComponent<ArcherUnit>();
+                            if (archerUnit != null)
+                            {
+                                archerUnit.timeBetweenAttacks = _timeBetweenAttacks;
+                                archerUnit.arrowToShoot = _selectedArrowTypeIndex;
+                            }
+                            break;
+                    }
+                }
+            }
+        }
     }
 
-            /*if (GUILayout.Button("Create Attributes for Enemy"))
-        {
-            SpawnManagerScriptableObject newEnemyAttributes = CreateInstance<SpawnManagerScriptableObject>();
-            newEnemyAttributes.attackSpeed = _attackSpeed;
-            newEnemyAttributes.attackRange = _attackRange;
-            newEnemyAttributes.attackDamage = _attackDamage;
-            newEnemyAttributes.movementSpeed = _movementSpeed;
 
-            string path = EditorUtility.SaveFilePanelInProject("Save Enemy Attribute", "NewEnemyAttribute", "asset", "Save enemy attribute");
-            if (!string.IsNullOrEmpty(path))
-            {
-                AssetDatabase.CreateAsset(newEnemyAttributes, path);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
-                EditorUtility.FocusProjectWindow();
-                Selection.activeObject = newEnemyAttributes;
-            }
-        }*/
     
     

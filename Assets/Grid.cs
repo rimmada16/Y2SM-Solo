@@ -2,6 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+namespace AStarPathfinding
+{
+    
 public class Grid : MonoBehaviour
 {
 
@@ -153,5 +156,4 @@ public class Grid : MonoBehaviour
 
     }
 }
-
-
+}
