@@ -3,6 +3,9 @@ using UnityEngine;
 using System.Collections.Generic;
 using AStarPathfinding;
 
+    /// <summary>
+    /// Handles the movement of the enemy agents
+    /// </summary>
     public class EnemyMovement : MonoBehaviour
     {
         public float movementSpeed = 5f; // Adjust the speed as needed
@@ -11,11 +14,17 @@ using AStarPathfinding;
         private bool _initialPathCalculated;
         private bool _canFollowPath = true;
 
+        /// <summary>
+        /// Get the Pathfinding component
+        /// </summary>
         private void Awake()
         {
             _pathfinding = GetComponent<Pathfinding>();
         }
 
+        /// <summary>
+        /// Check if the enemy can follow the path and follow the path
+        /// </summary>
         private void Update()
         {
             if (_canFollowPath && _pathfinding.canPathFindToTarget)
@@ -36,7 +45,15 @@ using AStarPathfinding;
                 _initialPathCalculated = true;
             }
         }
-
+        
+        /// <summary>
+        /// Retrieves the path to follow from the pathfinding script. If certain conditions are met, resets the node
+        /// index. Moves the enemy towards each node sequentially, incrementing the node index upon reaching each node.
+        /// When the node index equals the total number of nodes in the path, it resets the node index. If the enemy is
+        /// patrolling, calls the PatrolPointFollower method from the pathfinding script. If the enemy is not
+        /// patrolling, obtains a new target and initiates a coroutine to introduce a delay before continuing onto the
+        /// new path.
+        /// </summary>
         private void FollowPath()
         {
             List<Node> finalPath = _pathfinding.GetFinalPath(gameObject);
@@ -49,10 +66,10 @@ using AStarPathfinding;
             }
 
             // Move towards the current node
-            transform.position = Vector3.MoveTowards(transform.position, finalPath[_currentNodeIndex].NodePosition, movementSpeed * Time.deltaTime);
+            transform.position = Vector3.MoveTowards(transform.position, finalPath[_currentNodeIndex].nodePosition, movementSpeed * Time.deltaTime);
 
             // Check if the enemy's position matches the position of the current node
-            if (Vector3.Distance(transform.position, finalPath[_currentNodeIndex].NodePosition) < .1f)
+            if (Vector3.Distance(transform.position, finalPath[_currentNodeIndex].nodePosition) < .1f)
             {
                 // Increment currentNodeIndex
                 _currentNodeIndex++;
@@ -83,6 +100,9 @@ using AStarPathfinding;
             }
         }
 
+        /// <summary>
+        /// Coroutine to introduce a delay before resuming following the path.
+        /// </summary>
         private IEnumerator WaitBeforeFollowingPath()
         {
             yield return new WaitForSeconds(1f);

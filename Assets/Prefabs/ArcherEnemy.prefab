@@ -913,14 +913,10 @@ MonoBehaviour:
   isFollowingPlayer: 0
   isTargetingPatrolPoints: 0
   patrolPointsList: []
-  results: []
   isAttacking: 0
   attackRange: 1.5
   aggroRange: 5
-  _initialPathCalculated: 0
-  canPathfind: 1
-  timeBetweenAttacks: 2
-  arrowToShoot: 0
+  canPathFindToTarget: 1
 --- !u!114 &-4729588218445702132
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -933,6 +929,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7677de75fa20b7b41bb435f33d798ca0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  arrowToShoot: 0
+  timeBetweenAttacks: 2
 --- !u!1 &4763234367417390314
 GameObject:
   m_ObjectHideFlags: 0

@@ -282,13 +282,10 @@ MonoBehaviour:
   isFollowingPlayer: 0
   isTargetingPatrolPoints: 0
   patrolPointsList: []
-  results: []
   isAttacking: 0
   attackRange: 1.5
   aggroRange: 5
-  canPathfind: 1
-  timeBetweenAttacks: 2
-  arrowToShoot: 0
+  canPathFindToTarget: 1
 --- !u!114 &3835174713367845126
 MonoBehaviour:
   m_ObjectHideFlags: 0

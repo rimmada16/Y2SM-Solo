@@ -9,6 +9,14 @@ public delegate void MeleeAttackEvent(GameObject source);
 
 public delegate void RangedAttackEvent(GameObject source);
 
+public delegate void HealthValueChangedEvent(int health);
+
+public delegate void KillCountChangedEvent();
+
+public delegate void KillCountInitialisationEvent();
+
+public delegate void EnemySpawnedEvent();
+
 
 public class GameManager : MonoBehaviour
 {

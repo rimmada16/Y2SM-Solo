@@ -1,157 +1,158 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace AStarPathfinding
 {
-    
+/// <summary>
+///Represents a grid used for pathfinding in the game environment. This class manages the creation of a grid layout,
+/// defines obstacles, and provides methods to retrieve neighboring nodes and find nodes based on world positions.
+/// It also visualizes the grid and node information in the Scene view for debugging purposes.
+/// </summary> 
 public class Grid : MonoBehaviour
 {
-
-    public Transform StartPosition;
-    public LayerMask WallMask;
-    public Vector2 vGridWorldSize;
-    public float fNodeRadius;
-    public float fDistanceBetweenNodes;
-
-    Node[,] NodeArray;
-    public List<Node> FinalPath;
+    [Header("Grid Settings")]
+    public Vector2 gridWorldSize;
+    private int _gridSizeX, _gridSizeY;
     
+    [Header("What is an Obstacle?")]
+    [SerializeField] private LayerMask wallMask;
+    
+    [Header("Node Settings")]
+    [SerializeField] private float nodeRadius;
+    [SerializeField] private float distanceBetweenNodes;
+    public float nodeDiameter;
+    private Node[,] _nodeArray;
+    public readonly Dictionary<GameObject, List<Node>> EnemyFinalPaths = new();
 
-
-    public float fNodeDiameter;
-    int iGridSizeX, iGridSizeY;
-    public Dictionary<GameObject, List<Node>> enemyFinalPaths = new Dictionary<GameObject, List<Node>>();
-
+    /// <summary>
+    /// Grid initialization via calculation of needed parameters and then actually creates the grid.
+    /// </summary>
     private void Start()
     {
-        fNodeDiameter = fNodeRadius * 2;
-        iGridSizeX = Mathf.RoundToInt(vGridWorldSize.x / fNodeDiameter);
-        iGridSizeY = Mathf.RoundToInt(vGridWorldSize.y / fNodeDiameter);
+        nodeDiameter = nodeRadius * 2;
+        _gridSizeX = Mathf.RoundToInt(gridWorldSize.x / nodeDiameter);
+        _gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
         CreateGrid();
     }
 
-    public void SetEnemyFinalPath(GameObject enemy, List<Node> finalPath)
+    /// <summary>
+    /// Sets the final path for the specified enemy GameObject.
+    /// </summary>
+    /// <param name="enemy">The GameObject representing the enemy.</param>
+    /// <param name="theFinalPath">The final path of nodes for the enemy.</param>
+    public void SetEnemyFinalPath(GameObject enemy, List<Node> theFinalPath)
     {
-        enemyFinalPaths[enemy] = finalPath;
-    }
-    
-    
-    void CreateGrid()
-    {
-        NodeArray = new Node[iGridSizeX, iGridSizeY];
-        Vector3 bottomLeft = transform.position - Vector3.right * vGridWorldSize.x / 2 - Vector3.forward * vGridWorldSize.y / 2;
-        for (int x = 0; x < iGridSizeX; x++)
-        {
-            for (int y = 0; y < iGridSizeY; y++)
-            {
-                Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
-                bool Wall = !Physics.CheckSphere(worldPoint, fNodeRadius, WallMask);
-                NodeArray[x, y] = new Node(Wall, worldPoint, x, y);
-            }
-        }
+        EnemyFinalPaths[enemy] = theFinalPath;
     }
 
-    //Gets the neighbouring nodes of the given node.
-    public List<Node> GetNeighbouringNodes(Node a_NeighbourNode)
+    /// <summary>
+    /// Creates the grid for the pathfinding algorithm using the specified parameters.
+    /// </summary>
+    private void CreateGrid()
     {
-        List<Node> NeighbourList = new List<Node>();//Make a new list of all available neighbors.
-        int icheckX;//Variable to check if the XPosition is within range of the node array to avoid out of range errors.
-        int icheckY;//Variable to check if the YPosition is within range of the node array to avoid out of range errors.
+        _nodeArray = new Node[_gridSizeX, _gridSizeY];
+        Vector3 bottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.forward * gridWorldSize.y / 2;
+        for (int x = 0; x < _gridSizeX; x++)
+        {
+            for (int y = 0; y < _gridSizeY; y++)
+            {
+                Vector3 worldPoint = bottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
+                bool wall = !Physics.CheckSphere(worldPoint, nodeRadius, wallMask);
+                _nodeArray[x, y] = new Node(wall, worldPoint, x, y);
+            }
+        }
+    }
 
-        //Check the right side of the current node.
-        icheckX = a_NeighbourNode.GridX + 1;
-        icheckY = a_NeighbourNode.GridY;
-        if (icheckX >= 0 && icheckX < iGridSizeX)//If the XPosition is in range of the array
+    /// <summary>
+    /// Gets the neighboring nodes of the given node.
+    /// </summary>
+    /// <param name="neighbourNode">The node whose neighbors are to be obtained.</param>
+    /// <returns>A list containing all neighboring nodes of the specified node.</returns>
+    public List<Node> GetNeighbouringNodes(Node neighbourNode)
+    {
+        // Make a new list of all available neighbors
+        List<Node> neighbourList = new List<Node>();
+
+        for (int x = -1; x <= 1; x++) 
         {
-            if (icheckY >= 0 && icheckY < iGridSizeY)//If the YPosition is in range of the array
+            for (int y = -1; y <= 1; y++) 
             {
-                NeighbourList.Add(NodeArray[icheckX, icheckY]);//Add the grid to the available neighbors list
-            }
-        }
-        //Check the Left side of the current node.
-        icheckX = a_NeighbourNode.GridX - 1;
-        icheckY = a_NeighbourNode.GridY;
-        if (icheckX >= 0 && icheckX < iGridSizeX)//If the XPosition is in range of the array
-        {
-            if (icheckY >= 0 && icheckY < iGridSizeY)//If the YPosition is in range of the array
-            {
-                NeighbourList.Add(NodeArray[icheckX, icheckY]);//Add the grid to the available neighbors list
-            }
-        }
-        //Check the Top side of the current node.
-        icheckX = a_NeighbourNode.GridX;
-        icheckY = a_NeighbourNode.GridY + 1;
-        if (icheckX >= 0 && icheckX < iGridSizeX)//If the XPosition is in range of the array
-        {
-            if (icheckY >= 0 && icheckY < iGridSizeY)//If the YPosition is in range of the array
-            {
-                NeighbourList.Add(NodeArray[icheckX, icheckY]);//Add the grid to the available neighbors list
-            }
-        }
-        //Check the Bottom side of the current node.
-        icheckX = a_NeighbourNode.GridX;
-        icheckY = a_NeighbourNode.GridY - 1;
-        if (icheckX >= 0 && icheckX < iGridSizeX)//If the XPosition is in range of the array
-        {
-            if (icheckY >= 0 && icheckY < iGridSizeY)//If the YPosition is in range of the array
-            {
-                NeighbourList.Add(NodeArray[icheckX, icheckY]);//Add the grid to the available neighbors list
+                // If we are on the node that was passed in, skip this iteration.
+                if (x == 0 && y == 0) 
+                {
+                    continue;
+                }
+
+                var checkX = neighbourNode.gridX + x;
+                var checkY = neighbourNode.gridY + y;
+
+                // Make sure the node is within the grid.
+                if (checkX >= 0 && checkX < _gridSizeX && checkY >= 0 && checkY < _gridSizeY) 
+                {
+                    // Adds to the neighbours list.
+                    neighbourList.Add(_nodeArray[checkX, checkY]); 
+                }
             }
         }
 
-        return NeighbourList;//Return the neighbors list.
+        return neighbourList;
     }
 
     //Gets the closest node to the given world position.
-    public Node NodeFromWorldPoint(Vector3 a_vWorldPos)
+    /// <summary>
+    /// Returns the node corresponding to the specified world position.
+    /// </summary>
+    /// <param name="worldPos">The world position use to find the closest node.</param>
+    /// <returns>The node corresponding to the specified world position.</returns>
+    public Node NodeFromWorldPoint(Vector3 worldPos)
     {
-        float ixPos = ((a_vWorldPos.x + vGridWorldSize.x / 2) / vGridWorldSize.x);
-        float iyPos = ((a_vWorldPos.z + vGridWorldSize.y / 2) / vGridWorldSize.y);
+        var ixPos = (worldPos.x + gridWorldSize.x / 2) / gridWorldSize.x;
+        var iyPos = (worldPos.z + gridWorldSize.y / 2) / gridWorldSize.y;
 
         ixPos = Mathf.Clamp01(ixPos);
         iyPos = Mathf.Clamp01(iyPos);
 
-        int ix = Mathf.RoundToInt((iGridSizeX - 1) * ixPos);
-        int iy = Mathf.RoundToInt((iGridSizeY - 1) * iyPos);
+        var ix = Mathf.RoundToInt((_gridSizeX - 1) * ixPos);
+        var iy = Mathf.RoundToInt((_gridSizeY - 1) * iyPos);
 
-        return NodeArray[ix, iy];
+        return _nodeArray[ix, iy];
     }
     
-    
-    
-    //Function that draws the wireframe
+    /// <summary>
+    /// Draws Gizmos in the Scene view for visualizing the grid and node information.
+    /// Grid will be in a grey colour, obstacles are visualised in yellow and the final path of the enemy is in red.
+    /// </summary>
     private void OnDrawGizmos()
     {
-       
-        
-        Gizmos.DrawWireCube(transform.position, new Vector3(vGridWorldSize.x, 1, vGridWorldSize.y));//Draw a wire cube with the given dimensions from the Unity inspector
+        Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));//Draw a wire cube with the given dimensions from the Unity inspector
 
-        if (NodeArray != null)//If the grid is not empty
+        if (_nodeArray == null) 
         {
-            foreach (Node n in NodeArray)//Loop through every node in the grid
+            return; //If the grid is not empty
+        }
+        
+        foreach (Node n in _nodeArray)//Loop through every node in the grid
+        {
+            if (n.isWall)//If the current node is a wall node
             {
-                if (n.IsWall)//If the current node is a wall node
-                {
-                    Gizmos.color = Color.white;//Set the color of the node
-                }
-                else
-                {
-                    Gizmos.color = Color.yellow;//Set the color of the node
-                }
-
-                // Check if any enemy final paths exist and if the current node is in any of them
-                foreach (var kvp in enemyFinalPaths)
-                {
-                    if (kvp.Value.Contains(n))//If the current node is in the final path of the enemy
-                    {
-                        Gizmos.color = Color.red;//Set the color of that node
-                        break; // Exit the loop if the node is found in any enemy's final path
-                    }
-                }
-
-                Gizmos.DrawCube(n.NodePosition, Vector3.one * (fNodeDiameter - fDistanceBetweenNodes));//Draw the node at the position of the node.
+                Gizmos.color = Color.white;//Set the color of the node
             }
+            else
+            {
+                Gizmos.color = Color.yellow;//Set the color of the node
+            }
+
+            // Check if any enemy final paths exist and if the current node is in any of them
+            foreach (var kvp in EnemyFinalPaths)
+            {
+                if (kvp.Value.Contains(n))//If the current node is in the final path of the enemy
+                {
+                    Gizmos.color = Color.red;//Set the color of that node
+                    break; // Exit the loop if the node is found in any enemy's final path
+                }
+            }
+            Gizmos.DrawCube(n.nodePosition, Vector3.one * (nodeDiameter - distanceBetweenNodes)); //Draw the node at the position of the node.
         }
 
     }

@@ -1,35 +1,23 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 namespace AStarPathfinding
 {
-    
-public class Pathfinding : MonoBehaviour {
+    /// <summary>
+    /// Handles the overall Pathfinding logic for the enemy agents.
+    /// </summary>
+    public class Pathfinding : MonoBehaviour {
 
+    // Events for the different enemy types
     public static event ExploderEvent Explode;
     public static event MeleeAttackEvent Melee;
-    
     public static event RangedAttackEvent Ranged;
-    
-    
-    // Add another enum for the enemy type
-    // Depending on type logic for attack
-    // Such as sword will run animation
-    // Bow will instantiate arrow
-    // Exploder will start explosion coroutine
-    // Like a MC Creeper - Get slightly bigger over small period
-    // Everything within explosion radius takes damage
-    // If time make it so further from explosion radius
-    // The less damage taken
-    
-    
+
+    // For interaction with the scene
     private Grid _gridReference;
     private GameObject _player;
+    
     public enum SelectionOption
     {
         RoamBounds,
@@ -49,42 +37,40 @@ public class Pathfinding : MonoBehaviour {
     [Header("Agent Type")]
     public SelectionOption selectionOption = SelectionOption.RoamBounds;
     
-    //[Header("Positions")]
-    private Transform _startPosition;
-    private Transform _targetPosition;
+    private Transform _startPosition, _targetPosition;
     
     [Space(10)]
     
     [Header("Agent Behaviour")]
     public bool isFollowingPlayer;
+    public bool isAttacking;
+    public bool canPathFindToTarget = true;
     
     [Space(10)]
     
     [Header("Patrol Points")]
     public bool isTargetingPatrolPoints;
     public List<Transform> patrolPointsList;
-    
-    // Need organising
-    // Difference must be always at least 3, any less causes issues
-    public bool isAttacking;
-    public float attackRange = 1.5f;
-    public float aggroRange = 5f;
-    
-    //Patrol point stuff
     private int _currentWaypointIndex = 0;
     private bool _isMovingForward;
     
+    // Difference must be always at least 3, any less causes issues
+    public float attackRange = 1.5f;
+    public float aggroRange = 5f;
+    
     // Getting the enemy to move initially
-    private bool _initialPathCalculated = false;
+    private bool _initialPathCalculated;
     
     // Pathfinding optimisation
-    private Vector3 _lastPlayerPosition;
+    private Vector3 _lastPlayerPosition, _lastPosition;
     
-    // Cannot pathfind if in attack range
-    public bool canPathFindToTarget = true;
+    // Viewing all the nodes in the path in the editor
+    public List<Node> finalPathOfNodes;
     
-    private Vector3 _lastPosition;
-    
+    /// <summary>
+    /// Fills in the player and grid references required for the script to function.
+    /// Sets the initial target position to the default target position GameObject.
+    /// </summary>
     private void Awake()
     {
         _player = GameObject.FindWithTag("Player");
@@ -92,29 +78,30 @@ public class Pathfinding : MonoBehaviour {
         _targetPosition = GameObject.FindWithTag("DefaultTargeting").transform;
     }
 
+    /// <summary>
+    /// isTargetingPatrolPoints set to true or false depending on the selection option.
+    /// start position is set to the enemies initial transform.
+    /// </summary>
     private void Start()
     {
-        if (selectionOption == SelectionOption.FollowPatrolPoints)
-        {
-            isTargetingPatrolPoints = true;
-        }
-        else
-        {
-            isTargetingPatrolPoints = false;
-        }
-        
+        isTargetingPatrolPoints = selectionOption == SelectionOption.FollowPatrolPoints;
+
         _startPosition = transform;
-        
-        // Some other optimisation thing
-        //InvokeRepeating(nameof(CheckToFollowPlayer), 0f, 0.5f);
     }
 
+    /// <summary>
+    /// Calls the CheckToFollowPlayer method and the Rotation method.
+    /// </summary>
     private void Update()
     { 
         CheckToFollowPlayer();
         Rotation();
     }
 
+    /// <summary>
+    /// If the enemy is not following the player, rotate the enemy to face the direction of movement.
+    /// If the enemy is following the player, rotate the enemy to face the player.
+    /// </summary>
     private void Rotation()
     {
         if (!isFollowingPlayer)
@@ -139,12 +126,23 @@ public class Pathfinding : MonoBehaviour {
         if (isFollowingPlayer && _player != null)
         {
             // Look at the player if following
+            var playerPosition = _player.transform.position;
             Vector3 lookAtPosition =
-                new Vector3(_player.transform.position.x, transform.position.y, _player.transform.position.z);
+                new Vector3(playerPosition.x, transform.position.y, playerPosition.z);
             transform.LookAt(lookAtPosition);
         }
     }
     
+    /// <summary>
+    /// Find out the distance between the enemy and the player, if the distance is less than or equal to the aggro
+    /// range, than the enemy if it has not found its initial path to the player will set its target to the player and
+    /// recalculate the path. If it has found its initial path, if the distance between the last stored player position
+    /// and the current position is greater than the attack range then the target position is set back to the current
+    /// player position and the path is recalculated. If the distance between the last stored player position and the
+    /// enemy position is less than the attack range then the enemy will stop pathfinding and attack initiate an attack
+    /// if it is not already attacking. If the player is not within the aggro range, the enemy will stop following the
+    /// player and depending on its agent behaviour will either select a new target or continue patrolling.
+    /// </summary>
     private void CheckToFollowPlayer()
     {
         if (_player == null)
@@ -152,19 +150,22 @@ public class Pathfinding : MonoBehaviour {
             return;
         }
         
+        // If player is within the aggro range
         if (Vector3.Distance(transform.position, _player.transform.position) <= aggroRange)
         {
             isFollowingPlayer = true;
             if (_initialPathCalculated == false)
             {
                 isFollowingPlayer = true;
-                _targetPosition.position = _player.transform.position;
-                _lastPlayerPosition = _player.transform.position;
+                var playerPosition = _player.transform.position;
+                _targetPosition.position = playerPosition;
+                _lastPlayerPosition = playerPosition;
                 RecalculatePath();
                 _initialPathCalculated = true;
             }
             else if (_initialPathCalculated)
             {
+                // Player not in the attack range
                 if (Vector3.Distance(_lastPlayerPosition, _player.transform.position) >= attackRange)
                 {
                     canPathFindToTarget = true;
@@ -172,6 +173,7 @@ public class Pathfinding : MonoBehaviour {
                     _targetPosition.position = _lastPlayerPosition;
                     RecalculatePath();
                 }
+                // Player in the attack range
                 else if (Vector3.Distance(_lastPlayerPosition, transform.position) <= attackRange)
                 {
                     Debug.Log("In attack range");
@@ -186,11 +188,17 @@ public class Pathfinding : MonoBehaviour {
         }
         else
         {
+            // Not in aggro range and not targeting waypoints
             if (isFollowingPlayer && !isTargetingPatrolPoints)
             {
                 ChooseNewTarget();
+                if (canPathFindToTarget == false)
+                {
+                    canPathFindToTarget = true;
+                }
             }
 
+            // Not in aggro range and is targeting waypoints
             else if (isFollowingPlayer && isTargetingPatrolPoints)
             {
                 PatrolPointFollower();
@@ -200,6 +208,10 @@ public class Pathfinding : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Depending on the type of enemy, the corresponding attack event is called so the relevant scripts and execute
+    /// their attack behaviour.
+    /// </summary>
     private void Attack()
     {
         if (enemyType == EnemyType.Melee)
@@ -214,13 +226,31 @@ public class Pathfinding : MonoBehaviour {
         {
             Explode?.Invoke(gameObject);
         }
+        else
+        {
+            Debug.LogWarning("Enemy type not set for the attack!");
+        }
     }
     
+    /// <summary>
+    /// Calls the FindPath method while feeding in the start and target positions as the required Vectors
+    /// </summary>
     private void RecalculatePath()
     {
         FindPath(_startPosition.position, _targetPosition.position);
     }
     
+    /// <summary>
+    /// Finds a path from the specified starting position to the target position using the A* pathfinding algorithm.
+    /// </summary>
+    /// <param name="aStartPos">The starting position in world coordinates.</param>
+    /// <param name="aTargetPos">The target position in world coordinates.</param>
+    /// <remarks>
+    /// This method implements the A* algorithm to find the shortest path from the starting position to the target position.
+    /// It maintains an open list of nodes to explore and a closed list of nodes that have already been explored.
+    /// The algorithm iteratively selects the node with the least cost from the open list and explores its neighboring nodes
+    /// until the target node is reached or there are no more nodes to explore.
+    /// </remarks>
     private void FindPath(Vector3 aStartPos, Vector3 aTargetPos)
     {
         Node startNode = _gridReference.NodeFromWorldPoint(aStartPos);
@@ -237,7 +267,7 @@ public class Pathfinding : MonoBehaviour {
             for (int i = 1; i < openList.Count; i++)
             {
                 //If the f cost of that object is less than or equal to the f cost of the current node
-                if (openList[i].FCost < currentNode.FCost || openList[i].FCost == currentNode.FCost && openList[i].IhCost < currentNode.IhCost)
+                if (openList[i].FCost < currentNode.FCost || openList[i].FCost == currentNode.FCost && openList[i].hCost < currentNode.hCost)
                 {
                     currentNode = openList[i];
                 }
@@ -252,20 +282,21 @@ public class Pathfinding : MonoBehaviour {
 
             foreach (Node neighbourNode in _gridReference.GetNeighbouringNodes(currentNode))
             {
-                if (!neighbourNode.IsWall || closedList.Contains(neighbourNode))
+                // Not a wall or already in the closed list
+                if (!neighbourNode.isWall || closedList.Contains(neighbourNode))
                 {
                     continue;
                 }
                 
                 //Get the F cost of that neighbor
-                int moveCost = currentNode.IgCost + GetManhattenDistance(currentNode, neighbourNode);
+                int moveCost = currentNode.gCost + GetManhattanDistance(currentNode, neighbourNode);
 
                 //If the f cost is greater than the g cost or it is not in the open list
-                if (moveCost < neighbourNode.IgCost || !openList.Contains(neighbourNode))
+                if (moveCost < neighbourNode.gCost || !openList.Contains(neighbourNode))
                 {
-                    neighbourNode.IgCost = moveCost;
-                    neighbourNode.IhCost = GetManhattenDistance(neighbourNode, targetNode);
-                    neighbourNode.ParentNode = currentNode;
+                    neighbourNode.gCost = moveCost;
+                    neighbourNode.hCost = GetManhattanDistance(neighbourNode, targetNode);
+                    neighbourNode.parentNode = currentNode;
 
                     if(!openList.Contains(neighbourNode))
                     {
@@ -276,6 +307,13 @@ public class Pathfinding : MonoBehaviour {
         }
     }
     
+    /// <summary>
+    /// Generates the final path by traversing from the end node to the starting node.
+    /// Each node is added to the final path list as the algorithm traverses through the parent nodes.
+    /// The final path is then reversed to obtain the correct sequence.
+    /// </summary>
+    /// <param name="aStartingNode">The starting node of the path.</param>
+    /// <param name="aEndNode">The end node of the path.</param>
     private void GetFinalPath(Node aStartingNode, Node aEndNode)
     {
         List<Node> finalPath = new List<Node>();
@@ -283,50 +321,87 @@ public class Pathfinding : MonoBehaviour {
 
         _gridReference.SetEnemyFinalPath(gameObject, finalPath);
         
-        while (currentNode != aStartingNode)//While loop to work through each node going through the parents to the beginning of the path
+        // Work through each node going through the parents to the beginning of the path
+        while (currentNode != aStartingNode)
         {
             finalPath.Add(currentNode);
-            currentNode = currentNode.ParentNode;
+            currentNode = currentNode.parentNode;
         }
 
         finalPath.Reverse();
-
-        _gridReference.FinalPath = finalPath;//Set the final path
+        // Set the final path
+        finalPathOfNodes = finalPath; 
     }
     
+    /// <summary>
+    /// Retrieves the final path associated with the specified enemy GameObject.
+    /// If a final path is found for the enemy, it returns the path; otherwise, it logs a warning message and returns null.
+    /// </summary>
+    /// <param name="enemy">The GameObject representing the enemy.</param>
+    /// <returns>The final path of nodes for the specified enemy, or null if no path is found.</returns>
     public List<Node> GetFinalPath(GameObject enemy)
     {
-        var enemyFinalPaths = _gridReference.enemyFinalPaths;
+        var enemyFinalPaths = _gridReference.EnemyFinalPaths;
         
-        if (enemyFinalPaths.ContainsKey(enemy))
+        if (enemyFinalPaths.TryGetValue(enemy, out var path))
         {
-            return enemyFinalPaths[enemy];
+            return path;
         }
         else
         {
-            Debug.LogWarning("No final path found for the specified enemy.");
+            Debug.LogWarning("No final path found for the specified enemy." + enemy);
             return null;
         }
     }
 
-    int GetManhattenDistance(Node aNodeA, Node aNodeB)
+    // int GetManhattanDistance(Node aNodeA, Node aNodeB)
+    // {
+    //     int ix = Mathf.Abs(aNodeA.GridX - aNodeB.GridX);
+    //     int iy = Mathf.Abs(aNodeA.GridY - aNodeB.GridY);
+    //
+    //     return ix + iy;
+    // }
+
+    
+    /// <summary>
+    /// Calculates the Manhattan distance between two nodes on the grid.
+    /// </summary>
+    /// <param name="aNodeA">The first node.</param>
+    /// <param name="aNodeB">The second node.</param>
+    /// <returns>The Manhattan distance between the two nodes.</returns>
+    private int GetManhattanDistance(Node aNodeA, Node aNodeB)
     {
-        int ix = Mathf.Abs(aNodeA.GridX - aNodeB.GridX);
-        int iy = Mathf.Abs(aNodeA.GridY - aNodeB.GridY);
+        int ix = aNodeA.gridX - aNodeB.gridX;
+        int iy = aNodeA.gridY - aNodeB.gridY;
+
+        // Use bitwise operations to compute absolute values
+        ix = (ix ^ (ix >> 31)) - (ix >> 31);
+        iy = (iy ^ (iy >> 31)) - (iy >> 31);
 
         return ix + iy;
     }
-    
+
+    /// <summary>
+    /// Randomly chooses a new target position within the bounds of the grid and recalculates the path to the target.
+    /// </summary>
     public void ChooseNewTarget()
     {
-        var gridX = (_gridReference.vGridWorldSize.x / _gridReference.fNodeDiameter) / 2;
-        var gridY = (_gridReference.vGridWorldSize.y / _gridReference.fNodeDiameter) / 2;
+        var gridX = (_gridReference.gridWorldSize.x / _gridReference.nodeDiameter) / 2;
+        var gridY = (_gridReference.gridWorldSize.y / _gridReference.nodeDiameter) / 2;
         
         _targetPosition.position = new Vector3(Random.Range(-gridX,gridX), 0,
                                             Random.Range(-gridY,gridY));
         RecalculatePath();
     }
     
+    /// <summary>
+    /// Follows a patrol path defined by a list of patrol points. 
+    /// If no patrol points are set, a warning message is logged, and the method returns.
+    /// The target position is set based on the current patrol index, and the path is recalculated.
+    /// If moving forward, the current patrol index is incremented. If reaching the last patrol point,
+    /// movement direction is reversed. On moving backward, the current patrol index is decremented.
+    /// On reaching the first patrol point, movement direction is reversed.
+    /// </summary>
     public void PatrolPointFollower()
     {
         if (patrolPointsList.Count == 0)
@@ -366,6 +441,9 @@ public class Pathfinding : MonoBehaviour {
         }
     }
     
+    /// <summary>
+    /// Visualises the aggro range of the enemy in the Scene view. Via a wire sphere.
+    /// </summary>
     private void OnDrawGizmos()
     {
         // Draw a wire sphere representing the sphere cast

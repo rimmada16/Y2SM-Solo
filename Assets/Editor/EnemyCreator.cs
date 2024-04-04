@@ -1,20 +1,23 @@
 // Purpose: To create a custom editor window that allows the user to create enemies with different attributes and weapons.
+
 using System.Collections.Generic;
+using AStarPathfinding;
 using UnityEditor;
 using UnityEngine;
-using AStarPathfinding;
 using Random = UnityEngine.Random;
 
-/// <summary>
-/// An editor window that allows the user to create enemies within the scene from 3 selected types being a Melee Unit,
-/// a Archer Unit and an Exploder Unit. Depending on the Unit type selected the user can change the subtype of the Unit
-/// and edit different attributes for the unit. i.e. if the Archer Unit is selected then the user can change the type
-/// of arrow they shoot. The user can also select whether the enemy will roam freely within the bounds of the map grid
-/// or follow set patrol points defined by the user. The user can also select where they would like to spawn the enemy
-/// with multiple different spawning options. Finally the user can select how many units they would like to spawn
-/// within the appropriate predefined range.
-/// </summary>
-public class EnemyCreator : EditorWindow
+namespace Editor
+{
+    /// <summary>
+    /// An editor window that allows the user to create enemies within the scene from 3 selected types being a Melee Unit,
+    /// a Archer Unit and an Exploder Unit. Depending on the Unit type selected the user can change the subtype of the Unit
+    /// and edit different attributes for the unit. i.e. if the Archer Unit is selected then the user can change the type
+    /// of arrow they shoot. The user can also select whether the enemy will roam freely within the bounds of the map grid
+    /// or follow set patrol points defined by the user. The user can also select where they would like to spawn the enemy
+    /// with multiple different spawning options. Finally the user can select how many units they would like to spawn
+    /// within the appropriate predefined range.
+    /// </summary>
+    public class EnemyCreator : EditorWindow
     {
         // For the input of the prefab for the enemy
         private GameObject _meleeEnemy, _archerEnemy, _exploderEnemy;
@@ -86,14 +89,19 @@ public class EnemyCreator : EditorWindow
         private ExploderType _selectedExploderType = ExploderType.Small;
 
         // Enemy attributes
-        private float _timeBetweenAttacks, _attackRange, _explosionRadius, _aggroRange, _attackDamage, _movementSpeed;
+        private float _timeBetweenAttacks, _attackRange, _explosionRadius, _aggroRange, _attackRangeUpperBound, _movementSpeed;
+        private int _attackDamage;
         
         // Patrol points
-        private List<Transform> _patrolPoints = new List<Transform>();
+        private readonly List<Transform> _patrolPoints = new();
         private Transform _newPatrolPoint;
         
         // Scroll view
         private Vector2 _scrollPosition = Vector2.zero;
+
+
+        private bool _useDefaultValues = true;
+        
         
         /// <summary>
         /// MenuItem: Editor window can be opened via the Unity menu
@@ -125,20 +133,21 @@ public class EnemyCreator : EditorWindow
             // Gives the user the option to select the enemy type they wish to spawn
             EditorGUILayout.LabelField(new GUIContent("Spawn Option:", "Select what type of enemy you wish to spawn"), EditorStyles.boldLabel);
             _selectedEnemyTypeIndex = EditorGUILayout.Popup(_selectedEnemyTypeIndex, _enemyTypes);
+            if (GUI.changed)
+            {
+                _useDefaultValues = true;
+            }
 
             switch (_selectedEnemyTypeIndex)
             {
                 case 0:
                     _selectedType = EnemyType.Melee;
-                    _aggroRange = 5;
                     break;
                 case 1:
                     _selectedType = EnemyType.Archer;
-                    _aggroRange = 20;
                     break;
                 case 2:
                     _selectedType = EnemyType.Exploder;
-                    _aggroRange = 10;
                     break;
             }
             
@@ -153,36 +162,55 @@ public class EnemyCreator : EditorWindow
                     _meleeEnemy = (GameObject)EditorGUILayout.ObjectField(new GUIContent("Melee Enemy Prefab:", "Please enter the corresponding prefab to the selected enemy type"), _meleeEnemy, typeof(GameObject), true);
 
                     _selectedMeleeEnemyIndex = EditorGUILayout.Popup(new GUIContent("Melee Enemy Type:", "Select a type of Melee Unit"), _selectedMeleeEnemyIndex, _meleeEnemyTypes);
+                    if (GUI.changed)
+                    {
+                        _useDefaultValues = true;
+                    }
 
                     switch (_selectedMeleeEnemyIndex)
                     {
                         case 0:
-                            _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
-                            _attackDamage = 10;
-                            _timeBetweenAttacks = 2f;
-                            _attackRange = 1.5f;
-                            _aggroRange = 5;
-                            _movementSpeed = 5;
-                            _enemyHealth = 30;
+                            if (_useDefaultValues)
+                            {
+                                _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
+                                _attackDamage = 10;
+                                _timeBetweenAttacks = 2f;
+                                _attackRange = _attackRangeUpperBound = 1.5f;
+                                _aggroRange = 5;
+                                _movementSpeed = 5;
+                                _enemyHealth = 30;
+                                _useDefaultValues = false;
+                            }
                             break;
+                        
                         case 1:
-                            _selectedMeleeWeapon = MeleeWeaponType.Longsword;
-                            _attackDamage = 15;
-                            _timeBetweenAttacks = 3.5f;
-                            _attackRange = 3;
-                            _aggroRange = 5;
-                            _movementSpeed = 3;
-                            _enemyHealth = 60;
+                            if (_useDefaultValues)
+                            {
+                                _selectedMeleeWeapon = MeleeWeaponType.Longsword;
+                                _attackDamage = 15;
+                                _timeBetweenAttacks = 3.5f;
+                                _attackRange = _attackRangeUpperBound = 3;
+                                _aggroRange = 5;
+                                _movementSpeed = 3;
+                                _enemyHealth = 60;
+                                _useDefaultValues = false;
+                            }
                             break;
+                        
                         case 2:
-                            _selectedMeleeWeapon = MeleeWeaponType.Greatsword;
-                            _attackDamage = 50;
-                            _timeBetweenAttacks = 5f;
-                            _attackRange = 3;
-                            _aggroRange = 5;
-                            _movementSpeed = 1.5f;
-                            _enemyHealth = 100;
+                            if (_useDefaultValues)
+                            {
+                                _selectedMeleeWeapon = MeleeWeaponType.Greatsword;
+                                _attackDamage = 50;
+                                _timeBetweenAttacks = 5f;
+                                _attackRange = _attackRangeUpperBound = 3;
+                                _aggroRange = 5;
+                                _movementSpeed = 1.5f;
+                                _enemyHealth = 100;
+                                _useDefaultValues = false;
+                            }
                             break;
+                            
                     }
                     break;
 
@@ -191,32 +219,51 @@ public class EnemyCreator : EditorWindow
                     _archerEnemy = (GameObject)EditorGUILayout.ObjectField(new GUIContent("Archer Enemy Prefab:", "Please enter the corresponding prefab to the selected enemy type"), _archerEnemy, typeof(GameObject), true);
 
                     _selectedArcherEnemyIndex = EditorGUILayout.Popup(new GUIContent("Archer Enemy Type:", "Select a type of Archer Unit"), _selectedArcherEnemyIndex, _archerEnemyTypes);
+                    if (GUI.changed)
+                    {
+                        _useDefaultValues = true;
+                    }
 
                     switch (_selectedArcherEnemyIndex)
                     {
                         case 0:
-                            _selectedArcherWeapon = ArcherWeaponType.Shortbow;
-                            _attackDamage = 10;
-                            _timeBetweenAttacks = 2;
-                            _attackRange = 9;
-                            _movementSpeed = 5;
-                            _enemyHealth = 20;
+                            if (_useDefaultValues)
+                            {
+                                _selectedArcherWeapon = ArcherWeaponType.Shortbow;
+                                _attackDamage = 10;
+                                _timeBetweenAttacks = 2;
+                                _attackRange = _attackRangeUpperBound = 9;
+                                _aggroRange = 20;
+                                _movementSpeed = 5;
+                                _enemyHealth = 20;
+                                _useDefaultValues = false;
+                            }
                             break;
                         case 1:
-                            _selectedArcherWeapon = ArcherWeaponType.Longbow;
-                            _attackDamage = 15;
-                            _timeBetweenAttacks = 3.5f;
-                            _attackRange = 9;
-                            _movementSpeed = 3;
-                            _enemyHealth = 50;
+                            if (_useDefaultValues)
+                            {
+                                _selectedArcherWeapon = ArcherWeaponType.Longbow;
+                                _attackDamage = 15;
+                                _timeBetweenAttacks = 3.5f;
+                                _attackRange = _attackRangeUpperBound = 9;
+                                _aggroRange = 20;
+                                _movementSpeed = 3;
+                                _enemyHealth = 50;
+                                _useDefaultValues = false;
+                            }
                             break;
                         case 2:
-                            _selectedArcherWeapon = ArcherWeaponType.Greatbow;
-                            _attackDamage = 50;
-                            _timeBetweenAttacks = 5f;
-                            _attackRange = 9;
-                            _movementSpeed = 1.5f;
-                            _enemyHealth = 75;
+                            if (_useDefaultValues)
+                            {
+                                _selectedArcherWeapon = ArcherWeaponType.Greatbow;
+                                _attackDamage = 50;
+                                _timeBetweenAttacks = 5f;
+                                _attackRange = _attackRangeUpperBound = 9;
+                                _aggroRange = 20;
+                                _movementSpeed = 1.5f;
+                                _enemyHealth = 75;
+                                _useDefaultValues = false;
+                            }
                             break;
                     }
                     break;
@@ -226,35 +273,54 @@ public class EnemyCreator : EditorWindow
                     _exploderEnemy = (GameObject)EditorGUILayout.ObjectField(new GUIContent("Exploder Enemy Prefab:", "Please enter the corresponding prefab to the selected enemy type"), _exploderEnemy, typeof(GameObject), true);
 
                     _selectedExploderEnemyIndex = EditorGUILayout.Popup(new GUIContent("Exploder Enemy Type:", "Select a type of Exploder Unit"), _selectedExploderEnemyIndex, _exploderEnemyTypes);
+                    if (GUI.changed)
+                    {
+                        _useDefaultValues = true;
+                    }
 
                     switch (_selectedExploderEnemyIndex)
                     {
                         case 0:
-                            _selectedExploderType = ExploderType.Small;
-                            _attackDamage = 25;
-                            _timeBetweenAttacks = 1;
-                            _attackRange = 1.5f;
-                            _explosionRadius = 3f;
-                            _movementSpeed = 3;
-                            _enemyHealth = 50;
+                            if (_useDefaultValues)
+                            {
+                                _selectedExploderType = ExploderType.Small;
+                                _attackDamage = 25;
+                                _timeBetweenAttacks = 1;
+                                _attackRange = _attackRangeUpperBound = 1.5f;
+                                _aggroRange = 10;
+                                _explosionRadius = 3f;
+                                _movementSpeed = 3;
+                                _enemyHealth = 50;
+                                _useDefaultValues = false;
+                            }
                             break;
                         case 1:
-                            _selectedExploderType = ExploderType.Medium;
-                            _attackDamage = 50;
-                            _timeBetweenAttacks = 1;
-                            _attackRange = 2;
-                            _explosionRadius = 4.5f;
-                            _movementSpeed = 2;
-                            _enemyHealth = 100;
+                            if (_useDefaultValues)
+                            {
+                                _selectedExploderType = ExploderType.Medium;
+                                _attackDamage = 50;
+                                _timeBetweenAttacks = 1;
+                                _attackRange = _attackRangeUpperBound = 2;
+                                _aggroRange = 10;
+                                _explosionRadius = 4.5f;
+                                _movementSpeed = 2;
+                                _enemyHealth = 100;
+                                _useDefaultValues = false;
+                            }
                             break;
                         case 2:
-                            _selectedExploderType = ExploderType.Nuke;
-                            _attackDamage = 200;
-                            _timeBetweenAttacks = 1f;
-                            _attackRange = 3.5f;
-                            _explosionRadius = 6.5f;
-                            _movementSpeed = 1.5f;
-                            _enemyHealth = 200;
+                            if (_useDefaultValues)
+                            {
+                                _selectedExploderType = ExploderType.Nuke;
+                                _attackDamage = 200;
+                                _timeBetweenAttacks = 1f;
+                                _attackRange = _attackRangeUpperBound = 3.5f;
+                                _aggroRange = 10;
+                                _explosionRadius = 6.5f;
+                                _movementSpeed = 1.5f;
+                                _enemyHealth = 200;
+                                _useDefaultValues = false;
+                            }
                             break;
                     }
                     break;
@@ -265,19 +331,25 @@ public class EnemyCreator : EditorWindow
             EditorGUILayout.Space();
             
             // Allows user to enter the attack speed attribute for the enemy
-            _timeBetweenAttacks = EditorGUILayout.FloatField(new GUIContent("Time between Attacks:", "Enter the time between each attack for the enemy, their attack cooldown"), _timeBetweenAttacks);
+            _timeBetweenAttacks = EditorGUILayout.Slider(new GUIContent("Time between Attacks:", "Enter the time between each attack for the enemy, their attack cooldown"), _timeBetweenAttacks, 1, 5);
             
             // Allows the user to enter the aggression range attribute for the enemy
-            _aggroRange = EditorGUILayout.FloatField(new GUIContent("Aggro Range:", "Enter the range in which the enemy will start tracking the player"), _aggroRange);
+            _aggroRange = EditorGUILayout.Slider(new GUIContent("Aggro Range:", "Enter the range in which the enemy will start tracking the player"), _aggroRange, 4.5f, 20);
             
             // Allows user to enter the aggro range attribute for the enemy
-            _attackRange = EditorGUILayout.FloatField(new GUIContent("Attack Range:", "Enter the range in which the enemy must be from the player before it will start attacking"), _attackRange);
-
-
+            _attackRange = EditorGUILayout.Slider(new GUIContent("Attack Range:", "Enter the range in which the enemy must be from the player before it will start attacking"), _attackRange, 1.5f, _attackRangeUpperBound);
+            
+            
+            // Ensure that the aggro range is always greater than the attack range by 3 units
+            if (_aggroRange - _attackRange <= 3)
+            {
+                _aggroRange = _attackRange + 3;
+            }
+            
             if (_selectedType != EnemyType.Archer)
             {
                 // Allows user to enter the attack damage attribute for the enemy
-                _attackDamage = EditorGUILayout.FloatField(new GUIContent("Attack Damage:", "Enter the attack damage of the enemy"), _attackDamage);
+                _attackDamage = EditorGUILayout.IntSlider(new GUIContent("Attack Damage:", "Enter the attack damage of the enemy"), _attackDamage, 1, 200);
             }
 
             
@@ -290,14 +362,14 @@ public class EnemyCreator : EditorWindow
             if (_selectedType == EnemyType.Exploder)
             {
                 // Allows the user to enter the explosion radius attribute for the enemy
-                _explosionRadius = EditorGUILayout.FloatField(new GUIContent("Explosion Radius:", "Enter the explosion radius of the Exploder Unit"), _explosionRadius);
+                _explosionRadius = EditorGUILayout.Slider(new GUIContent("Explosion Radius:", "Enter the explosion radius of the Exploder Unit"), _explosionRadius, 2.5f, 10);
             }
             
             // Allows user to enter the movement speed attribute for the enemy
-            _movementSpeed = EditorGUILayout.FloatField(new GUIContent("Movement Speed:", "Enter the speed at which the enemy can move"), _movementSpeed);
-            
+            _movementSpeed = EditorGUILayout.Slider(new GUIContent("Movement Speed:", "Enter the speed at which the enemy can move"), _movementSpeed, 1.5f, 10);
+
             // Allows the user to enter the HP of the enemy
-            _enemyHealth = EditorGUILayout.IntField(new GUIContent("HP:", "Enter the health points for the Enemy"), _enemyHealth);
+            _enemyHealth = EditorGUILayout.IntSlider(new GUIContent("HP:", "Enter the health points for the Enemy"), _enemyHealth, 1, 200);
 
             EditorGUILayout.Space();
             
@@ -589,6 +661,7 @@ public class EnemyCreator : EditorWindow
             }
         }
     }
+}
 
 
     
