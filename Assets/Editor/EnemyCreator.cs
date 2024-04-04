@@ -524,11 +524,11 @@ namespace Editor
 
                     if (_selectedType == EnemyType.Exploder)
                     {
-                        Exploder exploder = newEnemy.GetComponent<Exploder>();
-                        if (exploder != null)
+                        ExploderUnit exploderUnit = newEnemy.GetComponent<ExploderUnit>();
+                        if (exploderUnit != null)
                         {
-                            exploder.explosionRadius = _explosionRadius;
-                            exploder.baseDamage = Mathf.RoundToInt(_attackDamage);
+                            exploderUnit.explosionRadius = _explosionRadius;
+                            exploderUnit.baseDamage = Mathf.RoundToInt(_attackDamage);
                         }
                     }
                     

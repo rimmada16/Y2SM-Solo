@@ -1,10 +1,8 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using AStarPathfinding;
 
-public class Exploder : MonoBehaviour
+public class ExploderUnit : MonoBehaviour
 {
     public int baseDamage; // Base damage of the explosion
     public float explosionRadius;
