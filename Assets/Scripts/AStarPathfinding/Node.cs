@@ -25,7 +25,7 @@ namespace AStarPathfinding
         public int hCost;
 
         // Total cost of the node (sum of gCost and hCost)
-        public int FCost { get { return gCost + hCost; } }
+        public int FCost => gCost + hCost;
 
         /// <summary>
         /// Constructor for creating a node.

@@ -51,7 +51,7 @@ namespace AStarPathfinding
     [Header("Patrol Points")]
     public bool isTargetingPatrolPoints;
     public List<Transform> patrolPointsList;
-    private int _currentWaypointIndex = 0;
+    private int _currentPatrolPointIndex = 0;
     private bool _isMovingForward;
     
     // Difference must be always at least 3, any less causes issues
@@ -107,15 +107,14 @@ namespace AStarPathfinding
         if (!isFollowingPlayer)
         {
             // Calculate the direction vector of movement
-            Vector3 direction = (transform.position - _lastPosition).normalized;
-
+            var direction = (transform.position - _lastPosition).normalized;
             var rotationSpeed = 5f;
             
             // Check if the enemy is moving (magnitude of direction is not close to zero)
             if (direction.magnitude > 0.01f)
             {
                 // Rotate the enemy to face the direction of movement
-                Quaternion targetRotation = Quaternion.LookRotation(direction);
+                var targetRotation = Quaternion.LookRotation(direction);
                 transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
             }
 
@@ -127,7 +126,7 @@ namespace AStarPathfinding
         {
             // Look at the player if following
             var playerPosition = _player.transform.position;
-            Vector3 lookAtPosition =
+            var lookAtPosition =
                 new Vector3(playerPosition.x, transform.position.y, playerPosition.z);
             transform.LookAt(lookAtPosition);
         }
@@ -243,18 +242,18 @@ namespace AStarPathfinding
     /// <summary>
     /// Finds a path from the specified starting position to the target position using the A* pathfinding algorithm.
     /// </summary>
-    /// <param name="aStartPos">The starting position in world coordinates.</param>
-    /// <param name="aTargetPos">The target position in world coordinates.</param>
+    /// <param name="startPos">The starting position in world coordinates.</param>
+    /// <param name="targetPos">The target position in world coordinates.</param>
     /// <remarks>
     /// This method implements the A* algorithm to find the shortest path from the starting position to the target position.
     /// It maintains an open list of nodes to explore and a closed list of nodes that have already been explored.
     /// The algorithm iteratively selects the node with the least cost from the open list and explores its neighboring nodes
     /// until the target node is reached or there are no more nodes to explore.
     /// </remarks>
-    private void FindPath(Vector3 aStartPos, Vector3 aTargetPos)
+    private void FindPath(Vector3 startPos, Vector3 targetPos)
     {
-        Node startNode = _gridReference.NodeFromWorldPoint(aStartPos);
-        Node targetNode = _gridReference.NodeFromWorldPoint(aTargetPos);
+        Node startNode = _gridReference.NodeFromWorldPoint(startPos);
+        Node targetNode = _gridReference.NodeFromWorldPoint(targetPos);
 
         List<Node> openList = new List<Node>();
         HashSet<Node> closedList = new HashSet<Node>();
@@ -289,7 +288,7 @@ namespace AStarPathfinding
                 }
                 
                 //Get the F cost of that neighbor
-                int moveCost = currentNode.gCost + GetManhattanDistance(currentNode, neighbourNode);
+                var moveCost = currentNode.gCost + GetManhattanDistance(currentNode, neighbourNode);
 
                 //If the f cost is greater than the g cost or it is not in the open list
                 if (moveCost < neighbourNode.gCost || !openList.Contains(neighbourNode))
@@ -312,17 +311,17 @@ namespace AStarPathfinding
     /// Each node is added to the final path list as the algorithm traverses through the parent nodes.
     /// The final path is then reversed to obtain the correct sequence.
     /// </summary>
-    /// <param name="aStartingNode">The starting node of the path.</param>
-    /// <param name="aEndNode">The end node of the path.</param>
-    private void GetFinalPath(Node aStartingNode, Node aEndNode)
+    /// <param name="startingNode">The starting node of the path.</param>
+    /// <param name="targetNode">The end node of the path.</param>
+    private void GetFinalPath(Node startingNode, Node targetNode)
     {
         List<Node> finalPath = new List<Node>();
-        Node currentNode = aEndNode;
+        Node currentNode = targetNode;
 
         _gridReference.SetEnemyFinalPath(gameObject, finalPath);
         
         // Work through each node going through the parents to the beginning of the path
-        while (currentNode != aStartingNode)
+        while (currentNode != startingNode)
         {
             finalPath.Add(currentNode);
             currentNode = currentNode.parentNode;
@@ -366,19 +365,19 @@ namespace AStarPathfinding
     /// <summary>
     /// Calculates the Manhattan distance between two nodes on the grid.
     /// </summary>
-    /// <param name="aNodeA">The first node.</param>
-    /// <param name="aNodeB">The second node.</param>
+    /// <param name="nodeA">The first node.</param>
+    /// <param name="nodeB">The second node.</param>
     /// <returns>The Manhattan distance between the two nodes.</returns>
-    private int GetManhattanDistance(Node aNodeA, Node aNodeB)
+    private int GetManhattanDistance(Node nodeA, Node nodeB)
     {
-        int ix = aNodeA.gridX - aNodeB.gridX;
-        int iy = aNodeA.gridY - aNodeB.gridY;
+        var x = nodeA.gridX - nodeB.gridX;
+        var y = nodeA.gridY - nodeB.gridY;
 
         // Use bitwise operations to compute absolute values
-        ix = (ix ^ (ix >> 31)) - (ix >> 31);
-        iy = (iy ^ (iy >> 31)) - (iy >> 31);
+        x = (x ^ (x >> 31)) - (x >> 31);
+        y = (y ^ (y >> 31)) - (y >> 31);
 
-        return ix + iy;
+        return x + y;
     }
 
     /// <summary>
@@ -389,8 +388,8 @@ namespace AStarPathfinding
         var gridX = (_gridReference.gridWorldSize.x / _gridReference.nodeDiameter) / 2;
         var gridY = (_gridReference.gridWorldSize.y / _gridReference.nodeDiameter) / 2;
         
-        _targetPosition.position = new Vector3(Random.Range(-gridX,gridX), 0,
-                                            Random.Range(-gridY,gridY));
+        _targetPosition.position = new Vector3(Random.Range(-gridX, gridX), 0,
+                                            Random.Range(-gridY, gridY));
         RecalculatePath();
     }
     
@@ -411,31 +410,31 @@ namespace AStarPathfinding
         }
 
         // Set the target position based on the current patrol index
-        _targetPosition.position = patrolPointsList[_currentWaypointIndex].transform.position;
+        _targetPosition.position = patrolPointsList[_currentPatrolPointIndex].transform.position;
         RecalculatePath();
 
         // Move to the next patrol or the previous one if reached the end
         if (_isMovingForward)
         {
             // Increment the current patrol index
-            _currentWaypointIndex++;
+            _currentPatrolPointIndex++;
 
             // If reached the last patrol, start moving backward
-            if (_currentWaypointIndex >= patrolPointsList.Count)
+            if (_currentPatrolPointIndex >= patrolPointsList.Count)
             {
-                _currentWaypointIndex = patrolPointsList.Count - 2; // Set index to second-to-last patrol
+                _currentPatrolPointIndex = patrolPointsList.Count - 2; // Set index to second-to-last patrol
                 _isMovingForward = false;
             }
         }
         else
         {
             // Decrement the current patrol index
-            _currentWaypointIndex--;
+            _currentPatrolPointIndex--;
 
             // If reached the first patrol, start moving forward
-            if (_currentWaypointIndex < 0)
+            if (_currentPatrolPointIndex < 0)
             {
-                _currentWaypointIndex = 1; // Set index to second patrol
+                _currentPatrolPointIndex = 1; // Set index to second patrol
                 _isMovingForward = true;
             }
         }

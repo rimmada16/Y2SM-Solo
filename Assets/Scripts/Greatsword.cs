@@ -5,16 +5,14 @@ using UnityEngine;
 
 public class Greatsword : MonoBehaviour
 {
-    private Animation anim;
+    private Animation _anim;
     
     [SerializeField] private float maxAttackCooldown = 2f;
     private float _currentAttackCooldown;
     
-
-
     private void Start()
     {
-        anim = GetComponent<Animation>();
+        _anim = GetComponent<Animation>();
     }
 
     // Update is called once per frame
@@ -22,7 +20,7 @@ public class Greatsword : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0) && _currentAttackCooldown <= 0)
         {
-            anim.Play();
+            _anim.Play();
             _currentAttackCooldown = maxAttackCooldown;
         }
         else

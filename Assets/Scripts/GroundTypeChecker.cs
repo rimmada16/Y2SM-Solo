@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GroundTypeChecker : MonoBehaviour
 {
-    [SerializeField] PlayerMovement playerMovement;
+    [SerializeField] private PlayerMovement playerMovement;
     [SerializeField] private float mudMoveSpeed;
     [SerializeField] private float iceMoveSpeed;
     private float _defaultMovementSpeed;
@@ -18,14 +18,23 @@ public class GroundTypeChecker : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-       Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.1f);
+        GroundCheck();
+    }
+
+    private void GroundCheck()
+    {
+        if (playerMovement == null)
+        {
+            return;
+        }
+        
+        Physics.Raycast(transform.position, Vector3.down, out RaycastHit hit, 1.1f);
         if (hit.collider != null)
-        { 
+        {
             if (hit.collider.gameObject.layer == 0)
-            { 
+            {
                 playerMovement.playerMovementSpeed = _defaultMovementSpeed;
                 //Debug.Log("On Ground");
-                
             }
             //Ice
             else if (hit.collider.gameObject.layer == 6)

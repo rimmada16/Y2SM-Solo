@@ -24,8 +24,6 @@ public class ProjectileManager : MonoBehaviour
     // Add bow type to method requirements
     // Can remove speed at that point
     
-    
-    
     public void FireProjectile(int projectile, Vector3 position, Vector3 direction, GameObject projectileSource)
     {
         // Increment the Projectile by a singular unit
@@ -36,5 +34,4 @@ public class ProjectileManager : MonoBehaviour
         newProjectile.layer = projectileSource.layer;
         //newProjectile.GetComponent<Arrow>().damage = projectileDamage;
     }
-
 }

@@ -9,7 +9,6 @@ public class Health : MonoBehaviour, IDamageable, IHealable
 { 
     public static event HealthValueChangedEvent OnHealthValueChanged;
     public static event KillCountChangedEvent OnKillCountChanged;
-    
     public static event KillCountInitialisationEvent OnKillCountInitialisation;
     public static event EnemySpawnedEvent OnEnemySpawned;
     

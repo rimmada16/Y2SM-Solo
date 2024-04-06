@@ -35,30 +35,20 @@ public class Grid : MonoBehaviour
         _gridSizeY = Mathf.RoundToInt(gridWorldSize.y / nodeDiameter);
         CreateGrid();
     }
-
-    /// <summary>
-    /// Sets the final path for the specified enemy GameObject.
-    /// </summary>
-    /// <param name="enemy">The GameObject representing the enemy.</param>
-    /// <param name="theFinalPath">The final path of nodes for the enemy.</param>
-    public void SetEnemyFinalPath(GameObject enemy, List<Node> theFinalPath)
-    {
-        EnemyFinalPaths[enemy] = theFinalPath;
-    }
-
+    
     /// <summary>
     /// Creates the grid for the pathfinding algorithm using the specified parameters.
     /// </summary>
     private void CreateGrid()
     {
         _nodeArray = new Node[_gridSizeX, _gridSizeY];
-        Vector3 bottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.forward * gridWorldSize.y / 2;
-        for (int x = 0; x < _gridSizeX; x++)
+        var bottomLeft = transform.position - Vector3.right * gridWorldSize.x / 2 - Vector3.forward * gridWorldSize.y / 2;
+        for (var x = 0; x < _gridSizeX; x++)
         {
-            for (int y = 0; y < _gridSizeY; y++)
+            for (var y = 0; y < _gridSizeY; y++)
             {
-                Vector3 worldPoint = bottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
-                bool wall = !Physics.CheckSphere(worldPoint, nodeRadius, wallMask);
+                var worldPoint = bottomLeft + Vector3.right * (x * nodeDiameter + nodeRadius) + Vector3.forward * (y * nodeDiameter + nodeRadius);
+                var wall = !Physics.CheckSphere(worldPoint, nodeRadius, wallMask);
                 _nodeArray[x, y] = new Node(wall, worldPoint, x, y);
             }
         }
@@ -72,11 +62,11 @@ public class Grid : MonoBehaviour
     public List<Node> GetNeighbouringNodes(Node neighbourNode)
     {
         // Make a new list of all available neighbors
-        List<Node> neighbourList = new List<Node>();
+        var neighbourList = new List<Node>();
 
-        for (int x = -1; x <= 1; x++) 
+        for (var x = -1; x <= 1; x++) 
         {
-            for (int y = -1; y <= 1; y++) 
+            for (var y = -1; y <= 1; y++) 
             {
                 // If we are on the node that was passed in, skip this iteration.
                 if (x == 0 && y == 0) 
@@ -107,16 +97,26 @@ public class Grid : MonoBehaviour
     /// <returns>The node corresponding to the specified world position.</returns>
     public Node NodeFromWorldPoint(Vector3 worldPos)
     {
-        var ixPos = (worldPos.x + gridWorldSize.x / 2) / gridWorldSize.x;
-        var iyPos = (worldPos.z + gridWorldSize.y / 2) / gridWorldSize.y;
+        var xPos = (worldPos.x + gridWorldSize.x / 2) / gridWorldSize.x;
+        var yPos = (worldPos.z + gridWorldSize.y / 2) / gridWorldSize.y;
 
-        ixPos = Mathf.Clamp01(ixPos);
-        iyPos = Mathf.Clamp01(iyPos);
+        xPos = Mathf.Clamp01(xPos);
+        yPos = Mathf.Clamp01(yPos);
 
-        var ix = Mathf.RoundToInt((_gridSizeX - 1) * ixPos);
-        var iy = Mathf.RoundToInt((_gridSizeY - 1) * iyPos);
+        var x = Mathf.RoundToInt((_gridSizeX - 1) * xPos);
+        var y = Mathf.RoundToInt((_gridSizeY - 1) * yPos);
 
-        return _nodeArray[ix, iy];
+        return _nodeArray[x, y];
+    }
+    
+    /// <summary>
+    /// Sets the final path for the specified enemy GameObject.
+    /// </summary>
+    /// <param name="enemy">The GameObject representing the enemy.</param>
+    /// <param name="theFinalPath">The final path of nodes for the enemy.</param>
+    public void SetEnemyFinalPath(GameObject enemy, List<Node> theFinalPath)
+    {
+        EnemyFinalPaths[enemy] = theFinalPath;
     }
     
     /// <summary>
@@ -154,7 +154,6 @@ public class Grid : MonoBehaviour
             }
             Gizmos.DrawCube(n.nodePosition, Vector3.one * (nodeDiameter - distanceBetweenNodes)); //Draw the node at the position of the node.
         }
-
     }
 }
 }

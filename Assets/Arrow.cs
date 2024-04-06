@@ -9,8 +9,6 @@ public class Arrow : MonoBehaviour
     public int damage = 50;
     public Vector3 direction;
     
-    
-    
     // Start is called before the first frame update
     private void Awake()
     {
@@ -22,7 +20,6 @@ public class Arrow : MonoBehaviour
     {
         transform.Translate(direction * (speed * Time.deltaTime));
     }
-    
     
     private void OnTriggerEnter(Collider other)
     {
