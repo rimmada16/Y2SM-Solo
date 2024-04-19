@@ -98,11 +98,9 @@ namespace Editor
         
         // Scroll view
         private Vector2 _scrollPosition = Vector2.zero;
-
-
+        
         private bool _useDefaultValues = true;
-        
-        
+
         /// <summary>
         /// MenuItem: Editor window can be opened via the Unity menu
         /// ShowWindow: Creates the window in the editor so it is visible for the user
@@ -125,10 +123,9 @@ namespace Editor
             // Scroll bar
             _scrollPosition = GUILayout.BeginScrollView(_scrollPosition);
             
-            //Set Initial Values
+            //Set Initial Value
             _selectedType = EnemyType.Melee;
-            _selectedMeleeWeapon = MeleeWeaponType.Shortsword;
-            
+
             EditorGUILayout.Space();
             // Gives the user the option to select the enemy type they wish to spawn
             EditorGUILayout.LabelField(new GUIContent("Spawn Option:", "Select what type of enemy you wish to spawn"), EditorStyles.boldLabel);

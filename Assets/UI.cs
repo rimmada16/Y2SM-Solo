@@ -6,11 +6,13 @@ using UnityEngine;
 
 public class UI : MonoBehaviour
 {
+    public static event KillCountReachedEvent OnKillCountReached;
+    
     [SerializeField] private TextMeshProUGUI healthText;
     [SerializeField] private TextMeshProUGUI killCountText;
     private int _killCount;
     private int _amountOfEnemies;
-    
+
     // Start is called before the first frame update
     private void Start()
     {
@@ -44,6 +46,11 @@ public class UI : MonoBehaviour
     {
         _killCount++;
         UpdateKillCountUI();
+        
+        if (_killCount == _amountOfEnemies)
+        {
+            OnKillCountReached?.Invoke();
+        }
     }
     
     private void UpdateKillCountUI()

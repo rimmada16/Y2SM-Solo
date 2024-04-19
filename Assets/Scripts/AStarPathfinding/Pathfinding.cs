@@ -96,8 +96,25 @@ namespace AStarPathfinding
     { 
         CheckToFollowPlayer();
         Rotation();
+        PlayerDeath();
     }
 
+
+    private void PlayerDeath()
+    {
+        if (_player != null)
+        {
+            return;
+        }
+        
+        if (isFollowingPlayer)
+        {
+            isFollowingPlayer = false;
+            canPathFindToTarget = true;
+        }
+    }
+    
+    
     /// <summary>
     /// If the enemy is not following the player, rotate the enemy to face the direction of movement.
     /// If the enemy is following the player, rotate the enemy to face the player.
@@ -448,6 +465,9 @@ namespace AStarPathfinding
         // Draw a wire sphere representing the sphere cast
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(transform.position, aggroRange);
+        
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(transform.position, attackRange);
     }
 }
 }

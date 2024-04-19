@@ -11,6 +11,7 @@ public class Health : MonoBehaviour, IDamageable, IHealable
     public static event KillCountChangedEvent OnKillCountChanged;
     public static event KillCountInitialisationEvent OnKillCountInitialisation;
     public static event EnemySpawnedEvent OnEnemySpawned;
+    public static event PlayerDeathEvent OnPlayerDeath;
     
     public int health = 100;
 
@@ -36,9 +37,13 @@ public class Health : MonoBehaviour, IDamageable, IHealable
             OnHealthValueChanged?.Invoke(health);
         }
         
-        if (health <= 0)
+        if (gameObject.layer != 9 && health <= 0)
         {
             Die();
+        }
+        else if (gameObject.layer == 9 && health <= 0)
+        {
+            OnPlayerDeath?.Invoke();
         }
     }
     
