@@ -104,7 +104,7 @@ public class GameManager : MonoBehaviour
         winCanvas.SetActive(true);
     }
     
-    private void PlayerDeath()
+    public void PlayerDeath()
     {
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;

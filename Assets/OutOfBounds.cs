@@ -7,6 +7,6 @@ public class OutOfBounds : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        GameManager.Instance.Restart();
+        GameManager.Instance.PlayerDeath();
     }
 }
