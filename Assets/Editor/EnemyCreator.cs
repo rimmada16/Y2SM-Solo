@@ -2,6 +2,8 @@
 
 using System.Collections.Generic;
 using AStarPathfinding;
+using EnemyUnits;
+using SupportingSystems;
 using UnityEditor;
 using UnityEngine;
 using Random = UnityEngine.Random;

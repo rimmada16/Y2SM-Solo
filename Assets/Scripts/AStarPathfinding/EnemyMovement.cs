@@ -1,8 +1,9 @@
 using System.Collections;
-using UnityEngine;
 using System.Collections.Generic;
-using AStarPathfinding;
+using UnityEngine;
 
+namespace AStarPathfinding
+{
     /// <summary>
     /// Handles the movement of the enemy agents
     /// </summary>
@@ -109,3 +110,4 @@ using AStarPathfinding;
             _canFollowPath = true;
         }
     }
+}

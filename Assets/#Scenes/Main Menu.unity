@@ -449,7 +449,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Working Title
+  m_text: A* Pathfinding Project
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -622,6 +622,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 59c2165daf0f76c409949b7a98036ce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultCanvas: {fileID: 0}
+  pauseMenuCanvas: {fileID: 0}
+  winCanvas: {fileID: 0}
+  playerDeathCanvas: {fileID: 0}
 --- !u!4 &766075724
 Transform:
   m_ObjectHideFlags: 0

@@ -1,4 +1,10 @@
-public interface IDamageable
+namespace Interfaces
 {
-    void TakeDamage(int damage);
+    /// <summary>
+    /// Interface for objects that can take damage.
+    /// </summary>
+    public interface IDamageable
+    {
+        void TakeDamage(int damage);
+    }
 }
