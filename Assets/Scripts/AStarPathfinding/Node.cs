@@ -9,19 +9,45 @@ namespace AStarPathfinding
     [Serializable]
     public class Node 
     {
+        /// <summary>
+        /// X grid position
+        /// </summary>
         public int gridX;
+        
+        /// <summary>
+        /// Y grid position
+        /// </summary>
         public int gridY;
 
+        /// <summary>
+        /// Is the node a wall
+        /// </summary>
         public bool isWall;
+        
+        /// <summary>
+        /// Node position in world space - XYZ
+        /// </summary>
         public Vector3 nodePosition;
 
+        /// <summary>
+        /// The parent node
+        /// </summary>
         public Node parentNode;
 
         // Cost values for pathfinding (gCost: cost from start, hCost: heuristic cost to end)
+        /// <summary>
+        /// Cost from the start
+        /// </summary>
         public int gCost;
+        
+        /// <summary>
+        /// Heuristic cost to end
+        /// </summary>
         public int hCost;
-
-        // Total cost of the node (sum of gCost and hCost)
+        
+        /// <summary>
+        /// Total cost of the node (sum of gCost and hCost)
+        /// </summary>
         public int FCost => gCost + hCost;
 
         /// <summary>

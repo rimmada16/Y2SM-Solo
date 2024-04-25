@@ -11,7 +11,11 @@ namespace EnemyUnits
     /// </summary>
     public class MeleeUnit : MonoBehaviour
     {
+        /// <summary>
+        /// How often the melee Unit can attack
+        /// </summary>
         public float timeBetweenAttacks = 2f;
+        
         private Animation _anim;
         private Pathfinding _pathfinding;
     

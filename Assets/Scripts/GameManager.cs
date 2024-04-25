@@ -57,6 +57,9 @@ public delegate void PlayerDeathEvent();
 /// </summary>
 public class GameManager : MonoBehaviour
 {
+    /// <summary>
+    /// Singleton
+    /// </summary>
     public static GameManager Instance;
     
     private bool _isPaused;

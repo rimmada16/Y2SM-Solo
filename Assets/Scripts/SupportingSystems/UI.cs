@@ -9,6 +9,9 @@ namespace SupportingSystems
     /// </summary>
     public class UI : MonoBehaviour
     {
+        /// <summary>
+        /// Event for when the player reaches the amount of kills needed to run the game won logic
+        /// </summary>
         public static event KillCountReachedEvent OnKillCountReached;
     
         [SerializeField] private TextMeshProUGUI healthText;

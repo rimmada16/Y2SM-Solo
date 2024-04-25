@@ -7,7 +7,11 @@ namespace SupportingSystems
     /// </summary>
     public class DealDamage : MonoBehaviour
     {
+        /// <summary>
+        /// The attack damage of the item
+        /// </summary>
         public int damage = 50;
+        
         private bool _isAttacking;
     
         /// <summary>

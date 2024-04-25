@@ -11,7 +11,14 @@ namespace ProjectileSystem
         [SerializeField] private float lifetime = 3f;
         [SerializeField] private float speed = 10f;
         
+        /// <summary>
+        /// The damage of the Arrow
+        /// </summary>
         public int damage = 50;
+        
+        /// <summary>
+        /// The direction that the arrow will head in
+        /// </summary>
         public Vector3 direction;
     
         /// <summary>

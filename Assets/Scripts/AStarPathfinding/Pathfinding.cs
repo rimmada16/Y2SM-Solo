@@ -9,22 +9,37 @@ namespace AStarPathfinding
     /// </summary>
     public class Pathfinding : MonoBehaviour
     {
-
-        // Events for the different enemy types
+        /// <summary>
+        /// Event for triggering the ExploderUnit attack
+        /// </summary>
         public static event ExploderEvent Explode;
+        
+        /// <summary>
+        /// Event for triggering the MeleeUnit attack
+        /// </summary>
         public static event MeleeAttackEvent Melee;
+        
+        /// <summary>
+        /// Event for triggering the ArcherUnit attack
+        /// </summary>
         public static event RangedAttackEvent Ranged;
 
         // For interaction with the scene
         private Grid _gridReference;
         private GameObject _player;
 
+        /// <summary>
+        /// Choose whether the agent is roaming or following patrol points
+        /// </summary>
         public enum SelectionOption
         {
             RoamBounds,
             FollowPatrolPoints
         }
 
+        /// <summary>
+        /// The type of agent
+        /// </summary>
         public enum EnemyType
         {
             Melee,
@@ -32,25 +47,46 @@ namespace AStarPathfinding
             Exploder
         }
 
-        [Header("Enemy Type")] public EnemyType enemyType = EnemyType.Melee;
+        [Header("Enemy Type")] 
+        public EnemyType enemyType = EnemyType.Melee;
 
-        [Header("Agent Type")] public SelectionOption selectionOption = SelectionOption.RoamBounds;
+        [Header("Agent Type")] 
+        public SelectionOption selectionOption = SelectionOption.RoamBounds;
 
         private Transform _startPosition, _targetPosition;
 
         [Space(10)] [Header("Agent Behaviour")]
         public bool isFollowingPlayer;
-
+        /// <summary>
+        /// States whether the unit is attacking or not
+        /// </summary>
         public bool isAttacking;
+        
+        /// <summary>
+        /// Lets the agent know whether they can path to their intended target
+        /// </summary>
         public bool canPathFindToTarget = true;
 
-        [Space(10)] [Header("Patrol Points")] public bool isTargetingPatrolPoints;
+        [Space(10)] [Header("Patrol Points")]
+        public bool isTargetingPatrolPoints;
+        
+        /// <summary>
+        /// List of patrol points
+        /// </summary>
         public List<Transform> patrolPointsList;
+        
         private int _currentPatrolPointIndex = 0;
         private bool _isMovingForward;
 
         // Difference must be always at least 3, any less causes issues
+        /// <summary>
+        /// The attack range of the Unit
+        /// </summary>
         public float attackRange = 1.5f;
+        
+        /// <summary>
+        /// The aggression range of the Unit
+        /// </summary>
         public float aggroRange = 5f;
 
         // Getting the enemy to move initially
@@ -58,8 +94,10 @@ namespace AStarPathfinding
 
         // Pathfinding optimisation
         private Vector3 _lastPlayerPosition, _lastPosition;
-
-        // Viewing all the nodes in the path in the editor
+        
+        /// <summary>
+        /// List to display all the nodes in the path for the Unit in the Editor
+        /// </summary>
         public List<Node> finalPathOfNodes;
 
         /// <summary>

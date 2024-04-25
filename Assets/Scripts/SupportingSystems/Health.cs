@@ -9,12 +9,34 @@ namespace SupportingSystems
     public class Health : MonoBehaviour, IDamageable, IHealable
     { 
         // Events
+        /// <summary>
+        /// Event for when the players health value is altered
+        /// </summary>
         public static event HealthValueChangedEvent OnHealthValueChanged;
+        
+        /// <summary>
+        /// Event to update the kill count when an enemy is slain
+        /// </summary>
         public static event KillCountChangedEvent OnKillCountChanged;
+        
+        /// <summary>
+        /// Event to initialise the amount of kills on the UI
+        /// </summary>
         public static event KillCountInitialisationEvent OnKillCountInitialisation;
+        
+        /// <summary>
+        /// Event to initialise the amount of enemies that need to be killed on the UI
+        /// </summary>
         public static event EnemySpawnedEvent OnEnemySpawned;
+        
+        /// <summary>
+        /// Event to run logic appropriate for when the player dies
+        /// </summary>
         public static event PlayerDeathEvent OnPlayerDeath;
     
+        /// <summary>
+        /// The health value of the entity
+        /// </summary>
         public int health = 100;
 
         /// <summary>

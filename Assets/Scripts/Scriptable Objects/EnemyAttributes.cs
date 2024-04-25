@@ -7,9 +7,24 @@ namespace Scriptable_Objects
     
     public class SpawnManagerScriptableObject : ScriptableObject
     {
+        /// <summary>
+        /// The attack speed of the enemy
+        /// </summary>
         public float attackSpeed;
+        
+        /// <summary>
+        /// The attack range of the enemy
+        /// </summary>
         public float attackRange;
+        
+        /// <summary>
+        /// The attack damage of the enemy
+        /// </summary>
         public float attackDamage;
+        
+        /// <summary>
+        /// The movement speed of the enemy
+        /// </summary>
         public float movementSpeed;
     }
 }

@@ -9,7 +9,11 @@ namespace AStarPathfinding
     /// </summary>
     public class EnemyMovement : MonoBehaviour
     {
+        /// <summary>
+        /// Movement Speed of the Unit
+        /// </summary>
         public float movementSpeed = 5f; // Adjust the speed as needed
+        
         private int _currentNodeIndex = 0;
         private Pathfinding _pathfinding;
         private bool _initialPathCalculated;

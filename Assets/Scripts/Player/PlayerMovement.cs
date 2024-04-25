@@ -7,7 +7,11 @@ namespace Player
     /// </summary>
     public class PlayerMovement : MonoBehaviour
     {
+        /// <summary>
+        /// The movement speed of the Player
+        /// </summary>
         public float playerMovementSpeed = 5f;
+        
         [SerializeField] private float jumpSpeed = 5f;
         [SerializeField] private float gravity = 9.81f;
         

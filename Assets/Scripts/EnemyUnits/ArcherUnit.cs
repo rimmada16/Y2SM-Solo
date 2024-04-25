@@ -13,7 +13,15 @@ namespace EnemyUnits
     public class ArcherUnit : MonoBehaviour
     {
         private Pathfinding _pathfinding;
+        
+        /// <summary>
+        /// Represents the arrow to be shot by the Unit
+        /// </summary>
         public int arrowToShoot = 0;
+        
+        /// <summary>
+        /// Represents how often the Unit can attack
+        /// </summary>
         public float timeBetweenAttacks = 2f;
     
         /// <summary>

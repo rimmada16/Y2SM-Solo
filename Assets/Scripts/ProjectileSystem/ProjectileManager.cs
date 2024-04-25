@@ -7,7 +7,9 @@ namespace ProjectileSystem
     /// </summary>
     public class ProjectileManager : MonoBehaviour
     {
-        // Singleton
+        /// <summary>
+        /// Singleton
+        /// </summary>
         public static ProjectileManager Instance;
     
         [SerializeField] private GameObject[] projectiles;

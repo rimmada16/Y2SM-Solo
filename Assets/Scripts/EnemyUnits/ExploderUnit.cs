@@ -12,10 +12,21 @@ namespace EnemyUnits
     /// </summary>
     public class ExploderUnit : MonoBehaviour
     {
+        /// <summary>
+        /// Event for if the exploder Unit blows itself up
+        /// </summary>
         public static event ExploderBlewItselfUpEvent OnExploderBlewItselfUp;
     
+        /// <summary>
+        /// The damage value for the exploder Unit
+        /// </summary>
         public int baseDamage; 
+        
+        /// <summary>
+        /// The explosion radius of the exploder Unit
+        /// </summary>
         public float explosionRadius;
+        
         private bool _explosionEventNotInvoked = true;
 
         /// <summary>

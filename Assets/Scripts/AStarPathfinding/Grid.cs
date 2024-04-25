@@ -12,6 +12,7 @@ namespace AStarPathfinding
     {
         [Header("Grid Settings")]
         public Vector2 gridWorldSize;
+        
         private int _gridSizeX, _gridSizeY;
         
         [Header("What is an Obstacle?")]
@@ -20,8 +21,16 @@ namespace AStarPathfinding
         [Header("Node Settings")]
         [SerializeField] private float nodeRadius;
         [SerializeField] private float distanceBetweenNodes;
-        public float nodeDiameter;
         private Node[,] _nodeArray;
+        
+        /// <summary>
+        /// The diameter of a node
+        /// </summary>
+        public float nodeDiameter;
+        
+        /// <summary>
+        /// Dictionary containing the enemy game objects and their paths
+        /// </summary>
         public readonly Dictionary<GameObject, List<Node>> EnemyFinalPaths = new();
 
         /// <summary>
@@ -128,24 +137,26 @@ namespace AStarPathfinding
 
             if (_nodeArray == null) 
             {
-                return; //If the grid is not empty
+                return;
             }
             
-            foreach (Node n in _nodeArray)//Loop through every node in the grid
+            foreach (Node n in _nodeArray)
             {
-                if (n.isWall)//If the current node is a wall node
+                //If the current node is a wall node
+                if (n.isWall)
                 {
-                    Gizmos.color = Color.white;//Set the color of the node
+                    Gizmos.color = Color.white;
                 }
                 else
                 {
-                    Gizmos.color = Color.yellow;//Set the color of the node
+                    Gizmos.color = Color.yellow;
                 }
 
                 // Check if any enemy final paths exist and if the current node is in any of them
                 foreach (var kvp in EnemyFinalPaths)
                 {
-                    if (kvp.Value.Contains(n))//If the current node is in the final path of the enemy
+                    //If the current node is in the final path of the enemy
+                    if (kvp.Value.Contains(n))
                     {
                         Gizmos.color = Color.red;//Set the color of that node
                         break; // Exit the loop if the node is found in any enemy's final path
