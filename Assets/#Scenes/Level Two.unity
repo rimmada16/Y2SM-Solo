@@ -1092,7 +1092,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &78004996
 MonoBehaviour:
@@ -1441,7 +1441,7 @@ BoxCollider:
   m_GameObject: {fileID: 91752043}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -1465,7 +1465,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -2326,7 +2326,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &125581800
 MonoBehaviour:
@@ -4036,7 +4036,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &237236170
 MonoBehaviour:
@@ -4287,7 +4287,7 @@ BoxCollider:
   m_GameObject: {fileID: 266214965}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -4311,7 +4311,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4936,7 +4936,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &330872455
 MonoBehaviour:
@@ -6144,7 +6144,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &413291864
 MonoBehaviour:
@@ -6539,7 +6539,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &443025326
 MonoBehaviour:
@@ -7067,7 +7067,7 @@ BoxCollider:
   m_GameObject: {fileID: 484576119}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -7091,7 +7091,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8642,7 +8642,7 @@ BoxCollider:
   m_GameObject: {fileID: 583224691}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -8666,7 +8666,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -9011,7 +9011,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &600141431
 MonoBehaviour:
@@ -9278,7 +9278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &616397627
 MonoBehaviour:
@@ -10687,7 +10687,7 @@ BoxCollider:
   m_GameObject: {fileID: 714093291}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -10711,7 +10711,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -12829,7 +12829,7 @@ BoxCollider:
   m_GameObject: {fileID: 840575818}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -12853,7 +12853,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -13746,7 +13746,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &906703003
 MonoBehaviour:
@@ -14227,7 +14227,7 @@ BoxCollider:
   m_GameObject: {fileID: 936277354}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -14251,7 +14251,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15325,7 +15325,7 @@ BoxCollider:
   m_GameObject: {fileID: 1005377151}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -15349,7 +15349,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -15700,7 +15700,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &1038616869
 MonoBehaviour:
@@ -16016,7 +16016,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &1055593170
 MonoBehaviour:
@@ -17029,7 +17029,7 @@ BoxCollider:
   m_GameObject: {fileID: 1104760351}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -17053,7 +17053,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -17126,7 +17126,7 @@ BoxCollider:
   m_GameObject: {fileID: 1105224218}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -17150,7 +17150,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -17398,7 +17398,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &1112750141
 MonoBehaviour:
@@ -19665,7 +19665,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &1298251039
 MonoBehaviour:
@@ -19810,7 +19810,7 @@ BoxCollider:
   m_GameObject: {fileID: 1307336038}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -19834,7 +19834,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -23845,7 +23845,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &1515714646
 MonoBehaviour:
@@ -24744,7 +24744,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &1557321498
 MonoBehaviour:
@@ -24969,7 +24969,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &1575966660
 MonoBehaviour:
@@ -27045,7 +27045,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &1701684461
 MonoBehaviour:
@@ -28256,7 +28256,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &1796935033
 MonoBehaviour:
@@ -29981,7 +29981,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &1987315866
 MonoBehaviour:
@@ -30284,7 +30284,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &2012151558
 MonoBehaviour:
@@ -30961,7 +30961,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  HAHA: 0
+  damageUnitTest: 0
   health: 100
 --- !u!114 &2050680191
 MonoBehaviour:
@@ -31019,7 +31019,7 @@ BoxCollider:
   m_GameObject: {fileID: 2057867079}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
@@ -31043,7 +31043,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

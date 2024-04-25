@@ -1343,7 +1343,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -3362,6 +3362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageUnitTest: 0
   health: 30
 --- !u!33 &714951194
 MeshFilter:
@@ -3738,6 +3739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageUnitTest: 0
   health: 50
 --- !u!33 &763692156
 MeshFilter:
@@ -4009,7 +4011,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4121,7 +4123,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4917,6 +4919,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageUnitTest: 0
   health: 20
 --- !u!33 &926630189
 MeshFilter:
@@ -5324,7 +5327,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5958,7 +5961,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -6396,7 +6399,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -7108,6 +7111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageUnitTest: 0
   health: 100
 --- !u!33 &1270522701
 MeshFilter:
@@ -7471,7 +7475,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: eb53d6a78c6b6de4f8e66dcd769929c0, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8429,6 +8433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageUnitTest: 0
   health: 50
 --- !u!33 &1458295605
 MeshFilter:
@@ -10455,6 +10460,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damageUnitTest: 0
   health: 60
 --- !u!33 &2030500996
 MeshFilter:

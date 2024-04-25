@@ -140,6 +140,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         _isPaused = true;
         defaultCanvas.SetActive(false);
         pauseMenuCanvas.SetActive(true);
@@ -167,6 +168,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         _isWinCanvasActive = true;
         winCanvas.SetActive(true);
     }
@@ -179,6 +181,7 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0;
         Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         _isPlayerDeathCanvasActive = true;
         defaultCanvas.SetActive(false);
         playerDeathCanvas.SetActive(true);
