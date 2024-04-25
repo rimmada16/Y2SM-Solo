@@ -3290,11 +3290,11 @@ GameObject:
   m_Component:
   - component: {fileID: 714951195}
   - component: {fileID: 714951194}
-  - component: {fileID: 714951193}
   - component: {fileID: 714951192}
   - component: {fileID: 714951191}
   - component: {fileID: 714951190}
   - component: {fileID: 714951196}
+  - component: {fileID: 714951197}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -3350,19 +3350,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
---- !u!114 &714951193
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 714951189}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 30
 --- !u!33 &714951194
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3400,6 +3387,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   test: 0
+--- !u!114 &714951197
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 714951189}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageUnitTest: 0
+  health: 30
 --- !u!1 &752189065
 GameObject:
   m_ObjectHideFlags: 0
@@ -3665,11 +3666,11 @@ GameObject:
   m_Component:
   - component: {fileID: 763692157}
   - component: {fileID: 763692156}
-  - component: {fileID: 763692155}
   - component: {fileID: 763692154}
   - component: {fileID: 763692153}
   - component: {fileID: 763692152}
   - component: {fileID: 763692158}
+  - component: {fileID: 763692159}
   m_Layer: 3
   m_Name: ExploderEnemy(Clone)
   m_TagString: Enemy
@@ -3726,19 +3727,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
---- !u!114 &763692155
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 763692151}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 50
 --- !u!33 &763692156
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -3776,6 +3764,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   test: 0
+--- !u!114 &763692159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 763692151}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageUnitTest: 0
+  health: 50
 --- !u!1 &767011238
 GameObject:
   m_ObjectHideFlags: 0
@@ -4842,11 +4844,11 @@ GameObject:
   m_Component:
   - component: {fileID: 926630190}
   - component: {fileID: 926630189}
-  - component: {fileID: 926630188}
   - component: {fileID: 926630187}
   - component: {fileID: 926630186}
   - component: {fileID: 926630185}
   - component: {fileID: 926630191}
+  - component: {fileID: 926630192}
   m_Layer: 3
   m_Name: ArcherEnemy(Clone)
   m_TagString: Enemy
@@ -4905,19 +4907,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
---- !u!114 &926630188
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 926630184}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 20
 --- !u!33 &926630189
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4955,6 +4944,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   test: 0
+--- !u!114 &926630192
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926630184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageUnitTest: 0
+  health: 20
 --- !u!1 &951067466
 GameObject:
   m_ObjectHideFlags: 0
@@ -7033,11 +7036,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1270522702}
   - component: {fileID: 1270522701}
-  - component: {fileID: 1270522700}
   - component: {fileID: 1270522699}
   - component: {fileID: 1270522698}
   - component: {fileID: 1270522697}
   - component: {fileID: 1270522703}
+  - component: {fileID: 1270522704}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -7096,19 +7099,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 1.5
---- !u!114 &1270522700
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1270522696}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 100
 --- !u!33 &1270522701
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -7146,6 +7136,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   test: 0
+--- !u!114 &1270522704
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1270522696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageUnitTest: 0
+  health: 100
 --- !u!1 &1291992819
 GameObject:
   m_ObjectHideFlags: 0
@@ -8354,11 +8358,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1458295606}
   - component: {fileID: 1458295605}
-  - component: {fileID: 1458295604}
   - component: {fileID: 1458295603}
   - component: {fileID: 1458295602}
   - component: {fileID: 1458295601}
   - component: {fileID: 1458295607}
+  - component: {fileID: 1458295608}
   m_Layer: 3
   m_Name: ExploderEnemy(Clone)
   m_TagString: Enemy
@@ -8417,19 +8421,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
---- !u!114 &1458295604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1458295600}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 50
 --- !u!33 &1458295605
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8467,6 +8458,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   test: 0
+--- !u!114 &1458295608
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1458295600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageUnitTest: 0
+  health: 50
 --- !u!1 &1460735142
 GameObject:
   m_ObjectHideFlags: 0
@@ -9792,6 +9797,20 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 9099999530021385831, guid: 9f04151d5687d0145904e2c7775b783d, type: 3}
   m_PrefabInstance: {fileID: 9099999529609078477}
   m_PrefabAsset: {fileID: 0}
+--- !u!115 &1774677654
+MonoScript:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: 
+  serializedVersion: 5
+  m_Script: 
+  m_DefaultReferences: {}
+  m_Icon: {fileID: 0}
+  m_ExecutionOrder: 0
+  m_ClassName: EnemyHealth
+  m_Namespace: SupportingSystems
 --- !u!1 &1783192121
 GameObject:
   m_ObjectHideFlags: 0
@@ -10383,11 +10402,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2030500997}
   - component: {fileID: 2030500996}
-  - component: {fileID: 2030500995}
   - component: {fileID: 2030500994}
   - component: {fileID: 2030500993}
   - component: {fileID: 2030500992}
   - component: {fileID: 2030500998}
+  - component: {fileID: 2030500999}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -10443,19 +10462,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
---- !u!114 &2030500995
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2030500991}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 60
 --- !u!33 &2030500996
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -10493,6 +10499,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   test: 0
+--- !u!114 &2030500999
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2030500991}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 1774677654}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageUnitTest: 0
+  health: 60
 --- !u!1 &2039462704
 GameObject:
   m_ObjectHideFlags: 0

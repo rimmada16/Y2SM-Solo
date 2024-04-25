@@ -10,6 +10,9 @@ namespace AStarPathfinding
     /// </summary> 
     public class Grid : MonoBehaviour
     {
+        /// <summary>
+        /// How big the grid should be in the world.
+        /// </summary>
         [Header("Grid Settings")]
         public Vector2 gridWorldSize;
         

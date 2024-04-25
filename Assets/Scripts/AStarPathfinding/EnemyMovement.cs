@@ -82,7 +82,7 @@ namespace AStarPathfinding
                 // Check if reached the end of the path
                 if (_currentNodeIndex >= finalPath.Count)
                 {
-                    Debug.Log("Reached the end of the path!");
+                    Debug.Log(gameObject + "reached the end of the path!");
 
                     // Reset _currentNodeIndex
                     _currentNodeIndex = 0;

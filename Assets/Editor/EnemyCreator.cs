@@ -519,7 +519,7 @@ namespace Editor
                     // Get the relevant scripts off the enemy
                     Pathfinding pathfinding = newEnemy.GetComponent<Pathfinding>();
                     EnemyMovement enemyMovement = newEnemy.GetComponent<EnemyMovement>();
-                    Health enemyHealth = newEnemy.GetComponent<Health>();
+                    EnemyHealth enemyHealth = newEnemy.GetComponent<EnemyHealth>();
 
                     if (_selectedType == EnemyType.Exploder)
                     {

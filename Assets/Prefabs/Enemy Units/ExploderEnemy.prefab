@@ -223,10 +223,11 @@ GameObject:
   m_Component:
   - component: {fileID: 223572419834743577}
   - component: {fileID: 223572419834743582}
-  - component: {fileID: 223572419834743570}
   - component: {fileID: 223572419834743571}
   - component: {fileID: 223572419834743568}
   - component: {fileID: 6540869353009404845}
+  - component: {fileID: -5471073817995034001}
+  - component: {fileID: 5362372999453177784}
   m_Layer: 3
   m_Name: ExploderEnemy
   m_TagString: Enemy
@@ -258,19 +259,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 223572419834743569}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!114 &223572419834743570
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 223572419834743569}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 30
 --- !u!114 &223572419834743571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -299,12 +287,13 @@ MonoBehaviour:
   enemyType: 2
   selectionOption: 0
   isFollowingPlayer: 0
+  isAttacking: 0
+  canPathFindToTarget: 1
   isTargetingPatrolPoints: 0
   patrolPointsList: []
-  isAttacking: 0
   attackRange: 2
   aggroRange: 10
-  canPathFindToTarget: 1
+  finalPathOfNodes: []
 --- !u!114 &6540869353009404845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -319,3 +308,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   baseDamage: 90
   explosionRadius: 5
+--- !u!114 &-5471073817995034001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223572419834743569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &5362372999453177784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 223572419834743569}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0

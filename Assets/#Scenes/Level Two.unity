@@ -996,10 +996,11 @@ GameObject:
   m_Component:
   - component: {fileID: 78004994}
   - component: {fileID: 78004993}
-  - component: {fileID: 78004992}
   - component: {fileID: 78004991}
   - component: {fileID: 78004990}
   - component: {fileID: 78004989}
+  - component: {fileID: 78004996}
+  - component: {fileID: 78004995}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -1055,19 +1056,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
---- !u!114 &78004992
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 78004988}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 60
 --- !u!33 &78004993
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1092,6 +1080,33 @@ Transform:
   m_Father: {fileID: 385296282}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &78004995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78004988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &78004996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 78004988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &81489519
 GameObject:
   m_ObjectHideFlags: 0
@@ -2208,10 +2223,11 @@ GameObject:
   m_Component:
   - component: {fileID: 125581798}
   - component: {fileID: 125581797}
-  - component: {fileID: 125581796}
   - component: {fileID: 125581795}
   - component: {fileID: 125581794}
   - component: {fileID: 125581793}
+  - component: {fileID: 125581800}
+  - component: {fileID: 125581799}
   m_Layer: 3
   m_Name: ArcherEnemy(Clone)
   m_TagString: Enemy
@@ -2274,19 +2290,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 10
---- !u!114 &125581796
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 125581792}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 200
 --- !u!33 &125581797
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -2311,6 +2314,33 @@ Transform:
   m_Father: {fileID: 75640408}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &125581799
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125581792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &125581800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 125581792}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &144142585
 GameObject:
   m_ObjectHideFlags: 0
@@ -3909,10 +3939,11 @@ GameObject:
   m_Component:
   - component: {fileID: 237236168}
   - component: {fileID: 237236167}
-  - component: {fileID: 237236166}
   - component: {fileID: 237236165}
   - component: {fileID: 237236164}
   - component: {fileID: 237236163}
+  - component: {fileID: 237236170}
+  - component: {fileID: 237236169}
   m_Layer: 3
   m_Name: ArcherEnemy(Clone)
   m_TagString: Enemy
@@ -3969,19 +4000,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
---- !u!114 &237236166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 237236162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 20
 --- !u!33 &237236167
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4006,6 +4024,33 @@ Transform:
   m_Father: {fileID: 75640408}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &237236169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237236162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &237236170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237236162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &237647818
 GameObject:
   m_ObjectHideFlags: 0
@@ -4794,10 +4839,11 @@ GameObject:
   m_Component:
   - component: {fileID: 330872453}
   - component: {fileID: 330872452}
-  - component: {fileID: 330872451}
   - component: {fileID: 330872450}
   - component: {fileID: 330872449}
   - component: {fileID: 330872448}
+  - component: {fileID: 330872455}
+  - component: {fileID: 330872454}
   m_Layer: 3
   m_Name: ArcherEnemy(Clone)
   m_TagString: Enemy
@@ -4854,19 +4900,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
---- !u!114 &330872451
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 330872447}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 20
 --- !u!33 &330872452
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4891,6 +4924,33 @@ Transform:
   m_Father: {fileID: 75640408}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &330872454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330872447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &330872455
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330872447}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &333554143
 GameObject:
   m_ObjectHideFlags: 0
@@ -5987,10 +6047,11 @@ GameObject:
   m_Component:
   - component: {fileID: 413291862}
   - component: {fileID: 413291861}
-  - component: {fileID: 413291860}
   - component: {fileID: 413291859}
   - component: {fileID: 413291858}
   - component: {fileID: 413291857}
+  - component: {fileID: 413291864}
+  - component: {fileID: 413291863}
   m_Layer: 3
   m_Name: ArcherEnemy(Clone)
   m_TagString: Enemy
@@ -6047,19 +6108,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
---- !u!114 &413291860
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 413291856}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 20
 --- !u!33 &413291861
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6084,6 +6132,33 @@ Transform:
   m_Father: {fileID: 75640408}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &413291863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413291856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &413291864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413291856}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &414986133
 GameObject:
   m_ObjectHideFlags: 0
@@ -6368,10 +6443,11 @@ GameObject:
   m_Component:
   - component: {fileID: 443025324}
   - component: {fileID: 443025323}
-  - component: {fileID: 443025322}
   - component: {fileID: 443025321}
   - component: {fileID: 443025320}
   - component: {fileID: 443025319}
+  - component: {fileID: 443025326}
+  - component: {fileID: 443025325}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -6427,19 +6503,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
---- !u!114 &443025322
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 443025318}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 60
 --- !u!33 &443025323
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -6464,6 +6527,33 @@ Transform:
   m_Father: {fileID: 385296282}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &443025325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443025318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &443025326
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 443025318}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &466279411
 GameObject:
   m_ObjectHideFlags: 0
@@ -8825,10 +8915,11 @@ GameObject:
   m_Component:
   - component: {fileID: 600141429}
   - component: {fileID: 600141428}
-  - component: {fileID: 600141427}
   - component: {fileID: 600141426}
   - component: {fileID: 600141425}
   - component: {fileID: 600141424}
+  - component: {fileID: 600141431}
+  - component: {fileID: 600141430}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -8884,19 +8975,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
---- !u!114 &600141427
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 600141423}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 60
 --- !u!33 &600141428
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -8921,6 +8999,33 @@ Transform:
   m_Father: {fileID: 385296282}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &600141430
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600141423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &600141431
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 600141423}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &610835584
 GameObject:
   m_ObjectHideFlags: 0
@@ -9077,10 +9182,11 @@ GameObject:
   m_Component:
   - component: {fileID: 616397625}
   - component: {fileID: 616397624}
-  - component: {fileID: 616397623}
   - component: {fileID: 616397622}
   - component: {fileID: 616397621}
   - component: {fileID: 616397620}
+  - component: {fileID: 616397627}
+  - component: {fileID: 616397626}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -9136,19 +9242,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
---- !u!114 &616397623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 616397619}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 30
 --- !u!33 &616397624
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -9173,6 +9266,33 @@ Transform:
   m_Father: {fileID: 385296282}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &616397626
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616397619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &616397627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 616397619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &616953317
 GameObject:
   m_ObjectHideFlags: 0
@@ -13529,10 +13649,11 @@ GameObject:
   m_Component:
   - component: {fileID: 906703001}
   - component: {fileID: 906703000}
-  - component: {fileID: 906702999}
   - component: {fileID: 906702998}
   - component: {fileID: 906702997}
   - component: {fileID: 906702996}
+  - component: {fileID: 906703003}
+  - component: {fileID: 906703002}
   m_Layer: 3
   m_Name: ArcherEnemy(Clone)
   m_TagString: Enemy
@@ -13589,19 +13710,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
---- !u!114 &906702999
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 906702995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 50
 --- !u!33 &906703000
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -13626,6 +13734,33 @@ Transform:
   m_Father: {fileID: 75640408}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &906703002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 906702995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &906703003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 906702995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!4 &907289680 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 878718492912542167, guid: 3563fab7cd30def4bb6936993006267c, type: 3}
@@ -15468,10 +15603,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1038616867}
   - component: {fileID: 1038616866}
-  - component: {fileID: 1038616865}
   - component: {fileID: 1038616864}
   - component: {fileID: 1038616863}
   - component: {fileID: 1038616862}
+  - component: {fileID: 1038616869}
+  - component: {fileID: 1038616868}
   m_Layer: 3
   m_Name: ExploderEnemy(Clone)
   m_TagString: Enemy
@@ -15528,19 +15664,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
---- !u!114 &1038616865
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1038616861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 50
 --- !u!33 &1038616866
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -15565,6 +15688,33 @@ Transform:
   m_Father: {fileID: 567579031}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1038616868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038616861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &1038616869
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1038616861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &1039166362
 GameObject:
   m_ObjectHideFlags: 0
@@ -15769,10 +15919,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1055593168}
   - component: {fileID: 1055593167}
-  - component: {fileID: 1055593166}
   - component: {fileID: 1055593165}
   - component: {fileID: 1055593164}
   - component: {fileID: 1055593163}
+  - component: {fileID: 1055593170}
+  - component: {fileID: 1055593169}
   m_Layer: 3
   m_Name: ArcherEnemy(Clone)
   m_TagString: Enemy
@@ -15829,19 +15980,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
---- !u!114 &1055593166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1055593162}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 50
 --- !u!33 &1055593167
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -15866,6 +16004,33 @@ Transform:
   m_Father: {fileID: 75640408}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1055593169
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1055593162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &1055593170
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1055593162}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &1056086293
 GameObject:
   m_ObjectHideFlags: 0
@@ -17137,10 +17302,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1112750139}
   - component: {fileID: 1112750138}
-  - component: {fileID: 1112750137}
   - component: {fileID: 1112750136}
   - component: {fileID: 1112750135}
   - component: {fileID: 1112750134}
+  - component: {fileID: 1112750141}
+  - component: {fileID: 1112750140}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -17196,19 +17362,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
---- !u!114 &1112750137
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1112750133}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 30
 --- !u!33 &1112750138
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -17233,6 +17386,33 @@ Transform:
   m_Father: {fileID: 385296282}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1112750140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1112750133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &1112750141
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1112750133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &1114814786
 GameObject:
   m_ObjectHideFlags: 0
@@ -19388,10 +19568,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1298251037}
   - component: {fileID: 1298251036}
-  - component: {fileID: 1298251035}
   - component: {fileID: 1298251034}
   - component: {fileID: 1298251033}
   - component: {fileID: 1298251032}
+  - component: {fileID: 1298251039}
+  - component: {fileID: 1298251038}
   m_Layer: 3
   m_Name: ExploderEnemy(Clone)
   m_TagString: Enemy
@@ -19448,19 +19629,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 1.5
---- !u!114 &1298251035
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1298251031}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 200
 --- !u!33 &1298251036
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -19485,6 +19653,33 @@ Transform:
   m_Father: {fileID: 567579031}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1298251038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1298251031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &1298251039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1298251031}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &1299751755
 GameObject:
   m_ObjectHideFlags: 0
@@ -23553,10 +23748,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1515714644}
   - component: {fileID: 1515714643}
-  - component: {fileID: 1515714642}
   - component: {fileID: 1515714641}
   - component: {fileID: 1515714640}
   - component: {fileID: 1515714639}
+  - component: {fileID: 1515714646}
+  - component: {fileID: 1515714645}
   m_Layer: 3
   m_Name: ArcherEnemy(Clone)
   m_TagString: Enemy
@@ -23613,19 +23809,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 3
---- !u!114 &1515714642
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1515714638}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 50
 --- !u!33 &1515714643
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -23650,6 +23833,33 @@ Transform:
   m_Father: {fileID: 75640408}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1515714645
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515714638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &1515714646
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1515714638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &1518606294
 GameObject:
   m_ObjectHideFlags: 0
@@ -24436,10 +24646,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1557321496}
   - component: {fileID: 1557321495}
-  - component: {fileID: 1557321494}
   - component: {fileID: 1557321493}
   - component: {fileID: 1557321492}
   - component: {fileID: 1557321491}
+  - component: {fileID: 1557321498}
+  - component: {fileID: 1557321497}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -24497,19 +24708,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 1.5
---- !u!114 &1557321494
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1557321490}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 100
 --- !u!33 &1557321495
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -24534,6 +24732,33 @@ Transform:
   m_Father: {fileID: 385296282}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1557321497
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557321490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &1557321498
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557321490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!4 &1559050042 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3914069886582724769, guid: 0efbdac5ac085954785d8189616f51b3, type: 3}
@@ -24646,10 +24871,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1575966658}
   - component: {fileID: 1575966657}
-  - component: {fileID: 1575966656}
   - component: {fileID: 1575966655}
   - component: {fileID: 1575966654}
   - component: {fileID: 1575966653}
+  - component: {fileID: 1575966660}
+  - component: {fileID: 1575966659}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -24707,19 +24933,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 1.5
---- !u!114 &1575966656
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1575966652}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 100
 --- !u!33 &1575966657
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -24744,6 +24957,33 @@ Transform:
   m_Father: {fileID: 385296282}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1575966659
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1575966652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &1575966660
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1575966652}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &1579812805
 GameObject:
   m_ObjectHideFlags: 0
@@ -26707,10 +26947,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1701684459}
   - component: {fileID: 1701684458}
-  - component: {fileID: 1701684457}
   - component: {fileID: 1701684456}
   - component: {fileID: 1701684455}
   - component: {fileID: 1701684454}
+  - component: {fileID: 1701684461}
+  - component: {fileID: 1701684460}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -26768,19 +27009,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 1.5
---- !u!114 &1701684457
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1701684453}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 100
 --- !u!33 &1701684458
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -26805,6 +27033,33 @@ Transform:
   m_Father: {fileID: 385296282}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1701684460
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701684453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &1701684461
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1701684453}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &1703188870
 GameObject:
   m_ObjectHideFlags: 0
@@ -27905,10 +28160,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1796935031}
   - component: {fileID: 1796935030}
-  - component: {fileID: 1796935029}
   - component: {fileID: 1796935028}
   - component: {fileID: 1796935027}
   - component: {fileID: 1796935026}
+  - component: {fileID: 1796935033}
+  - component: {fileID: 1796935032}
   m_Layer: 3
   m_Name: MeleeEnemy(Clone) (1)(Clone)
   m_TagString: Enemy
@@ -27964,19 +28220,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
---- !u!114 &1796935029
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1796935025}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 30
 --- !u!33 &1796935030
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -28001,6 +28244,33 @@ Transform:
   m_Father: {fileID: 385296282}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1796935032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796935025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &1796935033
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1796935025}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1001 &1809090745
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -29614,10 +29884,11 @@ GameObject:
   m_Component:
   - component: {fileID: 1987315864}
   - component: {fileID: 1987315863}
-  - component: {fileID: 1987315862}
   - component: {fileID: 1987315861}
   - component: {fileID: 1987315860}
   - component: {fileID: 1987315859}
+  - component: {fileID: 1987315866}
+  - component: {fileID: 1987315865}
   m_Layer: 3
   m_Name: ArcherEnemy(Clone)
   m_TagString: Enemy
@@ -29674,19 +29945,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 5
---- !u!114 &1987315862
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1987315858}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 20
 --- !u!33 &1987315863
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -29711,6 +29969,33 @@ Transform:
   m_Father: {fileID: 75640408}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1987315865
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987315858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &1987315866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1987315858}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!4 &2000892623 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 878718492912542167, guid: 3563fab7cd30def4bb6936993006267c, type: 3}
@@ -29902,10 +30187,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2012151556}
   - component: {fileID: 2012151555}
-  - component: {fileID: 2012151554}
   - component: {fileID: 2012151553}
   - component: {fileID: 2012151552}
   - component: {fileID: 2012151551}
+  - component: {fileID: 2012151558}
+  - component: {fileID: 2012151557}
   m_Layer: 3
   m_Name: ExploderEnemy(Clone)
   m_TagString: Enemy
@@ -29962,19 +30248,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 2
---- !u!114 &2012151554
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2012151550}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 100
 --- !u!33 &2012151555
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -29999,6 +30272,33 @@ Transform:
   m_Father: {fileID: 567579031}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2012151557
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012151550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &2012151558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012151550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!4 &2018456994 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 878718492912542167, guid: 3563fab7cd30def4bb6936993006267c, type: 3}
@@ -30564,10 +30864,11 @@ GameObject:
   m_Component:
   - component: {fileID: 2050680189}
   - component: {fileID: 2050680188}
-  - component: {fileID: 2050680187}
   - component: {fileID: 2050680186}
   - component: {fileID: 2050680185}
   - component: {fileID: 2050680184}
+  - component: {fileID: 2050680191}
+  - component: {fileID: 2050680190}
   m_Layer: 3
   m_Name: ExploderEnemy(Clone)
   m_TagString: Enemy
@@ -30624,19 +30925,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementSpeed: 1.5
---- !u!114 &2050680187
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2050680183}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 38bdf0daf804cf7429c1d285dad4c8ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  health: 200
 --- !u!33 &2050680188
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -30661,6 +30949,33 @@ Transform:
   m_Father: {fileID: 567579031}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2050680190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2050680183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c64fbad67b6b4ec59bb79660bd640a58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HAHA: 0
+  health: 100
+--- !u!114 &2050680191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2050680183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f5928ada01da4271a5b10c1d32ec745e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  test: 0
 --- !u!1 &2057867079
 GameObject:
   m_ObjectHideFlags: 0

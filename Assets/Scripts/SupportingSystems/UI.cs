@@ -1,4 +1,5 @@
 using EnemyUnits;
+using Player;
 using TMPro;
 using UnityEngine;
 
@@ -17,19 +18,19 @@ namespace SupportingSystems
         [SerializeField] private TextMeshProUGUI healthText;
         [SerializeField] private TextMeshProUGUI killCountText;
         
-        private int _killCount;
-        private int _amountOfEnemies;
+        private int _killCount = 0;
+        private int _amountOfEnemies = 0;
 
         /// <summary>
         /// Subscribes to all the relevant events
         /// </summary>
         private void Start()
         {
-            Health.OnHealthValueChanged += UpdateHealthUI;
-            Health.OnKillCountChanged += UpdateKillCount;
+            PlayerHealth.OnPlayerHealthChanged += UpdateHealthUI;
+            EnemyDied.OnKillCountChanged += UpdateKillCount;
             ExploderUnit.OnExploderBlewItselfUp += UpdateKillCount;
-            Health.OnKillCountInitialisation += UpdateKillCountUI;
-            Health.OnEnemySpawned += UpdateEnemyCount;
+            EnemyHealth.OnEnemySpawned += UpdateEnemyCount;
+            PlayerHealth.OnPlayerInitialised += UpdateHealthUI;
         }
 
         /// <summary>
@@ -37,17 +38,26 @@ namespace SupportingSystems
         /// </summary>
         private void OnDestroy()
         {
-            Health.OnHealthValueChanged -= UpdateHealthUI;
-            Health.OnKillCountChanged -= UpdateKillCount;
+            PlayerHealth.OnPlayerHealthChanged -= UpdateHealthUI;
+            EnemyDied.OnKillCountChanged -= UpdateKillCount;
             ExploderUnit.OnExploderBlewItselfUp -= UpdateKillCount;
-            Health.OnKillCountInitialisation -= UpdateKillCountUI;
-            Health.OnEnemySpawned -= UpdateEnemyCount;
+            EnemyHealth.OnEnemySpawned -= UpdateEnemyCount;
+            PlayerHealth.OnPlayerInitialised -= UpdateHealthUI;
         }
 
         /// <summary>
-        /// Updates the health UI depending on the damage taken
+        /// Updates the health UI to the current health value
         /// </summary>
-        /// <param name="health"></param>
+        /// <param name="player">The player with the health value</param>
+        private void UpdateHealthUI(PlayerHealth player)
+        {
+            UpdateHealthUI(player.health);
+        }
+
+        /// <summary>
+        /// Updates the health UI
+        /// </summary>
+        /// <param name="health">The current Health value</param>
         private void UpdateHealthUI(int health)
         {
             Debug.Log("Health has been updated to: " + health);
@@ -60,6 +70,7 @@ namespace SupportingSystems
         private void UpdateEnemyCount()
         {
             _amountOfEnemies++;
+            UpdateKillCountUI();
             Debug.Log("Amount of enemies: " + _amountOfEnemies);
         }
 

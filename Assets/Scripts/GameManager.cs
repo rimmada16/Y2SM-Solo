@@ -1,3 +1,4 @@
+using Player;
 using SupportingSystems;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -90,7 +91,7 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 1;
         
         UI.OnKillCountReached += WinCondition;
-        Health.OnPlayerDeath += PlayerDeath;
+        PlayerDied.OnPlayerDeath += PlayerDeath;
     }
 
     /// <summary>
@@ -99,7 +100,7 @@ public class GameManager : MonoBehaviour
     private void OnDestroy()
     {
         UI.OnKillCountReached -= WinCondition;
-        Health.OnPlayerDeath -= PlayerDeath;
+        PlayerDied.OnPlayerDeath -= PlayerDeath;
     }
 
     /// <summary>
@@ -208,7 +209,7 @@ public class GameManager : MonoBehaviour
     public void LoadLevelOne()
     {
         Debug.Log("Loading Level One...");
-        SceneManager.LoadScene("Level One");
+        SceneManager.LoadScene("Level1A");
     }
 
     /// <summary>

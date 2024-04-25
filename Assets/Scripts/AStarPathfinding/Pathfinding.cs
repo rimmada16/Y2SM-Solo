@@ -47,16 +47,24 @@ namespace AStarPathfinding
             Exploder
         }
 
+        /// <summary>
+        /// Selection option for the agent type - Melee, Archer, Exploder
+        /// </summary>
         [Header("Enemy Type")] 
         public EnemyType enemyType = EnemyType.Melee;
 
+        /// <summary>
+        /// Selection option for the agent - Roaming or Patrol Points
+        /// </summary>
         [Header("Agent Type")] 
         public SelectionOption selectionOption = SelectionOption.RoamBounds;
-
-        private Transform _startPosition, _targetPosition;
-
+        
+        /// <summary>
+        /// Lets the pathfinding system know if the agent is following a player or not
+        /// </summary>
         [Space(10)] [Header("Agent Behaviour")]
         public bool isFollowingPlayer;
+        
         /// <summary>
         /// States whether the unit is attacking or not
         /// </summary>
@@ -67,6 +75,9 @@ namespace AStarPathfinding
         /// </summary>
         public bool canPathFindToTarget = true;
 
+        /// <summary>
+        /// Lets the system know if the agent is targeting patrol points
+        /// </summary>
         [Space(10)] [Header("Patrol Points")]
         public bool isTargetingPatrolPoints;
         
@@ -75,6 +86,7 @@ namespace AStarPathfinding
         /// </summary>
         public List<Transform> patrolPointsList;
         
+        private Transform _startPosition, _targetPosition;
         private int _currentPatrolPointIndex = 0;
         private bool _isMovingForward;
 
@@ -400,7 +412,7 @@ namespace AStarPathfinding
             }
             else
             {
-                Debug.LogWarning("No final path found for the specified enemy." + enemy);
+                //Debug.LogWarning("No final path found for the specified enemy." + enemy);
                 return null;
             }
         }
