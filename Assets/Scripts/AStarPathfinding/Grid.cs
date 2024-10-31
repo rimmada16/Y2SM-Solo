@@ -1,10 +1,11 @@
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace AStarPathfinding
 {
     /// <summary>
-    ///Represents a grid used for pathfinding in the game environment. This class manages the creation of a grid layout,
+    /// Represents a grid used for pathfinding in the game environment. This class manages the creation of a grid layout,
     /// defines obstacles, and provides methods to retrieve neighboring nodes and find nodes based on world positions.
     /// It also visualizes the grid and node information in the Scene view for debugging purposes.
     /// </summary> 
@@ -64,7 +65,7 @@ namespace AStarPathfinding
                 }
             }
         }
-
+       
         /// <summary>
         /// Gets the neighboring nodes of the given node.
         /// </summary>
@@ -99,8 +100,7 @@ namespace AStarPathfinding
 
             return neighbourList;
         }
-
-        //Gets the closest node to the given world position.
+        
         /// <summary>
         /// Returns the node corresponding to the specified world position.
         /// </summary>
@@ -136,13 +136,14 @@ namespace AStarPathfinding
         /// </summary>
         private void OnDrawGizmos()
         {
-            Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));//Draw a wire cube with the given dimensions from the Unity inspector
+            //Draw a wire cube with the given dimensions from the Unity inspector
+            Gizmos.DrawWireCube(transform.position, new Vector3(gridWorldSize.x, 1, gridWorldSize.y));
 
             if (_nodeArray == null) 
             {
                 return;
             }
-            
+
             foreach (Node n in _nodeArray)
             {
                 //If the current node is a wall node
@@ -155,17 +156,31 @@ namespace AStarPathfinding
                     Gizmos.color = Color.yellow;
                 }
 
+                // Draw the node at the position of the node with adjusted size for the grid
+                Gizmos.DrawCube(n.nodePosition, Vector3.one * (nodeDiameter - distanceBetweenNodes));
+                
                 // Check if any enemy final paths exist and if the current node is in any of them
                 foreach (var kvp in EnemyFinalPaths)
                 {
-                    //If the current node is in the final path of the enemy
+                    // If the current node is in the final path of the enemy
                     if (kvp.Value.Contains(n))
                     {
-                        Gizmos.color = Color.red;//Set the color of that node
-                        break; // Exit the loop if the node is found in any enemy's final path
+                        // Visualize the current node (n) as a cube in red
+                        Gizmos.color = Color.red;
+                        Gizmos.DrawCube(n.nodePosition, Vector3.one * nodeRadius * 2);
+                        
+                        // Visualise the first node in the path as a cube in green
+                        Gizmos.color = Color.green;
+                        Gizmos.DrawCube(kvp.Value.First().nodePosition, Vector3.one * nodeRadius * 2);
+
+                        // Visualise the last node as a cube in magenta
+                        Gizmos.color = Color.black;
+                        Gizmos.DrawCube(kvp.Value.Last().nodePosition, Vector3.one * nodeRadius * 2);
+
+                        // Exit the loop if the node is found in any enemy's final path
+                        break; 
                     }
                 }
-                Gizmos.DrawCube(n.nodePosition, Vector3.one * (nodeDiameter - distanceBetweenNodes)); //Draw the node at the position of the node.
             }
         }
     }

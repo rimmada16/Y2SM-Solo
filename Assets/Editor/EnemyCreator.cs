@@ -1,5 +1,6 @@
 // Purpose: To create a custom editor window that allows the user to create enemies with different attributes and weapons.
 
+using System;
 using System.Collections.Generic;
 using AStarPathfinding;
 using EnemyUnits;
@@ -128,6 +129,8 @@ namespace Editor
             //Set Initial Value
             _selectedType = EnemyType.Melee;
 
+            #region EnemySelection
+            
             EditorGUILayout.Space();
             // Gives the user the option to select the enemy type they wish to spawn
             EditorGUILayout.LabelField(new GUIContent("Spawn Option:", "Select what type of enemy you wish to spawn"), EditorStyles.boldLabel);
@@ -151,6 +154,10 @@ namespace Editor
             }
             
             EditorGUILayout.Space();
+            
+            #endregion
+            
+            #region EnemySubTypeSelection
             
             // Do different things based on the selected enemy type
             // Allow selection of different weapons or types for the selected enemy type
@@ -325,6 +332,10 @@ namespace Editor
                     break;
             }
         
+            #endregion
+            
+            #region EnemyAttributes
+            
             EditorGUILayout.Space();
             GUILayout.Label(new GUIContent("Enemy Attributes Section", "Set the attributes for the enemy"), EditorStyles.boldLabel);
             EditorGUILayout.Space();
@@ -370,6 +381,8 @@ namespace Editor
             // Allows the user to enter the HP of the enemy
             _enemyHealth = EditorGUILayout.IntSlider(new GUIContent("HP:", "Enter the health points for the Enemy"), _enemyHealth, 1, 200);
 
+            #endregion
+            
             EditorGUILayout.Space();
             
             GUILayout.Label("Select Agent Type", EditorStyles.boldLabel);
@@ -385,6 +398,8 @@ namespace Editor
                     _selectedOption = SelectionOption.FollowPatrolPoints;
                     break;
             }
+            
+            #region PatrolPoints
             
             if (_selectedOption == SelectionOption.FollowPatrolPoints)
             {
@@ -402,7 +417,8 @@ namespace Editor
                 }
                 GUILayout.EndHorizontal();
                 // Lists the Patrol Points on the editor window with an option to remove the Patrol Points in the list
-                GUILayout.Label(new GUIContent("Current Patrol Points", "The current list of patrol points that the enemy will follow"), EditorStyles.boldLabel);
+                GUILayout.Label(new GUIContent("Current Patrol Points", "The current list of patrol points that the enemy will follow")
+                    , EditorStyles.boldLabel);
                 for (int i = 0; i < _patrolPoints.Count; i++)
                 {
                     GUILayout.BeginHorizontal();
@@ -424,6 +440,8 @@ namespace Editor
                     return;
                 }
             }
+            
+            #endregion
             
             EditorGUILayout.Space();
         
@@ -480,32 +498,16 @@ namespace Editor
         
             EditorGUILayout.Space();
             
-            // Will instantiate the enemy with the selected attributes
+            // Will instantiate with the selected attributes
             if (GUILayout.Button("Create Enemy"))
             {
-                GameObject objectToInstantiate;
-
                 if (_selectedSpawnOptionIndex == 3 && !_spawnOnSelectedGameObject)
                 {
                     return;
                 }
-                
-                
-                
-                // Sets the var to the prefab
-                if (_selectedType == EnemyType.Melee && _meleeEnemy != null)
-                {
-                    objectToInstantiate = _meleeEnemy;
-                }
-                else if (_selectedType == EnemyType.Archer && _archerEnemy != null)
-                {
-                    objectToInstantiate = _archerEnemy;
-                }
-                else if (_selectedType == EnemyType.Exploder && _exploderEnemy != null)
-                {
-                    objectToInstantiate = _exploderEnemy;
-                }
-                else
+
+                GameObject objectToInstantiate = GetEnemyPrefab();
+                if (objectToInstantiate == null)
                 {
                     Debug.LogWarning("Enemy type not recognized.");
                     return;
@@ -514,99 +516,124 @@ namespace Editor
                 // For loop to spawn the required amount of enemies
                 for (int i = 0; i < _amountToSpawn; i++)
                 {
-                    GameObject newEnemy = Instantiate(objectToInstantiate,_spawnLocation, Quaternion.identity);
-                    
-                    // Get the relevant scripts off the enemy
-                    Pathfinding pathfinding = newEnemy.GetComponent<Pathfinding>();
-                    EnemyMovement enemyMovement = newEnemy.GetComponent<EnemyMovement>();
-                    EnemyHealth enemyHealth = newEnemy.GetComponent<EnemyHealth>();
-
-                    if (_selectedType == EnemyType.Exploder)
-                    {
-                        ExploderUnit exploderUnit = newEnemy.GetComponent<ExploderUnit>();
-                        if (exploderUnit != null)
-                        {
-                            exploderUnit.explosionRadius = _explosionRadius;
-                            exploderUnit.baseDamage = Mathf.RoundToInt(_attackDamage);
-                        }
-                    }
-                    
-                    // Set the enemies health
-                    enemyHealth.health = _enemyHealth;
-            
-                    // Assign the attributes to the enemy
-                    if (pathfinding != null && enemyMovement != null)
-                    {
-                        pathfinding.aggroRange = _aggroRange;
-                        pathfinding.attackRange = _attackRange;
-                        pathfinding.selectionOption = (Pathfinding.SelectionOption)_selectedOption;
-                        enemyMovement.movementSpeed = _movementSpeed;
-
-                        // Set the Patrol Points in the enemy
-                        if (_selectedOption == SelectionOption.FollowPatrolPoints)
-                        {
-                            pathfinding.patrolPointsList = _patrolPoints;
-                        }
-
-                        if (_selectedType == EnemyType.Melee)
-                        {
-                            pathfinding.enemyType = Pathfinding.EnemyType.Melee;
-                            // Find which weapon is selected, then get the corresponding child object and set it to active
-                            if (_selectedMeleeWeapon == MeleeWeaponType.Longsword)
-                            {
-                                EnableCorrespondingWeapon(_selectedMeleeWeapon.ToString(), newEnemy, EnemyType.Melee);
-                            }
-                            else if (_selectedMeleeWeapon == MeleeWeaponType.Greatsword)
-                            {
-                                EnableCorrespondingWeapon(_selectedMeleeWeapon.ToString(), newEnemy, EnemyType.Melee);
-                            }
-                            else if (_selectedMeleeWeapon == MeleeWeaponType.Shortsword)
-                            {
-                                EnableCorrespondingWeapon(_selectedMeleeWeapon.ToString(), newEnemy, EnemyType.Melee);
-                            } 
-                        }
-
-                        if (_selectedType == EnemyType.Archer)
-                        {
-                            pathfinding.enemyType = Pathfinding.EnemyType.Archer;
-                            // Find which weapon is selected, then get the corresponding child object and set it to active
-                            if (_selectedArcherWeapon == ArcherWeaponType.Longbow)
-                            {
-                                EnableCorrespondingWeapon(_selectedArcherWeapon.ToString(), newEnemy, EnemyType.Archer);
-                            }
-                            else if (_selectedArcherWeapon == ArcherWeaponType.Greatbow)
-                            {
-                                EnableCorrespondingWeapon(_selectedArcherWeapon.ToString(), newEnemy, EnemyType.Archer);
-                            }
-                            else if (_selectedArcherWeapon == ArcherWeaponType.Shortbow)
-                            {
-                                EnableCorrespondingWeapon(_selectedArcherWeapon.ToString(), newEnemy, EnemyType.Archer);
-                            }
-                        }
-
-                        if (_selectedType == EnemyType.Exploder)
-                        {
-                            pathfinding.enemyType = Pathfinding.EnemyType.Exploder;
-                            // Apply appropriate scale depending on the exploder type
-                            if (_selectedExploderType == ExploderType.Small)
-                            {
-                                newEnemy.transform.localScale = new Vector3(1, .5f, 1);
-                            }
-                            else if (_selectedExploderType == ExploderType.Medium)
-                            {
-                                newEnemy.transform.localScale = new Vector3(1, 1, 1);
-                            }
-                            else if (_selectedExploderType == ExploderType.Nuke)
-                            {
-                                newEnemy.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
-                            }
-                        }
-                    }
+                    GameObject newEnemy = Instantiate(objectToInstantiate, _spawnLocation, Quaternion.identity);
+                    InitialiseEnemy(newEnemy);
                 }
             }
             GUILayout.EndScrollView();
         }
+
+        #region EnemyCreationHelperMethods
         
+        /// <summary>
+        /// Helper method to get the enemy prefab based on selected type
+        /// </summary>
+        /// <returns></returns>
+        private GameObject GetEnemyPrefab()
+        {
+            switch (_selectedType)
+            {
+                case EnemyType.Melee:
+                    return _meleeEnemy;
+                case EnemyType.Archer:
+                    return _archerEnemy;
+                case EnemyType.Exploder:
+                    return _exploderEnemy;
+                default:
+                    return null;
+            }
+        }
+
+        /// <summary>
+        /// Helper method to initialise the enemy
+        /// </summary>
+        /// <param name="newEnemy">The enemy we are creating</param>
+        private void InitialiseEnemy(GameObject newEnemy)
+        {
+            // Get the relevant scripts off the enemy
+            Pathfinding pathfinding = newEnemy.GetComponent<Pathfinding>();
+            EnemyMovement enemyMovement = newEnemy.GetComponent<EnemyMovement>();
+            EnemyHealth enemyHealth = newEnemy.GetComponent<EnemyHealth>();
+
+            // Initialise common properties
+            enemyHealth.health = _enemyHealth;
+
+            if (pathfinding != null && enemyMovement != null)
+            {
+                pathfinding.aggroRange = _aggroRange;
+                pathfinding.attackRange = _attackRange;
+                pathfinding.selectionOption = (Pathfinding.SelectionOption)_selectedOption;
+                enemyMovement.movementSpeed = _movementSpeed;
+
+                // Set Patrol Points in the enemy
+                if (_selectedOption == SelectionOption.FollowPatrolPoints)
+                {
+                    pathfinding.patrolPointsList = _patrolPoints;
+                }
+
+                // Call method to set up the enemy based on its type
+                SetupEnemyByType(pathfinding, newEnemy);
+            }
+        }
+
+        /// <summary>
+        /// Helper method to set up enemy-specific properties
+        /// </summary>
+        /// <param name="pathfinding">The pathfinding script on the enemy prefab</param>
+        /// <param name="newEnemy">The enemy we are creating</param>
+        private void SetupEnemyByType(Pathfinding pathfinding, GameObject newEnemy)
+        {
+            switch (_selectedType)
+            {
+                case EnemyType.Melee:
+                    pathfinding.enemyType = Pathfinding.EnemyType.Melee;
+                    EnableWeapon(newEnemy, _selectedMeleeWeapon, EnemyType.Melee);
+                    break;
+                case EnemyType.Archer:
+                    pathfinding.enemyType = Pathfinding.EnemyType.Archer;
+                    EnableWeapon(newEnemy, _selectedArcherWeapon, EnemyType.Archer);
+                    break;
+                case EnemyType.Exploder:
+                    pathfinding.enemyType = Pathfinding.EnemyType.Exploder;
+                    SetExploderScale(newEnemy);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Helper method to enable the corresponding weapon on the enemy
+        /// </summary>
+        /// <param name="newEnemy">The enemy we are creating</param>
+        /// <param name="weaponType">The weapon type that the enemy is using</param>
+        /// <param name="enemyType">The type of enemy we are creating</param>
+        private void EnableWeapon(GameObject newEnemy, Enum weaponType, EnemyType enemyType)
+        {
+            EnableCorrespondingWeapon(weaponType.ToString(), newEnemy, enemyType);
+        }
+
+        /// <summary>
+        /// Helper method to set the exploder's scale based on the selected type
+        /// </summary>
+        /// <param name="newEnemy">The enemy we are creating</param>
+        private void SetExploderScale(GameObject newEnemy)
+        {
+            Vector3 scale = Vector3.one;
+            switch (_selectedExploderType)
+            {
+                case ExploderType.Small:
+                    scale = new Vector3(1, .5f, 1);
+                    break;
+                case ExploderType.Medium:
+                    scale = Vector3.one;
+                    break;
+                case ExploderType.Nuke:
+                    scale = new Vector3(1.5f, 1.5f, 1.5f);
+                    break;
+            }
+            newEnemy.transform.localScale = scale;
+        }
+
+
         /// <summary>
         /// This method finds a transform called "Mesh" on the param newEnemy, it will then find Mesh transform that is
         /// the same as the string param weaponName on the Mesh transform, once that is found it will set it to active.
@@ -640,11 +667,13 @@ namespace Editor
                             {
                                 dealDamage.damage = Mathf.RoundToInt(_attackDamage);
                             }
+
                             MeleeUnit meleeUnit = newEnemy.GetComponent<MeleeUnit>();
                             if (meleeUnit != null)
                             {
                                 meleeUnit.timeBetweenAttacks = _timeBetweenAttacks;
                             }
+
                             break;
                         }
                         case EnemyType.Archer:
@@ -654,11 +683,14 @@ namespace Editor
                                 archerUnit.timeBetweenAttacks = _timeBetweenAttacks;
                                 archerUnit.arrowToShoot = _selectedArrowTypeIndex;
                             }
+
                             break;
                     }
                 }
             }
         }
+        
+        #endregion
     }
 }
 
