@@ -137,7 +137,7 @@ namespace AStarPathfinding
         /// <summary>
         /// Calls the CheckToFollowPlayer method and the Rotation method.
         /// </summary>
-        private void Update()
+        private void FixedUpdate()
         {
             CheckToFollowPlayer();
             Rotation();
@@ -194,14 +194,7 @@ namespace AStarPathfinding
         }
 
         /// <summary>
-        /// Find out the distance between the enemy and the player, if the distance is less than or equal to the aggro
-        /// range, than the enemy if it has not found its initial path to the player will set its target to the player and
-        /// recalculate the path. If it has found its initial path, if the distance between the last stored player position
-        /// and the current position is greater than the attack range then the target position is set back to the current
-        /// player position and the path is recalculated. If the distance between the last stored player position and the
-        /// enemy position is less than the attack range then the enemy will stop pathfinding and attack initiate an attack
-        /// if it is not already attacking. If the player is not within the aggro range, the enemy will stop following the
-        /// player and depending on its agent behaviour will either select a new target or continue patrolling.
+        /// Controls the logic for the enemy to follow the player depending on the distance between the player and the enemy.
         /// </summary>
         private void CheckToFollowPlayer()
         {
@@ -210,57 +203,64 @@ namespace AStarPathfinding
                 return;
             }
 
-            // If player is within the aggro range
-            if (Vector3.Distance(transform.position, _player.transform.position) <= aggroRange)
+            var distanceToPlayer = Vector3.Distance(transform.position, _player.transform.position);
+    
+            if (distanceToPlayer <= aggroRange)
             {
                 isFollowingPlayer = true;
-                if (_initialPathCalculated == false)
+                if (!_initialPathCalculated)
                 {
-                    isFollowingPlayer = true;
-                    var playerPosition = _player.transform.position;
-                    _targetPosition.position = playerPosition;
-                    _lastPlayerPosition = playerPosition;
-                    RecalculatePath();
-                    _initialPathCalculated = true;
+                    StartFollowingPlayer();
                 }
-                else if (_initialPathCalculated)
+                else if (Vector3.Distance(_lastPlayerPosition, _player.transform.position) >= attackRange)
                 {
-                    // Player not in the attack range
-                    if (Vector3.Distance(_lastPlayerPosition, _player.transform.position) >= attackRange)
-                    {
-                        canPathFindToTarget = true;
-                        _lastPlayerPosition = _player.transform.position;
-                        _targetPosition.position = _lastPlayerPosition;
-                        RecalculatePath();
-                    }
-                    // Player in the attack range
-                    else if (Vector3.Distance(_lastPlayerPosition, transform.position) <= attackRange)
-                    {
-                        //Debug.Log("In attack range");
-                        canPathFindToTarget = false;
-                        if (!isAttacking)
-                        {
-                            Attack();
-                        }
-
-                        _startPosition = transform;
-                    }
+                    UpdateTargetPositionAndPath();
+                }
+                else if (Vector3.Distance(_lastPlayerPosition, transform.position) <= attackRange && !isAttacking)
+                {
+                    Attack();
                 }
             }
             else
             {
-                // Not in aggro range and not targeting waypoints
-                if (isFollowingPlayer && !isTargetingPatrolPoints)
+                HandlePatrolOrNewTarget();
+            }
+        }
+
+        /// <summary>
+        /// Sets the target position to the player's position and recalculates the path.
+        /// </summary>
+        private void StartFollowingPlayer()
+        {
+            _targetPosition.position = _player.transform.position;
+            _lastPlayerPosition = _player.transform.position;
+            RecalculatePath();
+            _initialPathCalculated = true;
+        }
+
+        /// <summary>
+        /// Updates the target position to the player's position and recalculates the path.
+        /// </summary>
+        private void UpdateTargetPositionAndPath()
+        {
+            canPathFindToTarget = true;
+            _lastPlayerPosition = _player.transform.position;
+            _targetPosition.position = _lastPlayerPosition;
+            RecalculatePath();
+        }
+
+        /// <summary>
+        /// When the enemy is not following the player, the enemy will either patrol or choose a new target.
+        /// </summary>
+        private void HandlePatrolOrNewTarget()
+        {
+            if (isFollowingPlayer)
+            {
+                if (!isTargetingPatrolPoints)
                 {
                     ChooseNewTarget();
-                    if (canPathFindToTarget == false)
-                    {
-                        canPathFindToTarget = true;
-                    }
                 }
-
-                // Not in aggro range and is targeting waypoints
-                else if (isFollowingPlayer && isTargetingPatrolPoints)
+                else
                 {
                     PatrolPointFollower();
                 }
@@ -268,6 +268,7 @@ namespace AStarPathfinding
                 isFollowingPlayer = false;
             }
         }
+
 
         /// <summary>
         /// Depending on the type of enemy, the corresponding attack event is called so the relevant scripts and execute
